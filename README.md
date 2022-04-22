@@ -17,39 +17,11 @@
 지금 당장 모여라 모여 ~~ 😆
 >
 
-### Udada의 시작🐾
-- 가족 구성원의 추가와 1인 가구의 증가
-  - 최근 반려동물을 키우는 가구가 증가하면서 반려동물을 단순히 '소유'라는 개념이 아닌 하나의 가족으로써 함께한다는 인식이 자리잡았다. 1인 가구의 증가로 반려동물을 키우는 가구가 늘어남에 따라 반려동물을 돌봐줄 손길이 필요한 상황입니다.
-
-- 플랫폼의 부재
-  - 반려동물과 1인가구의 수는 늘어나는데 반해 관련한 정보들은 쉽게 찾아볼 수 없습니다.
-  - 반려인의 편의를 위한 서비스 중심의 편의를 제공하기 위해 모든 반려인들이 정보를 공유하고 서로 돕는 커뮤니티를 건설할 계획입니다.
-
-<br>
-
 # 📚 STACKS
 
-<div align=center> 
-  <img src="https://img.shields.io/badge/html5-E34F26?style=for-the-badge&logo=html5&logoColor=white">
-  <img src="https://img.shields.io/badge/css-1572B6?style=for-the-badge&logo=css3&logoColor=white">
-  <img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black">
-  
-  <br>
-  <img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black">
-  <img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white">
-  <img src="https://img.shields.io/badge/node.js-339933?style=for-the-badge&logo=Node.js&logoColor=white">
-  <img src="https://img.shields.io/badge/express-000000?style=for-the-badge&logo=express&logoColor=white">
-  <br>
-  
-  <img src="https://img.shields.io/badge/linux-FCC624?style=for-the-badge&logo=linux&logoColor=black">
-  <img src="https://img.shields.io/badge/amazonaws-232F3E?style=for-the-badge&logo=amazonaws&logoColor=white">
-  <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">
-  <img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white">
-  <img src="https://img.shields.io/badge/JWT-FC494A?style=for-the-badge&logo=JSON%20Web%20Tokens&logoColor=white">
-  <br>
-  
-</div>
-
+## Architecture
+<img width="556" alt="기술스택 이미지" src="https://user-images.githubusercontent.com/63045252/164348192-9ba5dcf1-d2ab-4b70-b155-6d37cf7f1aa9.png">
+ 
 <br>
 
 # 👾Team
