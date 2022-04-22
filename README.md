@@ -21,7 +21,6 @@
 
 # 📚 STACKS
 
-## Architecture
 <img width="556" alt="기술스택 이미지" src="https://user-images.githubusercontent.com/63045252/164348192-9ba5dcf1-d2ab-4b70-b155-6d37cf7f1aa9.png">
  
 <br>
