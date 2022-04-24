@@ -1,9 +1,9 @@
-// const models = require('../models');
+const models = require('../models');
 
 module.exports = {
   user: {
     get: (req, res) => {
-      res.send("user server test")
+      models.users.get(req, res);
     }
   },
   post: {

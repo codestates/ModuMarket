@@ -1,14 +1,11 @@
-const mysql = require('mysql');
-const dotenv = require('dotenv');
-const config = require('../config/config');
-dotenv.config();
+const { MongoClient } = require("mongodb");
+require("dotenv/config");
 
-const con = mysql.createConnection(
-  config[process.env.NODE_ENV || 'development']
-);
-
-con.connect((err) => {
-  if (err) throw err;
+const uri = `mongodb://root:${process.env.DATABASE_PASSWORD}@cluster0-shard-00-00.2yhrr.mongodb.net:27017,cluster0-shard-00-01.2yhrr.mongodb.net:27017,cluster0-shard-00-02.2yhrr.mongodb.net:27017/myFirstDatabase?ssl=true&replicaSet=atlas-14gwcx-shard-0&authSource=admin&retryWrites=true&w=majority`;
+const client = new MongoClient(uri, {
+  // @ts-ignore
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 });
 
-module.exports = con;
+module.exports = client
