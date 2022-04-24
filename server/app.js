@@ -6,7 +6,7 @@ const app = express();
 const fs = require('fs');
 const https = require('https');
 const PORT = 4000;
-console.log(indexRouter)
+// console.log(indexRouter)
 
 app.use(
   morgan('      :method :url :status :res[content-length] - :response-time ms')
