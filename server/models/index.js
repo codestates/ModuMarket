@@ -19,8 +19,6 @@ async function getChatsCollection() {
   return client.db("user").collection("users");
 }
 
-
-
 module.exports = {
   users: {
     get: async (req, res) => {
@@ -57,9 +55,9 @@ module.exports = {
         const users = await userCursor.toArray();
         // console.log(cursor)
 
-        res.status(200).json(users);
+        return users;
       } catch (err) {
-        res.status(500).send('Internal Server Error');
+        return null;
       }
   
       // db.query(queryString, (error, result) => {
