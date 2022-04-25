@@ -6,7 +6,7 @@ const app = express();
 const fs = require('fs');
 const https = require('https');
 const PORT = 4000;
-// console.log(indexRouter)
+const db = require('./db/index'); 
 
 app.use(
   morgan('      :method :url :status :res[content-length] - :response-time ms')
@@ -15,6 +15,7 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use('/', indexRouter);
+db();
 
 let server;
 
