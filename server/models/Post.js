@@ -11,7 +11,7 @@ const postSchema = new mongoose.Schema({
     image: { type: String, data: Buffer },
     post_location: {type: String, required: true},
     isvalid: {type: Boolean, required: true},
-    member_num: {type: Number, required: true},
+    member_num: {type: Number, default: 1},
     endtime: {type: Date, required: true},
     chatroom: new mongoose.Schema({
         id: mongoose.Schema.Types.ObjectId,

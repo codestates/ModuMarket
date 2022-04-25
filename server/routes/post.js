@@ -14,11 +14,11 @@ router.post('/', controller.post.registerPost);
 // 공고글 수정
 router.patch('/:id', controller.post.modifyPost);
 
-// 참가 신청
-router.patch('/:id', controller.post.applyPost);
+// 공고글에 있는 참가 신청 버튼
+router.patch('/:id/apply', controller.post.applyPost);
 
-// 참가 취소
-router.patch('/:id', controller.post.cancleApplyPost);
+// 공고글에 있는 참가 취소 버튼
+router.patch('/:id/cancle', controller.post.cancleApplyPost);
 
 // 공고글 삭제
 router.delete('/:id', controller.post.deletePost);

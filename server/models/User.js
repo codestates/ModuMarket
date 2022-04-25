@@ -8,7 +8,8 @@ const userSchema = new mongoose.Schema({
     password: { type: Number, required: true, trim: true },
     age: {type: Number, required: true},
     user_location: {type: [Number], required: true},
-    area_name: { type: String }
+    area_name: { type: String },
+    user_image: { type: String, data: Buffer },
 },{
   //데이터를 생성, 수정시 자동으로 시간을 기록해줌 
   timestamps: true
