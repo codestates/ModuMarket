@@ -1,14 +1,17 @@
-const mysql = require('mysql');
-const dotenv = require('dotenv');
-const config = require('../config/config');
-dotenv.config();
+const mongoose = require('mongoose');
+require("dotenv").config({path: ".env"});
 
-const con = mysql.createConnection(
-  config[process.env.NODE_ENV || 'development']
-);
 
-con.connect((err) => {
-  if (err) throw err;
-});
-
-module.exports = con;
+module.exports = () => {
+  function connect() {
+    mongoose.connect(process.env.MONGOB_URL, function(err) {
+        if (err) {
+          console.error('mongodb connection error', err);
+        }
+        console.log('mongodb connected');
+      });
+  }
+  connect();
+  mongoose.connection.on('disconnected', connect);
+  //require('./user.js'); // user.js는 나중에 만듭니다.
+};
