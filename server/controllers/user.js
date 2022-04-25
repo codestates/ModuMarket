@@ -1,21 +1,82 @@
 const User = require('../models/User');
+const jwt = require('jsonwebtoken');
 
 module.exports = {
     mypage: async (req, res) => {
-    //req에서 params에서 이메일받아서 아이디로 유저정보 가져오기
+      console.log(req.cookies)
+      console.log(req.headers)
+    // accessToken으로 유저정보 가져오기  || accessToken이 만료돼고 refreshToken
+    if (!req.headers.authorization) {
+      return res.status(401).send({data: null, message: 'invalid access token'})
+    }
+
+    if (!req.cookies.refreshToken) {
+      return res.status(401).send({data: null, message: 'refresh token not provided'})
+    }
     // const { email } = accessTokenData ???
 
-    //일단 가져왔다치고 밑의 이메일로 실험해보자 
-    const userEmail = "aa@aa.aa"
-
-      try {
-        const result =  await User.findOne({ email: userEmail }).exec();
-        const {name, email, age, area_name, user_image} = result
-        console.log(result);
-        res.status(200).json({data : name, email, age, area_name, user_image});
-      } catch (err) {
-        console.error(err);
+    const token = req.headers.authorization.split(' ')[1];
+    // console.log(token)
+    //일단 가져왔다치고 밑의 이메일로 실험해보자
+    const data = jwt.verify(token, process.env.ACCESS_SECRET); // 토큰을 해독해 유저 데이터를 리턴
+    const refToken = jwt.verify(req.cookies.refreshToken, process.env.REFRESH_SECRET);
+    // console.log(data);
+    // 만약 서버에서 생성한 유효한 토큰이면
+  
+    if (!data) {
+      if (!refToken) {
+          res.status(404).send({ "data": null, "message": "access and refresh token has been tempered" })
+      } else {
+        const userinfo = await User.findOne({ email: refToken.email }).exec();
+      
+        delete userinfo.password;
+    
+        const accessToken = jwt.sign(userinfo, process.env.ACCESS_SECRET);
+    
+        return res.send({data: {accessToken: accessToken, userInfo: userinfo}, message: "ok"})
       }
+    } else {
+      if (!refToken) {
+        const userinfo = await User.findOne({ email: data }).exec();
+
+        const refreshToken = jwt.sign(JSON.parse(JSON.stringify(data[0])), process.env.REFRESH_SECRET, {expiresIn: '14d'});
+
+        delete userinfo.password;
+        userinfo.refreshToken = refreshToken;
+
+        res.cookie("refreshToken", data.refreshToken, {
+              maxAge: 1000 * 60 * 60 * 24 * 14, // 쿠키 유효시간: 14일
+              httpOnly: true,
+            })
+            .send({data: {userinfo: userinfo}})
+      } else {
+        const userinfo = await User.findOne({ email: data.email }).exec();
+
+        delete userinfo.password;
+  
+        res.status(200).send({data: {userInfo: userinfo}, message: 'ok'})
+      }
+    }
+    //   res.status(404).send({ "data": null, "message": "access token has been tempered" })
+    // } else {
+    //   const userinfo = await User.findOne({ email: data.email }).exec();
+
+    //   // console.log(userinfo);
+    //   delete userinfo.password;
+  
+    //   res.status(200).send({data: {userInfo: userinfo}, message: 'ok'})
+    // }
+
+    // const userEmail = "aa@aa.aa"
+
+      // try {
+      //   const result =  await User.findOne({ email: userEmail }).exec();
+      //   const {name, email, age, area_name, user_image} = result
+      //   console.log(result);
+      //   res.status(200).json({data : {name, email, age, area_name, user_image}});
+      // } catch (err) {
+      //   console.error(err);
+      // }
     },
 
     auth: async (req, res) => { // 바디에 패스워드가 온다고한다 .. 
