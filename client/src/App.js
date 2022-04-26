@@ -1,12 +1,18 @@
 import './App.css';
 import Footer from './components/Footer/Footer';
-import {Routes} from 'react-router-dom';
-
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+} from "react-router-dom";
 function App() {
   return (
     <>
-  
-    <Footer/>
+      <Routes>
+        <Route> 
+        </Route>
+      </Routes>
+      <Footer/>
     </>
     
   );

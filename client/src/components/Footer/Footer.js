@@ -12,7 +12,7 @@ import {FooterContainer,
         TeamContainer,
         ProfileInfo,
         GithubIcon} from './styled'
-import {Link} from 'react-router-dom'
+
 
 
 function Footer (){
@@ -26,7 +26,7 @@ function Footer (){
             <TeamContainer>
                 <ProfileContainer>
                     <ProfilePhoto>
-                        <img src = {kwon}></img>
+                        <img src = {kwon} alt="team-member"></img>
                         <ProfileInfo>
                         <p>
                             <span>권형안 Front-End</span>
@@ -35,7 +35,7 @@ function Footer (){
                         </ProfileInfo>
                     </ProfilePhoto>
                     <ProfilePhoto>
-                        <img src = {park}></img>
+                        <img src = {park} alt="team-member"></img>
                         <ProfileInfo>
                         <p>
                             <span>박보미 Back-End</span>
@@ -44,7 +44,7 @@ function Footer (){
                         </ProfileInfo>
                     </ProfilePhoto>
                     <ProfilePhoto>
-                        <img src = {song}></img>
+                        <img src = {song} alt="team-member"></img>
                         <ProfileInfo>
                          <p>
                             <span>송혜원 Front-End</span>
@@ -53,7 +53,7 @@ function Footer (){
                         </ProfileInfo>
                     </ProfilePhoto>
                     <ProfilePhoto>
-                        <img src = {u}></img>
+                        <img src = {u} alt="team-member"></img>
                         <ProfileInfo>
                         <p>
                             <span>유태의 Back-End</span>
@@ -64,7 +64,9 @@ function Footer (){
                 </ProfileContainer>
             </TeamContainer>
             <GithubIcon>
-                <img src = {githubIcon} href= "https://github.com/codestates/ModuMarket/"/>
+                <a href= "https://github.com/codestates/ModuMarket/">
+                    <img src = {githubIcon} alt = "github-logo"/>
+                </a>
                 <span>About Us</span>
             </GithubIcon>
         </FooterContainer>
