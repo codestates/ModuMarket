@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema({
     user_location: {type: [Number], required: true},
     area_name: { type: String },
     user_image: { type: String, data: Buffer },
+    refreshToken: { type: String }
 },{
   //데이터를 생성, 수정시 자동으로 시간을 기록해줌 
   timestamps: true
