@@ -1,33 +1,17 @@
-const db = require('../db');
 
-const _client = db.connect();
+const User = require('./User'); 
 
-// db에서 가져옴 db sequelize method
+module.export = {User};
 
-// callback function
-// (error, result) => {
-//   if (error) {
-//     res.status(500).send('Internal Server Error');
-//   } else {
-//     res.status(200).json(result);
-//   }
-// }
-
-async function getChatsCollection() {
-  const client = await _client;
   // console.log(client);
-  return client.db("user").collection("users");
-}
-
-
+//   return client.db("user").collection("users");
+// }
 
 module.exports = {
   users: {
     get: async (req, res) => {
       const usersCollection = await getChatsCollection();
-
       await usersCollection.deleteMany({});
-
       await usersCollection.insertMany([
         {
           name: 'a',
@@ -53,15 +37,14 @@ module.exports = {
             createdAt: 1
           }
         })
-
         const users = await userCursor.toArray();
         // console.log(cursor)
 
-        res.status(200).json(users);
+        return users;
       } catch (err) {
-        res.status(500).send('Internal Server Error');
+        return null;
       }
-  
+
       // db.query(queryString, (error, result) => {
       // return callback(error, result);
       // });
@@ -77,9 +60,7 @@ module.exports = {
   //     INNER JOIN order_items ON (order_items.item_id = items.id)
   //     INNER JOIN orders ON (orders.id = order_items.order_id)
   //     WHERE (orders.user_id = ?)`;
-
   //     const params = [userId];
-
   //     db.query(queryString, params, (error, result) => {
   //       callback(error, result);
   //     });
@@ -88,7 +69,6 @@ module.exports = {
   //     // TODO: 해당 유저의 주문 요청을 데이터베이스에 생성하는 함수를 작성하세요
   //     const queryString = `INSERT INTO orders (user_id, total_price) VALUES (?, ?)`;
   //     const params = [userId, totalPrice];
-
   //     db.query(queryString, params, (error, result) => {
   //       if (result) {
   //         const queryString = `INSERT INTO order_items (order_id, item_id, order_quantity) VALUES ?;`;
@@ -97,7 +77,6 @@ module.exports = {
   //           order.itemId,
   //           order.quantity,
   //         ]);
-
   //         return db.query(queryString, [params], (error, result) => {
   //           callback(error, result);
   //         });

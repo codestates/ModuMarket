@@ -1,11 +1,17 @@
-const { MongoClient } = require("mongodb");
-require("dotenv/config");
+const mongoose = require('mongoose');
+require("dotenv").config({path: ".env"});
 
-const uri = `mongodb://root:${process.env.DATABASE_PASSWORD}@cluster0-shard-00-00.2yhrr.mongodb.net:27017,cluster0-shard-00-01.2yhrr.mongodb.net:27017,cluster0-shard-00-02.2yhrr.mongodb.net:27017/myFirstDatabase?ssl=true&replicaSet=atlas-14gwcx-shard-0&authSource=admin&retryWrites=true&w=majority`;
-const client = new MongoClient(uri, {
-  // @ts-ignore
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
 
-module.exports = client
+module.exports = () => {
+  function connect() {
+    mongoose.connect(process.env.MONGOB_URL, function(err) {
+        if (err) {
+          console.error('mongodb connection error', err);
+        }
+        console.log('mongodb connected');
+      });
+  }
+  connect();
+  mongoose.connection.on('disconnected', connect);
+  //require('./user.js'); // user.js는 나중에 만듭니다.
+};
