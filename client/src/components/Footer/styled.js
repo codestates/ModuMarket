@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 
 export const FooterContainer = styled.footer `
@@ -19,7 +19,9 @@ export const LogoContainer = styled.div `
         width: auto;
         height: 2rem;
     }
-
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 700;
 `
 export const TeamContainer = styled.div`
     display: flex;
@@ -42,7 +44,9 @@ export const ProfileContainer = styled.div `
     width: 4rem;
     height: 4rem;
     }
-    
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600;
 `
 
 export const ProfilePhoto = styled.div`
@@ -56,7 +60,7 @@ export const ProfileInfo = styled.div`
     flex-direction: column;
     align-items: flex-start;
     justify-content : center;
-
+    
     & > p {
         margin: 0;
     }
@@ -67,7 +71,7 @@ export const ProfileInfo = styled.div`
     }
 
     & > span:last-child {
-        font-size: 0.7rem;
+        font-size: 0.8rem;
         margin-left: 0.5rem;
     }
 `
@@ -84,4 +88,7 @@ export const GithubIcon = styled.div`
         width : 2.5rem;
         height : 2.5rem;
     }
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 700;
 `
