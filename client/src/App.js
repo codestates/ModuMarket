@@ -10,7 +10,10 @@ import MainPage from './pages/MainPage/MainPage'
 import Signup from './components/Modals/Signup/Signup'
 import Login from './components/Modals/Login/Login'
 import BoardPage from './pages/BoardPage/BoardPage'
+import Footer from './components/Footer/Footer';
 import './App.css';
+
+
 
 function App() {
   return (
@@ -22,8 +25,9 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
       </Routes>
-
+    <Footer/>
     </>
+    
   );
 }
 
