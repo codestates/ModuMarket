@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 export const NavLink = styled(Link)`
   text-decoration: none;
   color: black;
+
 `;
 
 export const NavContainer = styled.div`
@@ -13,10 +14,11 @@ export const NavContainer = styled.div`
     align-items: center;
     justify-content: space-between;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
-    @import url('https://fonts.googleapis.com/css2?family=Kanit&display=swap');
-    font-family: 'Kanit';
-    font-weight: 700;
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 900;
     font-size: 2rem;
+    
 `;
 export const NavBoard = styled.div`
     display: flex;
@@ -27,6 +29,7 @@ export const NavBoard = styled.div`
     font-size: 0.5em;
     font-weight: bold;
     padding: 10px;
+    padding-left: 0.5rem;
 `
 export const NavButtons = styled.div`
     display: flex;
@@ -46,15 +49,15 @@ export const NavButton = styled.button`
     /* padding: 0.8rem 2rem; */
     margin-left: 0.5rem;
     cursor: pointer;  
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 700;
     line-height: 1.4;
     color: #858585;
     background: #fff;
-    border-radius: 16px;
-    border: 2px solid #ADADAD;
+    border-radius: 4px;
+    border: 1px solid #ADADAD;
     max-width:100px;
-    max-height:50px;
+    max-height:40px;
     transition: all 0.3s;
     &:hover {
         color: #fff;

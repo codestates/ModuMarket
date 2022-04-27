@@ -23,7 +23,7 @@ function Header({ }) {
                             <NavButton>회원가입</NavButton>
                         </NavLink>
                         <NavLink to="/login">
-                            <NavButton>로그인</NavButton>
+                            <NavButton>Login</NavButton>
                         </NavLink>
                     </NavButtons>
                 </>
