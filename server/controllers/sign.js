@@ -9,9 +9,12 @@ module.exports = {
     let {name, email, password, age} = req.body;
 
     // 빈값이 오면 팅겨내기
-    if (!name || !email || !password || !passwordCheck || !age || !area_name) {
+    if (!name || !email || !password || !age || !user_location) {
       return res.json({message: "빠진 정보가 있습니다"});
     }
+
+    // // 비밀번호가 같지 않으면 팅겨내기
+    // if (password !== passwordCheck) return res.json({message: "비밀번호가 같지 않습니다"});
 
     // 이메일 검증
     const sameEmailUser = await User.findOne({ email: email });
@@ -112,6 +115,7 @@ module.exports = {
 
   out: async (req, res) => {
     // 리프레시 토큰을 null로 주고 accessToken도 비워준다.
+
     // delete user.refreshToken; // null값으로 수정
     const result = await User.updateOne({email: req.body.email},{$set: {refreshToken: null}})
     res

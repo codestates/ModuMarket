@@ -18,7 +18,3 @@ const userSchema = new mongoose.Schema({
 
 //스키마 등록 
 module.exports = mongoose.model('User', userSchema);
-
-
-
-
