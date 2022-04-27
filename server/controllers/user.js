@@ -5,6 +5,7 @@ const Application = require('../models/Application');
 
 module.exports = {
     mypage: async (req, res) => {
+
     // accessToken으로 유저정보 가져오기  || accessToken이 만료돼고 refreshToken
       if (!req.headers.authorization) {
         return res.status(401).json({data: null, message: 'invalid access token'})
