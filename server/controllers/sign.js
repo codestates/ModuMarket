@@ -1,22 +1,20 @@
 const User = require('../models/User');
 const bcrypt = require("bcrypt");
-// const cookieParser = require("cookie-parser");
 const jwt = require('jsonwebtoken');
-const user = require('./user');
 const saltRounds = 10;
 
 module.exports = {
   up: async (req, res) => {
 
-    let {name, email, password, passwordCheck, age, user_location} = req.body;
+    let {name, email, password, age, user_location} = req.body;
 
     // 빈값이 오면 팅겨내기
-    if (!name || !email || !password || !passwordCheck || !age || !user_location) {
+    if (!name || !email || !password || !age || !user_location) {
       return res.json({message: "정보를 입력하세요"});
     }
 
-    // 비밀번호가 같지 않으면 팅겨내기
-    if (password !== passwordCheck) return res.json({ message: "비밀번호가 같지 않습니다"});
+    // // 비밀번호가 같지 않으면 팅겨내기
+    // if (password !== passwordCheck) return res.json({message: "비밀번호가 같지 않습니다"});
 
     // 이메일 검증
     const sameEmailUser = await User.findOne({ email: email });
@@ -57,34 +55,27 @@ module.exports = {
     });
   },
 
-  in: (req, res) => {
+  in: async (req, res) => {
     // 로그인할때 이메일, 비밀번호로 회원인지 조회하기 
-    User.find({email: req.body.email},(err, data) => {
+    // console.log(User.find({}, {
+    //   $set: age
+    // }))
+    User.findOne({email: req.body.email},(err, data) => {
+      console.log(data)
       if(err) {
         console.log('err !!!!')
-        // res.end();
         return res.status(500).json({ error: "서버 오류" });
       }
 
-      if (!data[0]) {
+      if (!data) {
         return res.status(404).json({message: "회원을 찾을 수 없습니다."});
       }
 
-      // if(data[0]){ // 아이디가 일치할때
-      //   if(data[0].password === req.body.password){ //비밀번호 확인
-      //     console.log("로그인성공")
-      //   }else {
-      //     console.log("비밀번호 확인해주세요")
-      //   }
-      // }else { // 아이디가 일치하지않을때
-      //   console.log('아이디를 확인해주세요')
-      // }
-
       // console.log(req.body.password)
       // console.log(data.password)
-      if (data[0]) {
+      if (data) {
         const checkPW = () => {
-          bcrypt.compare(req.body.password, data[0].password, (error, isMatch) => {
+          bcrypt.compare(req.body.password, data.password, async (error, isMatch) => {
             // console.log(error)
             // console.log(isMatch)
             if (error) {
@@ -93,22 +84,25 @@ module.exports = {
             if (isMatch) {
               // 비밀번호가 맞으면 token을 생성해야 합니다.
               // secret 토큰 값은 특정 유저를 감별하는데 사용합니다.
-              // console.log(data[0]);
-              // delete data[0].password
-              // console.log(data[0]);
+              // console.log(data);
+              // delete data.password
+              // console.log(data);
 
-  
               // acessToken 생성 30s 유효
-              const accessToken = jwt.sign(JSON.parse(JSON.stringify(data[0])), process.env.ACCESS_SECRET, {expiresIn: '2h'});
+              const accessToken = jwt.sign(JSON.parse(JSON.stringify(data)), process.env.ACCESS_SECRET, {expiresIn: '2h'});
               // refreshToken 생성 2h 유효
-              const refreshToken = jwt.sign(JSON.parse(JSON.stringify(data[0])), process.env.REFRESH_SECRET, {expiresIn: '14d'});
+              const refreshToken = jwt.sign(JSON.parse(JSON.stringify(data)), process.env.REFRESH_SECRET, {expiresIn: '14d'});
 
               // 해당 유저에게 token값 할당 후 저장
-              data[0].refreshToken = refreshToken;
+              
+              await User.updateOne({email: data.email}, {
+                $set: {refreshToken: null}
+              })
+              data.refreshToken = refreshToken;
               // console.log(data[0])
-              data[0].save((error, data) => {
+              data.save((error, data) => {
                 if (error) {
-                  return res.status(400).json({ error: "something wrong" });
+                  return res.status(500).json({ error: "something wrong" });
                 }
   
                 // DB에 token 저장한 후에는 cookie에 토큰을 저장하여 이용자를 식별합니다.
@@ -130,10 +124,13 @@ module.exports = {
     })
   },
 
-  out: (req, res) => {
+  out: async (req, res) => {
     // 리프레시 토큰을 null로 주고 accessToken도 비워준다.
-    delete user.refreshToken;
+    // console.log(req.body.email)
+    await User.updateOne({email: req.body.email}, {
+      $set: {refreshToken: null}
+    })
 
-    res.cookie('refreshToken',null,{ httpOnly: true}).send({accessToken: null, message: "로그아웃이 완료되었습니다."})
+    res.cookie('refreshToken', null,{ httpOnly: true}).send({accessToken: null, message: "로그아웃이 완료되었습니다."})
   },
 }
