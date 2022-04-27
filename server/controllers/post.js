@@ -1,6 +1,8 @@
 const User = require('../models/User');
 const Post = require('../models/Post');
 const Application = require('../models/Application');
+const jwt = require('jsonwebtoken');
+
 
 module.exports = {
   postList: async(req, res) => {
@@ -176,7 +178,7 @@ module.exports = {
         await Post.findByIdAndUpdate(req.params.id, {$inc: {member_num: 1}}, 
           {new: true}).exec()
   
-        const applicationResult = await Application.findOneAndUpdate({
+        await Application.findOneAndUpdate({
           post_id: req.params.id,
           user_id: _id
         },{isapplied : true})
@@ -186,7 +188,7 @@ module.exports = {
         await Post.findByIdAndUpdate(req.params.id, {$inc: {member_num: 1}}, 
           {new: true}).exec()
   
-        const newApplication = new Application();
+        const newApplication = new Application(); 
         newApplication.post_id = req.params.id
         newApplication.user_id = _id
         res.status(200).json({data : null, message: "참여 신청이 완료되었습니다"});
@@ -207,7 +209,7 @@ module.exports = {
           await Post.findByIdAndUpdate(req.params.id, {$inc: {member_num: 1}}, 
             {new: true}).exec()
     
-          const applicationResult = await Application.findOneAndUpdate({
+          await Application.findOneAndUpdate({
             post_id: req.params.id,
             user_id: _id
           },{isapplied : true})
@@ -220,7 +222,15 @@ module.exports = {
           const newApplication = new Application();
           newApplication.post_id = req.params.id
           newApplication.user_id = _id
-          res.status(200).json({data : {accessToken}, message: "참여 신청이 완료되었습니다"});
+
+          newApplication.save()
+          .then(() => {
+            console.log('성공')
+            res.status(200).json({data : {accessToken}, message: "참여 신청이 완료되었습니다"});
+          })
+          .catch((err) => { 
+            console.log(err)
+          })
         }
       }
     }
@@ -264,6 +274,7 @@ module.exports = {
           const newApplication = new Application();
           newApplication.post_id = req.params.id
           newApplication.user_id = _id
+          newApplication.save()
           res
           .cookie("refreshToken", refreshToken, {
             maxAge: 1000 * 60 * 60 * 24 * 14, // 쿠키 유효시간: 14일
