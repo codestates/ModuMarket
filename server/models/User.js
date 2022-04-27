@@ -7,7 +7,6 @@ const userSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true, trim: true },
     age: {type: Number, required: true},
-    user_location: {type: [Number], required: true},
     area_name: { type: String },
     user_image: { type: String, data: Buffer },
     refreshToken: { type: String }

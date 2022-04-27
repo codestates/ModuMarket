@@ -42,8 +42,8 @@ module.exports = {
     if (!accTokenData && refTokenData) {
       const { emaildata } = refTokenData
       const result =  await User.findOne({ email: emaildata }).exec();
-      const {_id, name, email, age, area_name, user_location, user_image} = result
-      const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, age, area_name, user_location, user_image})), process.env.ACCESS_SECRET);
+      const {_id, name, email, password, age, area_name} = result
+      const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
       
       const newPost = new Post();
       newPost.userId = req.body.userId;
@@ -68,8 +68,8 @@ module.exports = {
     if (accTokenData && !refTokenData) {
       const { emaildata } = accTokenData
       const result =  await User.findOne({ email: emaildata }).exec();
-      const {_id, name, email, age, area_name, user_location, user_image} = result
-      const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, age, area_name, user_location, user_image})), process.env.ACCESS_SECRET);
+      const {_id, name, email, password, age, area_name} = result
+      const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), process.env.REFRESH_SECRET, {expiresIn: '14d'});
       
       await User.findByIdAndUpdate(_id, {refreshToken})
 
@@ -119,8 +119,8 @@ module.exports = {
     if (!accTokenData && refTokenData) {
       const { emaildata } = refTokenData
       const result =  await User.findOne({ email: emaildata }).exec();
-      const {_id, name, email, age, area_name, user_location, user_image} = result
-      const accTokenData = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, age, area_name, user_location, user_image})), process.env.ACCESS_SECRET);
+      const {_id, name, email, password, age, area_name} = result
+      const accTokenData = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
       if(refTokenData){
         const {_id, category, area_name, title, post_content, 
           image, post_location, isvalid, endtime} = req.body
@@ -133,8 +133,8 @@ module.exports = {
     if (accTokenData && !refTokenData) {
       const { emaildata } = accTokenData
       const result =  await User.findOne({ email: emaildata }).exec();
-      const {_id, name, email, age, area_name, user_location, user_image} = result
-      const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, age, area_name, user_location, user_image})), process.env.ACCESS_SECRET);
+      const {_id, name, email, password, age, area_name} = result
+      const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), process.env.REFRESH_SECRET, {expiresIn: '14d'});
       
       await User.findByIdAndUpdate(_id, {refreshToken})
 
@@ -196,8 +196,8 @@ module.exports = {
       const { _id } = refTokenData 
       const result =  await User.findOne({ _id: _id }).exec();
       if(refTokenData){
-        const {_id, name, email, age, area_name, user_location, user_image} = result
-        const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, age, area_name, user_location, user_image})), process.env.ACCESS_SECRET);
+        const {_id, name, email, password, age, area_name} = result
+        const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
       
         const applicationCollection = await Application.findOne({post_id:req.params.id, user_id:_id}).exec()
         if(applicationCollection.isapplied === true){ //이미 참여이므로 참여하기 눌러도 소용없게 . 
@@ -228,8 +228,8 @@ module.exports = {
       const { _id } = accTokenData 
       const result =  await User.findOne({ _id: _id }).exec();
       if(accTokenData){
-        const {_id, name, email, age, area_name, user_location, user_image} = result
-        const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, age, area_name, user_location, user_image})), process.env.ACCESS_SECRET);
+        const {_id, name, email, password, age, area_name} = result
+        const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), process.env.REFRESH_SECRET, {expiresIn: '14d'});
         
         await User.findByIdAndUpdate(_id, {refreshToken})
       
@@ -308,8 +308,8 @@ module.exports = {
       const { _id } = refTokenData 
       const result =  await User.findOne({ _id: _id }).exec();
       if(refTokenData){
-        const {_id, name, email, age, area_name, user_location, user_image} = result
-        const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, age, area_name, user_location, user_image})), process.env.ACCESS_SECRET);
+        const {_id, name, email, password, age, area_name} = result
+        const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
       
         const applicationCollection = await Application.findOne({post_id:req.params.id, user_id:_id}).exec()
         if(applicationCollection.isapplied === false){ //이미 취소상태이므로 취소하기 눌러도 소용없게 . 
@@ -323,7 +323,7 @@ module.exports = {
             post_id: req.params.id,
             user_id: _id
           },{isapplied : false})
-        res.status(200).json({data : null, message: "참여 취소가 완료되었습니다"});
+        res.status(200).json({data : {accessToken}, message: "참여 취소가 완료되었습니다"});
         } 
       }
     }
@@ -331,8 +331,8 @@ module.exports = {
       const { _id } = accTokenData 
       const result =  await User.findOne({ _id: _id }).exec();
       if(accTokenData){
-        const {_id, name, email, age, area_name, user_location, user_image} = result
-        const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, age, area_name, user_location, user_image})), process.env.ACCESS_SECRET);
+        const {_id, name, email, password, age, area_name} = result
+        const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), process.env.REFRESH_SECRET, {expiresIn: '14d'});
         
         await User.findByIdAndUpdate(_id, {refreshToken})
       
@@ -392,8 +392,8 @@ module.exports = {
       const { _id } = refTokenData 
       const result =  await User.findOne({ _id: _id }).exec();
       if(refTokenData){
-        const {_id, name, email, age, area_name, user_location, user_image} = result
-        const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, age, area_name, user_location, user_image})), process.env.ACCESS_SECRET);
+        const {_id, name, email, password, age, area_name} = result
+        const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
         
         const result = await Post.deleteOne({_id : req.params.id, userId: accTokenData._id})
         if(result.deletedCount === 1){
@@ -407,8 +407,8 @@ module.exports = {
       const { _id } = accTokenData 
       const result =  await User.findOne({ _id: _id }).exec();
       if(accTokenData){
-        const {_id, name, email, age, area_name, user_location, user_image} = result
-        const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, age, area_name, user_location, user_image})), process.env.ACCESS_SECRET);
+        const {_id, name, email, password, age, area_name} = result
+        const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), process.env.REFRESH_SECRET, {expiresIn: '14d'});
         
         await User.findByIdAndUpdate(_id, {refreshToken})
         

@@ -17,13 +17,13 @@ module.exports = {
 
       if (accTokenData && refTokenData) {
         const userinfo = await User.findOne({ email: accTokenData.email }).exec();
-        const {_id, name, email, age, area_name, user_location, user_image} = userinfo
-        res.status(200).json({data: {_id, name, email, age, area_name, user_location, user_image}, message: 'ok'})
+        const {_id, name, email, age, area_name} = userinfo
+        res.status(200).json({data: {_id, name, email, age, area_name}, message: 'ok'})
       }
       if (accTokenData && !refTokenData) {
         const userinfo = await User.findOne({ email: accTokenData.email }).exec();
-        const {_id, name, email, age, area_name, user_location, user_image} = userinfo
-        const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, age, area_name, user_location, user_image})), process.env.REFRESH_SECRET, {expiresIn: '14d'});
+        const {_id, name, email, password, age, area_name} = userinfo
+        const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), process.env.REFRESH_SECRET, {expiresIn: '14d'});
 
         userinfo.refreshToken = refreshToken; 
         userinfo.save((err, data) => {
@@ -36,13 +36,13 @@ module.exports = {
             httpOnly: true,
           })
           .status(200)
-          .json({data: {userinfo: {_id, name, email, age, area_name, user_location, user_image}}});
+          .json({data: {userinfo: {_id, name, email, age, area_name}}});
         });
       }
       if (!accTokenData && refTokenData) {
         const userinfo = await User.findOne({ email: refTokenData.email }).exec();
-        const {_id, name, email, age, area_name, user_location, user_image} = userinfo
-        const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, age, area_name, user_location, user_image})), process.env.ACCESS_SECRET);
+        const {_id, name, email, password, age, area_name} = userinfo
+        const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
         return res.send({data: {accessToken: accessToken, userInfo: userinfo}, message: "ok"})
       }
       if (!accTokenData && !refTokenData) {
@@ -79,8 +79,8 @@ module.exports = {
 
           const result =  await User.findOne({ email: email }).exec();
           if(result.password === req.body.password){
-              const {_id, name, email, age, area_name, user_location, user_image} = result
-              const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, age, area_name, user_location, user_image})), process.env.ACCESS_SECRET);
+              const {_id, name, email, password, age, area_name} = result
+              const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
               res.status(200).json({data : {accessToken}, message: '인증이 완료되었습니다'});
           } else {
               res.status(404).json({data : null, message: '비밀번호가 일치하지않습니다'});
@@ -92,9 +92,9 @@ module.exports = {
           const { email } = accTokenData
           const result =  await User.findOne({ email: email }).exec();
           if(result.password === req.body.password){
-              const {_id, name, email, age, area_name, user_location, user_image} = result
+              const {_id, name, email, password, age, area_name} = result
               const refreshToken = jwt.sign(JSON.parse(JSON.stringify({
-                _id, name, email, age, area_name, user_location, user_image
+                _id, name, email, password, age, area_name
                 })), process.env.REFRESH_SECRET, {expiresIn: '14d'});
 
               result.refreshToken = refreshToken; 
@@ -151,5 +151,13 @@ module.exports = {
         if (!accTokenData && !refTokenData) {
             return res.status(404).json({ data: null, message: "access and refresh token has been tempered" })
         }
+    },
+
+    writePost: (req, res) => {
+      res.send('b')
+    },
+
+    participatePost: (req, res) => {
+      res.send('bk')
     }
 };

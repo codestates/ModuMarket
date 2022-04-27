@@ -6,10 +6,10 @@ const saltRounds = 10;
 module.exports = {
   up: async (req, res) => {
 
-    let {name, email, password, age, user_location} = req.body;
+    let {name, email, password, age} = req.body;
 
     // 빈값이 오면 팅겨내기
-    if (!name || !email || !password || !passwordCheck || !age || !user_location) {
+    if (!name || !email || !password || !passwordCheck || !age || !area_name) {
       return res.json({message: "빠진 정보가 있습니다"});
     }
 
@@ -38,7 +38,7 @@ module.exports = {
         newUser.email = email;
         newUser.password = password;
         newUser.age = age;
-        newUser.user_location = user_location;
+ 
       
         // console.log(User)
         newUser.save()
@@ -70,12 +70,12 @@ module.exports = {
             // 비밀번호가 일치할 경우 
             if (isMatch) { 
               // 비밀번호가 맞으면 token을 생성해야함
-              const {_id, name, email, age, area_name, user_location, user_image} = data;
+              const {_id, name, email, password, age, area_name} = data;
               // acessToken 생성 2h 유효
-              const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, age, area_name, user_location, user_image})), 
+              const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), 
                                   process.env.ACCESS_SECRET, {expiresIn: '2h'});
               // refreshToken 생성 14d 유효
-              const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, age, area_name, user_location, user_image})), 
+              const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), 
                                   process.env.REFRESH_SECRET, {expiresIn: '14d'});
 
               // 해당 유저정보에 refreshToken값 저장
