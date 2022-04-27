@@ -20,32 +20,27 @@ module.exports = {
       if (accTokenData && refTokenData) {
         const userinfo = await User.findOne({ email: accTokenData.email }).exec();
         const {_id, name, email, age, area_name} = userinfo
-        res.status(200).json({data: {_id, name, email, age, area_name}, message: 'ok'})
+        res.status(200).json({data: {userInfo :{_id, name, email, age, area_name}}, message: 'ok'})
       }
       if (accTokenData && !refTokenData) {
         const userinfo = await User.findOne({ email: accTokenData.email }).exec();
         const {_id, name, email, password, age, area_name} = userinfo
         const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), process.env.REFRESH_SECRET, {expiresIn: '14d'});
 
-        userinfo.refreshToken = refreshToken; 
-        userinfo.save((err, data) => {
-        if (err) {
-          return res.status(500).json({ message: "서버 오류" });
-        }
-        return res
+          res
           .cookie("refreshToken", refreshToken, {
             maxAge: 1000 * 60 * 60 * 24 * 14, // 쿠키 유효시간: 14일
             httpOnly: true,
           })
           .status(200)
-          .json({data: {userinfo: {_id, name, email, age, area_name}}});
-        });
+          .json({data: {userinfo: {_id, name, email, age, area_name}}, message: 'ok'});
+
       }
       if (!accTokenData && refTokenData) {
         const userinfo = await User.findOne({ email: refTokenData.email }).exec();
         const {_id, name, email, password, age, area_name} = userinfo
         const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
-        return res.send({data: {accessToken: accessToken, userInfo: userinfo}, message: "ok"})
+        return res.send({data: {accessToken, userInfo: {_id, name, email, age, area_name}}, message: "ok"})
       }
       if (!accTokenData && !refTokenData) {
         res.status(404).send({ "data": null, "message": "access and refresh token has been tempered" })
@@ -99,19 +94,14 @@ module.exports = {
                 _id, name, email, password, age, area_name
                 })), process.env.REFRESH_SECRET, {expiresIn: '14d'});
 
-              result.refreshToken = refreshToken; 
-              result.save((err, data) => {
-              if (err) {
-                return res.status(500).json({ message: "서버 오류" });
-              }
-              return res
-                .cookie("refreshToken", refreshToken, {
-                  maxAge: 1000 * 60 * 60 * 24 * 14, // 쿠키 유효시간: 14일
-                  httpOnly: true,
-                })
-                .status(200)
-                .json({ data: null, message: "로그인에 성공하였습니다."});
-              });
+              res
+              .cookie("refreshToken", refreshToken, {
+                maxAge: 1000 * 60 * 60 * 24 * 14, // 쿠키 유효시간: 14일
+                httpOnly: true,
+              })
+              .status(200)
+              .json({ data: null, message: "로그인에 성공하였습니다."});
+
           } else {
               res.status(404).json({data : null, message: '비밀번호가 일치하지않습니다'});
           }
