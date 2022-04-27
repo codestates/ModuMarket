@@ -7,12 +7,16 @@ const fs = require('fs');
 const https = require('https');
 const PORT = 4000;
 const db = require('./db/index'); 
-const cookieParser = require("cookie-parser"); 
+const cookieParser = require("cookie-parser");
+const bodyParser = require("body-parser");
 
 app.use(
   morgan('      :method :url :status :res[content-length] - :response-time ms')
 );
 app.use(cookieParser());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use('/images', express.static('images'))
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());

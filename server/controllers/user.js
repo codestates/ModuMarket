@@ -1,7 +1,7 @@
 const User = require('../models/User');
-const Post = require('../models/Post');
 const jwt = require('jsonwebtoken');
-const Application = require('../models/Application');
+const fs = require('fs');
+const path = require('path')
 
 module.exports = {
     mypage: async (req, res) => {
@@ -20,28 +20,33 @@ module.exports = {
 
       if (accTokenData && refTokenData) {
         const userinfo = await User.findOne({ email: accTokenData.email }).exec();
-        const {_id, name, email, age, area_name} = userinfo
-        res.status(200).json({data: {userInfo :{_id, name, email, age, area_name}}, message: 'ok'})
+        const {_id, name, email, age, area_name, user_location, user_image} = userinfo
+        res.status(200).json({data: {_id, name, email, age, area_name, user_location, user_image}, message: 'ok'})
       }
       if (accTokenData && !refTokenData) {
         const userinfo = await User.findOne({ email: accTokenData.email }).exec();
-        const {_id, name, email, password, age, area_name} = userinfo
-        const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), process.env.REFRESH_SECRET, {expiresIn: '14d'});
+        const {_id, name, email, age, area_name, user_location, user_image} = userinfo
+        const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, age, area_name, user_location, user_image})), process.env.REFRESH_SECRET, {expiresIn: '14d'});
 
-          res
+        userinfo.refreshToken = refreshToken; 
+        userinfo.save((err, data) => {
+        if (err) {
+          return res.status(500).json({ message: "서버 오류" });
+        }
+        return res
           .cookie("refreshToken", refreshToken, {
             maxAge: 1000 * 60 * 60 * 24 * 14, // 쿠키 유효시간: 14일
             httpOnly: true,
           })
           .status(200)
-          .json({data: {userinfo: {_id, name, email, age, area_name}}, message: 'ok'});
-
+          .json({data: {userinfo: {_id, name, email, age, area_name, user_location, user_image}}});
+        });
       }
       if (!accTokenData && refTokenData) {
         const userinfo = await User.findOne({ email: refTokenData.email }).exec();
-        const {_id, name, email, password, age, area_name} = userinfo
-        const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
-        return res.send({data: {accessToken, userInfo: {_id, name, email, age, area_name}}, message: "ok"})
+        const {_id, name, email, age, area_name, user_location, user_image} = userinfo
+        const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, age, area_name, user_location, user_image})), process.env.ACCESS_SECRET);
+        return res.send({data: {accessToken: accessToken, userInfo: userinfo}, message: "ok"})
       }
       if (!accTokenData && !refTokenData) {
         res.status(404).send({ "data": null, "message": "access and refresh token has been tempered" })
@@ -77,8 +82,8 @@ module.exports = {
 
           const result =  await User.findOne({ email: email }).exec();
           if(result.password === req.body.password){
-              const {_id, name, email, password, age, area_name} = result
-              const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
+              const {_id, name, email, age, area_name, user_location, user_image} = result
+              const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, age, area_name, user_location, user_image})), process.env.ACCESS_SECRET);
               res.status(200).json({data : {accessToken}, message: '인증이 완료되었습니다'});
           } else {
               res.status(404).json({data : null, message: '비밀번호가 일치하지않습니다'});
@@ -90,19 +95,24 @@ module.exports = {
           const { email } = accTokenData
           const result =  await User.findOne({ email: email }).exec();
           if(result.password === req.body.password){
-              const {_id, name, email, password, age, area_name} = result
+              const {_id, name, email, age, area_name, user_location, user_image} = result
               const refreshToken = jwt.sign(JSON.parse(JSON.stringify({
-                _id, name, email, password, age, area_name
+                _id, name, email, age, area_name, user_location, user_image
                 })), process.env.REFRESH_SECRET, {expiresIn: '14d'});
 
-              res
-              .cookie("refreshToken", refreshToken, {
-                maxAge: 1000 * 60 * 60 * 24 * 14, // 쿠키 유효시간: 14일
-                httpOnly: true,
-              })
-              .status(200)
-              .json({ data: null, message: "로그인에 성공하였습니다."});
-
+              result.refreshToken = refreshToken; 
+              result.save((err, data) => {
+              if (err) {
+                return res.status(500).json({ message: "서버 오류" });
+              }
+              return res
+                .cookie("refreshToken", refreshToken, {
+                  maxAge: 1000 * 60 * 60 * 24 * 14, // 쿠키 유효시간: 14일
+                  httpOnly: true,
+                })
+                .status(200)
+                .json({ data: {accessToken}, message: "로그인에 성공하였습니다."});
+              });
           } else {
               res.status(404).json({data : null, message: '비밀번호가 일치하지않습니다'});
           }
@@ -115,13 +125,41 @@ module.exports = {
     },
 
     changeInfo: (req, res) => {
-      // 사는곳 수정은 인증으로 대체 .. 
-        res.send('b')
+      // 사는곳 수정은 인증으로 대체 ..
+
+      res.send('b')
+    },
+
+    uploadImage: async (req, res) => {
+      console.log(req.file);
+      console.log(req.params)
+
+      await User.updateOne({email: req.params.email},{$set: {user_image: req.file.path}})
+      
+      const result =  await User.findOne({ email: req.body.email }).exec();
+
+      res.send(result)
+      
+    // uploadImage.save()
+    // .then(() => {
+    //   return res.status(200).json({data: uploadImage, message: '이미지가 정상적으로 등록되었습니다.'});
+    // })
+    // .catch((err) => { //프론트에서 타입을 다 맞게 보내준다면, 이메일 중복을 여기서 잡아낼 수 있음
+    //   throw new Error(err)
+    // })
+
+    },
+
+    getImage: async (req, res) => {
+      console.log(req.params)
+      const result = await User.findOne({email: req.params.email}).select("user_image").exec();
+
+      res.send(result);
     },
 
     deleteInfo: async (req, res) => {
-        const token = req.headers.authorization.split(' ')[1]; 
-        const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET);
+        const token = req.headers.authorization.split(' ')[1]; //Bearer
+        const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET); // 토큰을 해독해 유저 데이터를 리턴
         const refTokenData = jwt.verify(req.cookies.refreshToken, process.env.REFRESH_SECRET);
         if(accTokenData){
           const { email } = accTokenData
@@ -146,137 +184,11 @@ module.exports = {
         }
     },
 
-    writePost: async(req, res) => { //내가 작성한 공고글
-      const token = req.headers.authorization.split(' ')[1]; 
-      const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET);
-      const refTokenData = jwt.verify(req.cookies.refreshToken, process.env.REFRESH_SECRET);
-      
-      // 토큰에서 유저 아이디 겟잇해서
-      // post 컬렉션에서 userId로 필터링해서 가져오기 
-      if (accTokenData && refTokenData) {
-        const { _id } = accTokenData
-        try {
-          const result =  await Post.find({ userId: _id }).exec();
-          if(result.length > 0){ //내가 작성한 공고글이 있을때
-              res.status(200).json({data : result, message: 'list fetch success'});
-          } else { //내가 작성한 공고글이 없을때
-              res.status(204).json({data : null, message: 'it does not exist'});
-          }
-        }
-        catch (err) {
-              console.error(err);
-              // res.status(501).json({data : null, message: 'server error'});
-        }
-      }
-      if (!accTokenData && refTokenData) {
-        const { email } = refTokenData
-        const userdata = await User.findOne({email})
-        if(refTokenData){
-          const {_id, name, email, password, age, area_name} = userdata
-          const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
-          
-          // 포스트 컬렉션에서 내가 작성한 공고글이 있는지 조회
-          const result =  await Post.find({ userId: _id }).exec();
-          if(result.length > 0){ //내가 작성한 공고글이 있을때
-              res.status(200).json({data : {result, accessToken}, message: 'list fetch success'});
-          } else { //내가 작성한 공고글이 없을때
-              res.status(204).json({data : {accessToken}, message: 'it does not exist'});
-          }
-        }
-      }
-      if (accTokenData && !refTokenData) {
-        const { email } = accTokenData
-        const userdata = await User.findOne({email})
-        if(accTokenData){
-          const {_id, name, email, password, age, area_name} = userdata
-          const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), process.env.REFRESH_SECRET, {expiresIn: '14d'});
-          
-          // 포스트 컬렉션에서 내가 작성한 공고글이 있는지 조회
-          const result =  await Post.find({ userId: _id }).exec();
-          if(result.length > 0){ //내가 작성한 공고글이 있을때
-              res.status(200).json({data : result, message: 'list fetch success'});
-          } else { //내가 작성한 공고글이 없을때
-              res
-              .cookie("refreshToken", refreshToken, {
-                maxAge: 1000 * 60 * 60 * 24 * 14, // 쿠키 유효시간: 14일
-                httpOnly: true,
-              })
-              .status(204).json({data : null, message: 'it does not exist'});
-          }
-        }
-      }      
-      if (!accTokenData && !refTokenData) {
-        return res.status(404).json({ data: null, message: "access and refresh token has been tempered" })
-      }
+    writePost: (req, res) => {
+      res.send('b')
     },
 
-    participatePost: async(req, res) => { //내가 참가한 공고글 
-      const token = req.headers.authorization.split(' ')[1]; 
-      const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET);
-      const refTokenData = jwt.verify(req.cookies.refreshToken, process.env.REFRESH_SECRET);
-
-      // 토큰에서 유저 아이디 겟잇해서
-      // application컬렉션에서 userId가 일치하고 isapplied상태가 true인것 필터링해서 해당 글의 post_id만 매핑하여 전달하기
-      if (accTokenData && refTokenData) {
-        const { _id }  = accTokenData
-        const result =  await Application.find({ userId: _id , isapplied: true }).populate('post_id').exec(); 
-        if(result.length > 0){
-          const postresult = result.map((data) => {
-            return data.post_id;
-          })
-          res.status(200).json({data : postresult, message: 'list fetch success'});
-        }else {
-          res.status(204).json({data : null, message: 'it does not exist'});
-        }
-      }
-      if (!accTokenData && refTokenData) {
-        const { email }  = refTokenData
-        const userdata = await User.findOne({email})
-        if(refTokenData){
-          const {_id, name, email, password, age, area_name} = userdata
-          const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
-          
-          const result =  await Application.find({ userId: _id , isapplied: true }).populate('post_id').exec(); 
-          if(result.length > 0){
-            const postresult = result.map((data) => {
-              return data.post_id;
-            })
-            res.status(200).json({data : {accessToken,postresult}, message: 'list fetch success'});
-          }else {
-            res.status(204).json({data : {accessToken}, message: 'it does not exist'});
-          }
-        }
-      }
-      if (accTokenData && !refTokenData) {
-        const { email }  = accTokenData
-        const userdata = await User.findOne({email})
-        if(accTokenData){
-          const {_id, name, email, password, age, area_name} = userdata
-          const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
-          
-          const result =  await Application.find({ userId: _id , isapplied: true }).populate('post_id').exec(); 
-          if(result.length > 0){
-            const postresult = result.map((data) => {
-              return data.post_id;
-            })
-            res.status(200)
-            .cookie("refreshToken", refreshToken, {
-              maxAge: 1000 * 60 * 60 * 24 * 14, // 쿠키 유효시간: 14일
-              httpOnly: true,
-            })
-            .json({data : postresult, message: 'list fetch success'});
-          }else {
-            res.status(204)
-            .cookie("refreshToken", refreshToken, {
-              maxAge: 1000 * 60 * 60 * 24 * 14, // 쿠키 유효시간: 14일
-              httpOnly: true,
-            })
-            .json({data : null, message: 'it does not exist'});
-          }
-        }
-      }
-      if (!accTokenData && !refTokenData) {
-        return res.status(404).json({ data: null, message: "access and refresh token has been tempered" })
-      }
+    participatePost: (req, res) => {
+      res.send('bk')
     }
-};
+}; 
