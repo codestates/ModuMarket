@@ -6,8 +6,45 @@ const jwt = require('jsonwebtoken');
 
 module.exports = {
   postList: async(req, res) => {
+    const token = req.headers.authorization.split(' ')[1]; 
+    const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET); 
+    const refTokenData = jwt.verify(req.cookies.refreshToken, process.env.REFRESH_SECRET);
+    // 토큰있는지 확인해서 없으면 다 보여주고
+    // 토큰 있으면 토큰안에 있는 area_name으로 필터링해서 보여주기 
+    if (accTokenData && refTokenData) {
+      const { area_name } = accTokenData;
+      const result = await Post.find({area_name})
+      res.status(200).json({data : result});
+    }
+    if (!accTokenData && refTokenData) {
+      const { email } = refTokenData;
+      const userResult =  await User.findOne({ email }).exec();
+      if(refTokenData){
+        const {_id, name, email, password, age, area_name} = userResult
+        const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
+        const result = await Post.find({area_name})
+        res.status(200).json({data : {result,accessToken}});
+      }
+    }    
+    if (accTokenData && !refTokenData) {
+      const { email } = accTokenData;
+      const userResult =  await User.findOne({ email }).exec();
+      if(accTokenData){
+        const {_id, name, email, password, age, area_name} = userResult
+        const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), process.env.REFRESH_SECRET, {expiresIn: '14d'});
+        const result = await Post.find({area_name})
+        res.status(200)
+        .cookie("refreshToken", refreshToken, {
+          maxAge: 1000 * 60 * 60 * 24 * 14, // 쿠키 유효시간: 14일
+          httpOnly: true,
+        })
+        .json({data : result});
+      }
+    }    
+    if (!accTokenData && !refTokenData) {
       const result = await Post.find({})
       res.status(200).json({data : result});
+    }
   },
 
   postOne: async (req, res) => {
@@ -19,6 +56,7 @@ module.exports = {
     const token = req.headers.authorization.split(' ')[1]; 
     const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET); 
     const refTokenData = jwt.verify(req.cookies.refreshToken, process.env.REFRESH_SECRET);
+    
 
     if (accTokenData && refTokenData) {
       const newPost = new Post();
@@ -159,6 +197,7 @@ module.exports = {
     }
 
   },
+
   applyPost: async(req, res) => {
     const token = req.headers.authorization.split(' ')[1]; 
     const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET); 
