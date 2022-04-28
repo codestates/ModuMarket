@@ -6,10 +6,10 @@ const saltRounds = 10;
 module.exports = {
   up: async (req, res) => {
 
-    let {name, email, password, age} = req.body;
+    let {name, email, password, age, area_name} = req.body;
 
     // 빈값이 오면 팅겨내기
-    if (!name || !email || !password || !age || !user_location) {
+    if (!name || !email || !password || !age || !area_name) {
       return res.json({message: "빠진 정보가 있습니다"});
     }
 
@@ -73,33 +73,25 @@ module.exports = {
             // 비밀번호가 일치할 경우 
             if (isMatch) { 
               // 비밀번호가 맞으면 token을 생성해야함
-              const {_id, name, email, password, age, area_name} = data;
+              const {_id, email, area_name} = data;
               // acessToken 생성 2h 유효
-              const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), 
+              const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), 
                                   process.env.ACCESS_SECRET, {expiresIn: '2h'});
               // refreshToken 생성 14d 유효
-              const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), 
+              const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), 
                                   process.env.REFRESH_SECRET, {expiresIn: '14d'});
 
-              // 해당 유저정보에 refreshToken값 저장
-              data.refreshToken = refreshToken; 
-              data.save((err, data) => {
-                if (err) {
-                  return res.status(500).json({ message: "서버 오류" });
-                }
-  
-                // DB에 token 저장한 후에는 cookie에 토큰을 저장하여 이용자를 식별합니다.
-                return res
-                  .cookie("refreshToken", refreshToken, {
-                    maxAge: 1000 * 60 * 60 * 24 * 14, // 쿠키 유효시간: 14일
-                    httpOnly: true,
-                  })
-                  .status(200)
-                  .json({ data: {accessToken: accessToken}, message: "로그인에 성공하였습니다."});
-              });
+              res
+              .cookie("refreshToken", refreshToken, {
+                maxAge: 1000 * 60 * 60 * 24 * 14, // 쿠키 유효시간: 14일
+                httpOnly: true,
+              })
+              .status(200)
+              .json({ data: {accessToken: accessToken}, message: "로그인에 성공하였습니다."});
+
             } 
             else {
-              return res.status(403).json({message: "비밀번호를 확인해주세요"});
+              return res.status(401).json({message: "비밀번호를 확인해주세요"});
             }
           });
         };

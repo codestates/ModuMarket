@@ -20,8 +20,8 @@ module.exports = {
       const { email } = refTokenData;
       const userResult =  await User.findOne({ email }).exec();
       if(refTokenData){
-        const {_id, name, email, password, age, area_name} = userResult
-        const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
+        const {_id, email, area_name} = userResult
+        const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
         const result = await Post.find({area_name})
         res.status(200).json({data : {result,accessToken}});
       }
@@ -30,8 +30,8 @@ module.exports = {
       const { email } = accTokenData;
       const userResult =  await User.findOne({ email }).exec();
       if(accTokenData){
-        const {_id, name, email, password, age, area_name} = userResult
-        const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), process.env.REFRESH_SECRET, {expiresIn: '14d'});
+        const {_id, email, area_name} = userResult
+        const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.REFRESH_SECRET, {expiresIn: '14d'});
         const result = await Post.find({area_name})
         res.status(200)
         .cookie("refreshToken", refreshToken, {
@@ -64,6 +64,7 @@ module.exports = {
       newPost.category = req.body.category;
       newPost.area_name = req.body.area_name;
       newPost.title = req.body.title;
+      newPost.member_min = req.body.member_min;
       newPost.post_content = req.body.post_content;
       newPost.image = req.body.image;
       newPost.post_location = req.body.post_location;
@@ -82,14 +83,15 @@ module.exports = {
     if (!accTokenData && refTokenData) {
       const { emaildata } = refTokenData
       const result =  await User.findOne({ email: emaildata }).exec();
-      const {_id, name, email, password, age, area_name} = result
-      const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
+      const {_id, email, area_name} = result
+      const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
       
       const newPost = new Post();
       newPost.userId = req.body.userId;
       newPost.category = req.body.category;
       newPost.area_name = req.body.area_name;
       newPost.title = req.body.title;
+      newPost.member_min = req.body.member_min;
       newPost.post_content = req.body.post_content;
       newPost.image = req.body.image;
       newPost.post_location = req.body.post_location;
@@ -108,14 +110,15 @@ module.exports = {
     if (accTokenData && !refTokenData) {
       const { emaildata } = accTokenData
       const result =  await User.findOne({ email: emaildata }).exec();
-      const {_id, name, email, password, age, area_name} = result
-      const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), process.env.REFRESH_SECRET, {expiresIn: '14d'});
+      const {_id, email, area_name} = result
+      const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.REFRESH_SECRET, {expiresIn: '14d'});
       
       const newPost = new Post();
       newPost.userId = req.body.userId;
       newPost.category = req.body.category;
       newPost.area_name = req.body.area_name;
       newPost.title = req.body.title;
+      newPost.member_min = req.body.member_min;
       newPost.post_content = req.body.post_content;
       newPost.image = req.body.image;
       newPost.post_location = req.body.post_location;
@@ -147,45 +150,65 @@ module.exports = {
     const refTokenData = jwt.verify(req.cookies.refreshToken, process.env.REFRESH_SECRET);
 
     if (accTokenData && refTokenData) {
-      const {_id, category, area_name, title, post_content, 
-        image, post_location, isvalid, endtime} = req.body
-      const result = await Post.findOneAndUpdate({_id, category, area_name, title, post_content, 
-        image, post_location, isvalid, endtime},  
-        {new: true}).exec()
-        res.status(200).json({data : result, message: "게시글이 수정되었습니다"});
+      if(req.body.isvalid === true){
+        await Post.findByIdAndUpdate(_id, {$set: {isvalid: true}})
+        res.status(200).json({data : null, message: "모집이 완료되었습니다"});
+      }else {
+        const {_id, category, area_name, title, member_min, post_content, 
+          image, post_location, endtime} = req.body
+        await Post.findByIdAndUpdate(_id, {$set: {category, area_name, title, member_min, post_content, 
+          image, post_location, endtime}},  
+          {new: true}).exec()
+          res.status(200).json({data : null, message: "게시글이 수정되었습니다"});
+      }
     }
     if (!accTokenData && refTokenData) {
       const { emaildata } = refTokenData
       const result =  await User.findOne({ email: emaildata }).exec();
-      const {_id, name, email, password, age, area_name} = result
-      const accTokenData = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
+      const {_id, email, area_name} = result
+      const accTokenData = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
       if(refTokenData){
-        const {_id, category, area_name, title, post_content, 
-          image, post_location, isvalid, endtime} = req.body
-        const result = await Post.findOneAndUpdate({_id, category, area_name, title, post_content, 
-          image, post_location, isvalid, endtime},  
-          {new: true}).exec()
-          res.status(200).json({data : {data: result, accTokenData}, message: "게시글이 수정되었습니다"});
+        if(req.body.isvalid === true){
+          await Post.findByIdAndUpdate(_id, {$set: {isvalid: true}})
+          res.status(200).json({data : {accTokenData}, message: "모집이 완료되었습니다"});
+        }else {
+          const {_id, category, area_name, title, member_min, post_content, 
+            image, post_location, endtime} = req.body
+          await Post.findByIdAndUpdate(_id, {$set: {category, area_name, title, member_min, post_content, 
+            image, post_location, endtime}},  
+            {new: true}).exec()
+            res.status(200).json({data : {data: null, accTokenData}, message: "게시글이 수정되었습니다"});
+        }
       }
     }
     if (accTokenData && !refTokenData) {
       const { emaildata } = accTokenData
       const result =  await User.findOne({ email: emaildata }).exec();
-      const {_id, name, email, password, age, area_name} = result
-      const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), process.env.REFRESH_SECRET, {expiresIn: '14d'});
+      const {_id, email, area_name} = result
+      const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.REFRESH_SECRET, {expiresIn: '14d'});
       
       if(accTokenData){
-        const {_id, category, area_name, title, post_content, 
-          image, post_location, isvalid, endtime} = req.body
-        const result = await Post.findOneAndUpdate({_id, category, area_name, title, post_content, 
-          image, post_location, isvalid, endtime},  
-          {new: true}).exec()
-          res
+        if(req.body.isvalid === true){
+          await Post.findByIdAndUpdate(_id, {$set: {isvalid: true}})
+          res.status(200)
           .cookie("refreshToken", refreshToken, {
             maxAge: 1000 * 60 * 60 * 24 * 14, // 쿠키 유효시간: 14일
             httpOnly: true,
           })
-          .status(200).json({data : result, message: "게시글이 수정되었습니다"});
+          .json({data : null, message: "모집이 완료되었습니다"});
+        }else {
+          const {_id, category, area_name, title, member_min, post_content, 
+            image, post_location, endtime} = req.body
+          await Post.findByIdAndUpdate(_id, {$set: {category, area_name, title, member_min, post_content, 
+            image, post_location, endtime}},  
+            {new: true}).exec()
+            res
+            .cookie("refreshToken", refreshToken, {
+              maxAge: 1000 * 60 * 60 * 24 * 14, // 쿠키 유효시간: 14일
+              httpOnly: true,
+            })
+            .status(200).json({data : null, message: "게시글이 수정되었습니다"});
+        }
       }
     }
     if (!accTokenData && !refTokenData) {
@@ -233,8 +256,8 @@ module.exports = {
       const { _id } = refTokenData 
       const result =  await User.findOne({ _id: _id }).exec();
       if(refTokenData){
-        const {_id, name, email, password, age, area_name} = result
-        const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
+        const {_id, email, area_name} = result
+        const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
       
         const applicationCollection = await Application.findOne({post_id:req.params.id, user_id:_id}).exec()
         if(applicationCollection.isapplied === true){ //이미 참여이므로 참여하기 눌러도 소용없게 . 
@@ -273,8 +296,8 @@ module.exports = {
       const { _id } = accTokenData 
       const result =  await User.findOne({ _id: _id }).exec();
       if(accTokenData){
-        const {_id, name, email, password, age, area_name} = result
-        const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), process.env.REFRESH_SECRET, {expiresIn: '14d'});
+        const {_id, email, area_name} = result
+        const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.REFRESH_SECRET, {expiresIn: '14d'});
       
         const applicationCollection = await Application.findOne({post_id:req.params.id, user_id:_id}).exec()
         if(applicationCollection.isapplied === true){ //이미 참여이므로 참여하기 눌러도 소용없게 . 
@@ -352,8 +375,8 @@ module.exports = {
       const { _id } = refTokenData 
       const result =  await User.findOne({ _id: _id }).exec();
       if(refTokenData){
-        const {_id, name, email, password, age, area_name} = result
-        const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
+        const {_id, email, area_name} = result
+        const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
       
         const applicationCollection = await Application.findOne({post_id:req.params.id, user_id:_id}).exec()
         if(applicationCollection.isapplied === false){ //이미 취소상태이므로 취소하기 눌러도 소용없게 . 
@@ -375,8 +398,8 @@ module.exports = {
       const { _id } = accTokenData 
       const result =  await User.findOne({ _id: _id }).exec();
       if(accTokenData){
-        const {_id, name, email, password, age, area_name} = result
-        const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), process.env.REFRESH_SECRET, {expiresIn: '14d'});
+        const {_id, email, area_name} = result
+        const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.REFRESH_SECRET, {expiresIn: '14d'});
       
         const applicationCollection = await Application.findOne({post_id:req.params.id, user_id:_id}).exec()
         if(applicationCollection.isapplied === false){ //이미 취소상태이므로 취소하기 눌러도 소용없게 . 
@@ -434,8 +457,8 @@ module.exports = {
       const { _id } = refTokenData 
       const result =  await User.findOne({ _id: _id }).exec();
       if(refTokenData){
-        const {_id, name, email, password, age, area_name} = result
-        const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
+        const {_id, email, area_name} = result
+        const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
         
         const result = await Post.deleteOne({_id : req.params.id, userId: accTokenData._id})
         if(result.deletedCount === 1){
@@ -449,8 +472,8 @@ module.exports = {
       const { _id } = accTokenData 
       const userResult =  await User.findOne({ _id: _id }).exec();
       if(accTokenData){
-        const {_id, name, email, password, age, area_name} = userResult
-        const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), process.env.REFRESH_SECRET, {expiresIn: '14d'});
+        const {_id, email, area_name} = userResult
+        const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.REFRESH_SECRET, {expiresIn: '14d'});
         
         const result = await Post.deleteOne({_id : req.params.id, userId: accTokenData._id})
         if(result.deletedCount === 1){

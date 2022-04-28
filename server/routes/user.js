@@ -27,6 +27,9 @@ const upload = multer({
     fileFilter: fileFilter
 });
 
+// 로그인 후 api주소와 동네주소 일치하는지 인증
+router.post('location', controller.user.location);
+
 // 마이페이지 유저정보 가져오기
 router.get('/', controller.user.mypage);
 
