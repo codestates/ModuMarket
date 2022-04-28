@@ -138,7 +138,7 @@ module.exports = {
       if (accTokenData && refTokenData) {
         const { _id } = accTokenData;
         if(req.body.password || req.body.area_name){
-          const result = await User.findOneAndUpdate(_id, {$set: {password: req.body.password, area_name: req.body.area_name}},{new: true})
+          const result = await User.findByIdAndUpdate(_id, {$set: {password: req.body.password, area_name: req.body.area_name}},{new: true})
           if(result){
             res.status(200).json({data : null, message: '회원정보 수정이 완료 되었습니다'});
           }else {
@@ -156,7 +156,7 @@ module.exports = {
           const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
          
           if(req.body.password || req.body.area_name){
-            const result = await User.findOneAndUpdate(_id, {$set: {password: req.body.password, area_name: req.body.area_name}},{new: true})
+            const result = await User.findByIdAndUpdate(_id, {$set: {password: req.body.password, area_name: req.body.area_name}},{new: true})
             if(result){
               res.status(200).json({data : {accessToken}, message: '회원정보 수정이 완료 되었습니다'});
             }else {
@@ -177,7 +177,7 @@ module.exports = {
             })), process.env.REFRESH_SECRET, {expiresIn: '14d'});
          
           if(req.body.password || req.body.area_name){
-            const result = await User.findOneAndUpdate(_id, {$set: {password: req.body.password, area_name: req.body.area_name}},{new: true})
+            const result = await User.findByIdAndUpdate(_id, {$set: {password: req.body.password, area_name: req.body.area_name}},{new: true})
             if(result){
               res.status(200)
               .cookie("refreshToken", refreshToken, {

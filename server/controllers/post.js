@@ -151,13 +151,13 @@ module.exports = {
 
     if (accTokenData && refTokenData) {
       if(req.body.isvalid === true){
-        await Post.findOneAndUpdate(_id, {$set: {isvalid: true}})
+        await Post.findByIdAndUpdate(_id, {$set: {isvalid: true}})
         res.status(200).json({data : null, message: "모집이 완료되었습니다"});
       }else {
         const {_id, category, area_name, title, member_min, post_content, 
           image, post_location, endtime} = req.body
-        await Post.findOneAndUpdate(_id, {category, area_name, title, member_min, post_content, 
-          image, post_location, endtime},  
+        await Post.findByIdAndUpdate(_id, {$set: {category, area_name, title, member_min, post_content, 
+          image, post_location, endtime}},  
           {new: true}).exec()
           res.status(200).json({data : null, message: "게시글이 수정되었습니다"});
       }
@@ -169,13 +169,13 @@ module.exports = {
       const accTokenData = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
       if(refTokenData){
         if(req.body.isvalid === true){
-          await Post.findOneAndUpdate(_id, {$set: {isvalid: true}})
+          await Post.findByIdAndUpdate(_id, {$set: {isvalid: true}})
           res.status(200).json({data : {accTokenData}, message: "모집이 완료되었습니다"});
         }else {
           const {_id, category, area_name, title, member_min, post_content, 
             image, post_location, endtime} = req.body
-          await Post.findOneAndUpdate(_id, {category, area_name, title, member_min, post_content, 
-            image, post_location, endtime},  
+          await Post.findByIdAndUpdate(_id, {$set: {category, area_name, title, member_min, post_content, 
+            image, post_location, endtime}},  
             {new: true}).exec()
             res.status(200).json({data : {data: null, accTokenData}, message: "게시글이 수정되었습니다"});
         }
@@ -189,7 +189,7 @@ module.exports = {
       
       if(accTokenData){
         if(req.body.isvalid === true){
-          await Post.findOneAndUpdate(_id, {$set: {isvalid: true}})
+          await Post.findByIdAndUpdate(_id, {$set: {isvalid: true}})
           res.status(200)
           .cookie("refreshToken", refreshToken, {
             maxAge: 1000 * 60 * 60 * 24 * 14, // 쿠키 유효시간: 14일
@@ -199,8 +199,8 @@ module.exports = {
         }else {
           const {_id, category, area_name, title, member_min, post_content, 
             image, post_location, endtime} = req.body
-          await Post.findOneAndUpdate(_id, {category, area_name, title, member_min, post_content, 
-            image, post_location, endtime},  
+          await Post.findByIdAndUpdate(_id, {$set: {category, area_name, title, member_min, post_content, 
+            image, post_location, endtime}},  
             {new: true}).exec()
             res
             .cookie("refreshToken", refreshToken, {
