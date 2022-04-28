@@ -1,7 +1,7 @@
 const User = require('../models/User');
-const Post = require('../models/Post');
 const jwt = require('jsonwebtoken');
-const Application = require('../models/Application');
+const fs = require('fs');
+const path = require('path')
 
 module.exports = {
     location: (req, res) => {
@@ -130,6 +130,7 @@ module.exports = {
         }
     },
 
+
     changeInfo: async (req, res) => {
       const token = req.headers.authorization.split(' ')[1]; 
       const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET); 
@@ -201,11 +202,39 @@ module.exports = {
       if (!accTokenData && !refTokenData) {
         res.status(404).json({ data: null, message: "access and refresh token has been tempered" })
       }
+   ,
+
+    uploadImage: async (req, res) => {
+      console.log(req.file);
+      console.log(req.params)
+
+      await User.updateOne({email: req.params.email},{$set: {user_image: req.file.path}})
+      
+      const result =  await User.findOne({ email: req.body.email }).exec();
+
+      res.send(result)
+      
+    // uploadImage.save()
+    // .then(() => {
+    //   return res.status(200).json({data: uploadImage, message: '이미지가 정상적으로 등록되었습니다.'});
+    // })
+    // .catch((err) => { //프론트에서 타입을 다 맞게 보내준다면, 이메일 중복을 여기서 잡아낼 수 있음
+    //   throw new Error(err)
+    // })
+
+    },
+
+    getImage: async (req, res) => {
+      console.log(req.params)
+      const result = await User.findOne({email: req.params.email}).select("user_image").exec();
+
+      res.send(result);
+
     },
 
     deleteInfo: async (req, res) => {
-        const token = req.headers.authorization.split(' ')[1]; 
-        const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET);
+        const token = req.headers.authorization.split(' ')[1]; //Bearer
+        const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET); // 토큰을 해독해 유저 데이터를 리턴
         const refTokenData = jwt.verify(req.cookies.refreshToken, process.env.REFRESH_SECRET);
         if(accTokenData){
           const { email } = accTokenData
@@ -229,6 +258,7 @@ module.exports = {
             return res.status(404).json({ data: null, message: "access and refresh token has been tempered" })
         }
     },
+
 
     writePost: async(req, res) => { //내가 작성한 공고글
       const token = req.headers.authorization.split(' ')[1]; 
@@ -362,5 +392,6 @@ module.exports = {
       if (!accTokenData && !refTokenData) {
         return res.status(404).json({ data: null, message: "access and refresh token has been tempered" })
       }
+
     }
-};
+}; 
