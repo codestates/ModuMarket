@@ -5,6 +5,10 @@ export const NavLink = styled(Link)`
   text-decoration: none;
   color: black;
 
+    & > span{
+      width: 190px;
+  }
+
 `;
 
 export const NavContainer = styled.div`
@@ -21,15 +25,16 @@ export const NavContainer = styled.div`
     
 `;
 export const NavBoard = styled.div`
+    width : 190px;
     display: flex;
     flex-shrink: 0;
     flex-direction: row;
     align-items: center;
-    justify-content: center;
     font-size: 0.5em;
     font-weight: bold;
-    padding: 10px;
-    padding-left: 0.5rem;
+    & > span {
+        padding: 1.3rem;
+    }
 `
 export const NavButtons = styled.div`
     display: flex;

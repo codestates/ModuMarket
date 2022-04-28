@@ -1,6 +1,28 @@
 import styled from 'styled-components'
+import {Link} from "react-router-dom"
 
+export const ButtonLink = styled(Link)`
+    & > button {
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+        font-family: 'Open Sans', sans-serif;
+        background-color: #FF6767;
+        font-size: 1rem;
+        font-weight:700;
+        width : 16rem;
+        height : 2.8rem;
+        cursor: pointer;
+        border-radius: 4px;
+        border: none;
+        color : white;
+        &:hover {
+            color: #FF6767;
+            transition: all 0.3s;
+            border: 1px solid #FF6767;
+            background-color: #fff;
+        }
 
+    }
+`
 
 export const Section = styled.section`
     width: 100vw;
@@ -11,7 +33,7 @@ export const Section = styled.section`
 
 export const Wrap = styled.div`
     width: 100%;
-    padding : 1rem;
+    padding : 1rem 0;
 `
 
 export const IntroduceSection = styled.div`
@@ -49,22 +71,5 @@ export const IntroduceContent = styled.div`
         line-height: 2.5rem;
     }
 
-    & > button {
-        background-color: #FF6767;
-        font-size: 1rem;
-        font-weight:700;
-        width : 16rem;
-        height : 2.8rem;
-        cursor: pointer;
-        border-radius: 4px;
-        border: none;
-        color : white;
-        &:hover {
-        color: #FF6767;
-        transition: all 0.3s;
-        border: 1px solid #FF6767;
-        background-color: #fff;
-    }
-
-    }
+    
 `

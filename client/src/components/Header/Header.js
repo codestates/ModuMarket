@@ -8,7 +8,11 @@ function Header({ }) {
     return (
         <NavContainer>
             <NavLink to="/board">
-                <NavBoard>게시판</NavBoard>
+                <NavBoard>
+                    <span>
+                        게시판
+                    </span>
+                </NavBoard>
             </NavLink>
             <NavLink to="/">
                 <span>ModuMarket</span>

@@ -7,7 +7,8 @@ import {
     Wrap,
     IntroduceSection,
     IntroducePhoto,
-    IntroduceContent} from './styled'
+    IntroduceContent,
+    ButtonLink} from './styled'
 
 function AboutSection (){
     return (
@@ -60,7 +61,9 @@ function AboutSection (){
                             지금 모두의 마켓으로 <br/>
                             이웃들과 공동구매를 시작해보세요!
                         </h2>
-                        <button>우리동네 공구 찾기</button>
+                        <ButtonLink to ="/board">
+                            <button>우리동네 공구 찾기</button>
+                        </ButtonLink>   
                     </IntroduceContent>
                 </IntroduceSection>
             </Wrap>
