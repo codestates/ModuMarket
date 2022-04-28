@@ -75,10 +75,10 @@ module.exports = {
               // 비밀번호가 맞으면 token을 생성해야함
               const {_id, name, email, password, age, area_name} = data;
               // acessToken 생성 2h 유효
-              const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), 
+              const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), 
                                   process.env.ACCESS_SECRET, {expiresIn: '2h'});
               // refreshToken 생성 14d 유효
-              const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), 
+              const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), 
                                   process.env.REFRESH_SECRET, {expiresIn: '14d'});
 
               // 해당 유저정보에 refreshToken값 저장
@@ -99,7 +99,7 @@ module.exports = {
               });
             } 
             else {
-              return res.status(403).json({message: "비밀번호를 확인해주세요"});
+              return res.status(401).json({message: "비밀번호를 확인해주세요"});
             }
           });
         };

@@ -26,7 +26,7 @@ module.exports = {
       if (accTokenData && !refTokenData) {
         const userinfo = await User.findOne({ email: accTokenData.email }).exec();
         const {_id, name, email, password, age, area_name} = userinfo
-        const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), process.env.REFRESH_SECRET, {expiresIn: '14d'});
+        const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.REFRESH_SECRET, {expiresIn: '14d'});
 
           res
           .cookie("refreshToken", refreshToken, {
@@ -40,7 +40,7 @@ module.exports = {
       if (!accTokenData && refTokenData) {
         const userinfo = await User.findOne({ email: refTokenData.email }).exec();
         const {_id, name, email, password, age, area_name} = userinfo
-        const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
+        const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
         return res.send({data: {accessToken, userInfo: {_id, name, email, age, area_name}}, message: "ok"})
       }
       if (!accTokenData && !refTokenData) {
@@ -78,7 +78,7 @@ module.exports = {
           const result =  await User.findOne({ email: email }).exec();
           if(result.password === req.body.password){
               const {_id, name, email, password, age, area_name} = result
-              const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
+              const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
               res.status(200).json({data : {accessToken}, message: '인증이 완료되었습니다'});
           } else {
               res.status(404).json({data : null, message: '비밀번호가 일치하지않습니다'});
@@ -173,7 +173,7 @@ module.exports = {
         const userdata = await User.findOne({email})
         if(refTokenData){
           const {_id, name, email, password, age, area_name} = userdata
-          const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
+          const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
           
           // 포스트 컬렉션에서 내가 작성한 공고글이 있는지 조회
           const result =  await Post.find({ userId: _id }).exec();
@@ -189,7 +189,7 @@ module.exports = {
         const userdata = await User.findOne({email})
         if(accTokenData){
           const {_id, name, email, password, age, area_name} = userdata
-          const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), process.env.REFRESH_SECRET, {expiresIn: '14d'});
+          const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.REFRESH_SECRET, {expiresIn: '14d'});
           
           // 포스트 컬렉션에서 내가 작성한 공고글이 있는지 조회
           const result =  await Post.find({ userId: _id }).exec();
@@ -234,7 +234,7 @@ module.exports = {
         const userdata = await User.findOne({email})
         if(refTokenData){
           const {_id, name, email, password, age, area_name} = userdata
-          const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
+          const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
           
           const result =  await Application.find({ userId: _id , isapplied: true }).populate('post_id').exec(); 
           if(result.length > 0){
@@ -252,7 +252,7 @@ module.exports = {
         const userdata = await User.findOne({email})
         if(accTokenData){
           const {_id, name, email, password, age, area_name} = userdata
-          const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, name, email, password, age, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
+          const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
           
           const result =  await Application.find({ userId: _id , isapplied: true }).populate('post_id').exec(); 
           if(result.length > 0){
