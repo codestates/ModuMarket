@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const Application = require('../models/Application');
 
 module.exports = {
-    location: async (req, res) => {
+    location: (req, res) => {
       const token = req.headers.authorization.split(' ')[1]; 
       const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET); 
 
@@ -41,7 +41,7 @@ module.exports = {
       }
       if (accTokenData && !refTokenData) {
         const userinfo = await User.findOne({ email: accTokenData.email }).exec();
-        const {_id, name, email, password, age, area_name} = userinfo
+        const {_id, email, area_name} = userinfo
         const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.REFRESH_SECRET, {expiresIn: '14d'});
 
           res
@@ -66,8 +66,8 @@ module.exports = {
 
     auth: async (req, res) => { // 바디에 패스워드가 온다고한다 .. 
 
-        const token = req.headers.authorization.split(' ')[1]; //Bearer
-        const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET); // 토큰을 해독해 유저 데이터를 리턴
+        const token = req.headers.authorization.split(' ')[1]; 
+        const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET); 
         const refTokenData = jwt.verify(req.cookies.refreshToken, process.env.REFRESH_SECRET);
 
         // accTokenData,refTokenData 둘다 있는 경우 
@@ -93,7 +93,7 @@ module.exports = {
 
           const result =  await User.findOne({ email: email }).exec();
           if(result.password === req.body.password){
-              const {_id, name, email, password, age, area_name} = result
+              const {_id, email, area_name} = result
               const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
               res.status(200).json({data : {accessToken}, message: '인증이 완료되었습니다'});
           } else {
@@ -106,7 +106,7 @@ module.exports = {
           const { email } = accTokenData
           const result =  await User.findOne({ email: email }).exec();
           if(result.password === req.body.password){
-              const {_id, name, email, password, age, area_name} = result
+              const {_id, email, area_name} = result
               const refreshToken = jwt.sign(JSON.parse(JSON.stringify({
                 _id, name, email, password, age, area_name
                 })), process.env.REFRESH_SECRET, {expiresIn: '14d'});
@@ -130,9 +130,77 @@ module.exports = {
         }
     },
 
-    changeInfo: (req, res) => {
-      // 사는곳 수정은 인증으로 대체 .. 
-        res.send('b')
+    changeInfo: async (req, res) => {
+      const token = req.headers.authorization.split(' ')[1]; 
+      const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET); 
+      const refTokenData = jwt.verify(req.cookies.refreshToken, process.env.REFRESH_SECRET);
+
+      if (accTokenData && refTokenData) {
+        const { _id } = accTokenData;
+        if(req.body.password || req.body.area_name){
+          const result = await User.findOneAndUpdate(_id, {$set: {password: req.body.password, area_name: req.body.area_name}},{new: true})
+          if(result){
+            res.status(200).json({data : null, message: '회원정보 수정이 완료 되었습니다'});
+          }else {
+            res.status(500).json({data : null, message: 'server error'});
+          }
+        }
+        res.status(404).json({data : null, message: '회원정보 수정란을 입력해주세요'});
+      }
+
+      if (!accTokenData && refTokenData) {
+        const { _id } = refTokenData;
+        const result =  await User.findOne({ _id }).exec();
+        if(refTokenData){
+          const {_id, email, area_name} = result
+          const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
+         
+          if(req.body.password || req.body.area_name){
+            const result = await User.findOneAndUpdate(_id, {$set: {password: req.body.password, area_name: req.body.area_name}},{new: true})
+            if(result){
+              res.status(200).json({data : {accessToken}, message: '회원정보 수정이 완료 되었습니다'});
+            }else {
+              res.status(500).json({data : null, message: 'server error'});
+            }
+          }
+          res.status(404).json({data : {accessToken}, message: '회원정보 수정란을 입력해주세요'});
+        }
+      }
+
+      if (accTokenData && !refTokenData) {
+        const { _id } = accTokenData;
+        const result =  await User.findOne({ _id }).exec();
+        if(accTokenData){
+          const {_id, email, area_name} = result
+          const refreshToken = jwt.sign(JSON.parse(JSON.stringify({
+            _id, email, area_name
+            })), process.env.REFRESH_SECRET, {expiresIn: '14d'});
+         
+          if(req.body.password || req.body.area_name){
+            const result = await User.findOneAndUpdate(_id, {$set: {password: req.body.password, area_name: req.body.area_name}},{new: true})
+            if(result){
+              res.status(200)
+              .cookie("refreshToken", refreshToken, {
+                maxAge: 1000 * 60 * 60 * 24 * 14, // 쿠키 유효시간: 14일
+                httpOnly: true,
+              })
+              .json({data : null, message: '회원정보 수정이 완료 되었습니다'});
+            }else {
+              res.status(500).json({data : null, message: 'server error'});
+            }
+          }
+          res.status(404)
+          .cookie("refreshToken", refreshToken, {
+            maxAge: 1000 * 60 * 60 * 24 * 14, // 쿠키 유효시간: 14일
+            httpOnly: true,
+          })
+          .json({data : null, message: '회원정보 수정란을 입력해주세요'});
+        }
+      }
+
+      if (!accTokenData && !refTokenData) {
+        res.status(404).json({ data: null, message: "access and refresh token has been tempered" })
+      }
     },
 
     deleteInfo: async (req, res) => {
@@ -188,7 +256,7 @@ module.exports = {
         const { email } = refTokenData
         const userdata = await User.findOne({email})
         if(refTokenData){
-          const {_id, name, email, password, age, area_name} = userdata
+          const {_id, email, area_name} = userdata
           const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
           
           // 포스트 컬렉션에서 내가 작성한 공고글이 있는지 조회
@@ -204,7 +272,7 @@ module.exports = {
         const { email } = accTokenData
         const userdata = await User.findOne({email})
         if(accTokenData){
-          const {_id, name, email, password, age, area_name} = userdata
+          const {_id, email, area_name} = userdata
           const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.REFRESH_SECRET, {expiresIn: '14d'});
           
           // 포스트 컬렉션에서 내가 작성한 공고글이 있는지 조회
@@ -249,7 +317,7 @@ module.exports = {
         const { email }  = refTokenData
         const userdata = await User.findOne({email})
         if(refTokenData){
-          const {_id, name, email, password, age, area_name} = userdata
+          const {_id, email, area_name} = userdata
           const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
           
           const result =  await Application.find({ userId: _id , isapplied: true }).populate('post_id').exec(); 
@@ -267,7 +335,7 @@ module.exports = {
         const { email }  = accTokenData
         const userdata = await User.findOne({email})
         if(accTokenData){
-          const {_id, name, email, password, age, area_name} = userdata
+          const {_id, email, area_name} = userdata
           const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
           
           const result =  await Application.find({ userId: _id , isapplied: true }).populate('post_id').exec(); 

@@ -6,10 +6,10 @@ const saltRounds = 10;
 module.exports = {
   up: async (req, res) => {
 
-    let {name, email, password, age} = req.body;
+    let {name, email, password, age, area_name} = req.body;
 
     // 빈값이 오면 팅겨내기
-    if (!name || !email || !password || !age || !user_location) {
+    if (!name || !email || !password || !age || !area_name) {
       return res.json({message: "빠진 정보가 있습니다"});
     }
 
@@ -73,7 +73,7 @@ module.exports = {
             // 비밀번호가 일치할 경우 
             if (isMatch) { 
               // 비밀번호가 맞으면 token을 생성해야함
-              const {_id, name, email, password, age, area_name} = data;
+              const {_id, email, area_name} = data;
               // acessToken 생성 2h 유효
               const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), 
                                   process.env.ACCESS_SECRET, {expiresIn: '2h'});

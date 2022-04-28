@@ -20,7 +20,7 @@ module.exports = {
       const { email } = refTokenData;
       const userResult =  await User.findOne({ email }).exec();
       if(refTokenData){
-        const {_id, name, email, password, age, area_name} = userResult
+        const {_id, email, area_name} = userResult
         const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
         const result = await Post.find({area_name})
         res.status(200).json({data : {result,accessToken}});
@@ -30,7 +30,7 @@ module.exports = {
       const { email } = accTokenData;
       const userResult =  await User.findOne({ email }).exec();
       if(accTokenData){
-        const {_id, name, email, password, age, area_name} = userResult
+        const {_id, email, area_name} = userResult
         const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.REFRESH_SECRET, {expiresIn: '14d'});
         const result = await Post.find({area_name})
         res.status(200)
@@ -82,7 +82,7 @@ module.exports = {
     if (!accTokenData && refTokenData) {
       const { emaildata } = refTokenData
       const result =  await User.findOne({ email: emaildata }).exec();
-      const {_id, name, email, password, age, area_name} = result
+      const {_id, email, area_name} = result
       const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
       
       const newPost = new Post();
@@ -108,7 +108,7 @@ module.exports = {
     if (accTokenData && !refTokenData) {
       const { emaildata } = accTokenData
       const result =  await User.findOne({ email: emaildata }).exec();
-      const {_id, name, email, password, age, area_name} = result
+      const {_id, email, area_name} = result
       const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.REFRESH_SECRET, {expiresIn: '14d'});
       
       const newPost = new Post();
@@ -157,7 +157,7 @@ module.exports = {
     if (!accTokenData && refTokenData) {
       const { emaildata } = refTokenData
       const result =  await User.findOne({ email: emaildata }).exec();
-      const {_id, name, email, password, age, area_name} = result
+      const {_id, email, area_name} = result
       const accTokenData = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
       if(refTokenData){
         const {_id, category, area_name, title, post_content, 
@@ -171,7 +171,7 @@ module.exports = {
     if (accTokenData && !refTokenData) {
       const { emaildata } = accTokenData
       const result =  await User.findOne({ email: emaildata }).exec();
-      const {_id, name, email, password, age, area_name} = result
+      const {_id, email, area_name} = result
       const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.REFRESH_SECRET, {expiresIn: '14d'});
       
       if(accTokenData){
@@ -233,7 +233,7 @@ module.exports = {
       const { _id } = refTokenData 
       const result =  await User.findOne({ _id: _id }).exec();
       if(refTokenData){
-        const {_id, name, email, password, age, area_name} = result
+        const {_id, email, area_name} = result
         const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
       
         const applicationCollection = await Application.findOne({post_id:req.params.id, user_id:_id}).exec()
@@ -273,7 +273,7 @@ module.exports = {
       const { _id } = accTokenData 
       const result =  await User.findOne({ _id: _id }).exec();
       if(accTokenData){
-        const {_id, name, email, password, age, area_name} = result
+        const {_id, email, area_name} = result
         const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.REFRESH_SECRET, {expiresIn: '14d'});
       
         const applicationCollection = await Application.findOne({post_id:req.params.id, user_id:_id}).exec()
@@ -352,7 +352,7 @@ module.exports = {
       const { _id } = refTokenData 
       const result =  await User.findOne({ _id: _id }).exec();
       if(refTokenData){
-        const {_id, name, email, password, age, area_name} = result
+        const {_id, email, area_name} = result
         const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
       
         const applicationCollection = await Application.findOne({post_id:req.params.id, user_id:_id}).exec()
@@ -375,7 +375,7 @@ module.exports = {
       const { _id } = accTokenData 
       const result =  await User.findOne({ _id: _id }).exec();
       if(accTokenData){
-        const {_id, name, email, password, age, area_name} = result
+        const {_id, email, area_name} = result
         const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.REFRESH_SECRET, {expiresIn: '14d'});
       
         const applicationCollection = await Application.findOne({post_id:req.params.id, user_id:_id}).exec()
@@ -434,7 +434,7 @@ module.exports = {
       const { _id } = refTokenData 
       const result =  await User.findOne({ _id: _id }).exec();
       if(refTokenData){
-        const {_id, name, email, password, age, area_name} = result
+        const {_id, email, area_name} = result
         const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
         
         const result = await Post.deleteOne({_id : req.params.id, userId: accTokenData._id})
@@ -449,7 +449,7 @@ module.exports = {
       const { _id } = accTokenData 
       const userResult =  await User.findOne({ _id: _id }).exec();
       if(accTokenData){
-        const {_id, name, email, password, age, area_name} = userResult
+        const {_id, email, area_name} = userResult
         const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.REFRESH_SECRET, {expiresIn: '14d'});
         
         const result = await Post.deleteOne({_id : req.params.id, userId: accTokenData._id})
