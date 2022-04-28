@@ -4,6 +4,22 @@ const jwt = require('jsonwebtoken');
 const Application = require('../models/Application');
 
 module.exports = {
+    location: async (req, res) => {
+      const token = req.headers.authorization.split(' ')[1]; 
+      const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET); 
+
+      //req.body.area_name으로 프론트쪽에서 현재api주소를 보내주면 .. 
+      //토큰에 있는 area_name과 비교하여 status 값 보내주기
+      // 로그인을 한 직후라 accTokenData가 무조건 있으므로 한가지토큰이 없는 경우는 구현하지않아도됨
+
+      const { area_name } = accTokenData
+      if(req.body.area_name === area_name){
+        res.status(200).json({data: null, message: '동네인증이 완료되었습니다'})
+      }else {
+        res.status(401).json({data: null, message: '나의 동네가 아닙니다'})
+      }
+    },
+
     mypage: async (req, res) => {
 
     // accessToken으로 유저정보 가져오기  || accessToken이 만료돼고 refreshToken
@@ -14,8 +30,8 @@ module.exports = {
         return res.status(401).json({data: null, message: 'refresh token not provided'})
       }
 
-      const token = req.headers.authorization.split(' ')[1]; //Bearer
-      const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET); // 토큰을 해독해 유저 데이터를 리턴
+      const token = req.headers.authorization.split(' ')[1]; 
+      const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET); 
       const refTokenData = jwt.verify(req.cookies.refreshToken, process.env.REFRESH_SECRET);
 
       if (accTokenData && refTokenData) {

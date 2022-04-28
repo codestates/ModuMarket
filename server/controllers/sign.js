@@ -81,22 +81,14 @@ module.exports = {
               const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), 
                                   process.env.REFRESH_SECRET, {expiresIn: '14d'});
 
-              // 해당 유저정보에 refreshToken값 저장
-              data.refreshToken = refreshToken; 
-              data.save((err, data) => {
-                if (err) {
-                  return res.status(500).json({ message: "서버 오류" });
-                }
-  
-                // DB에 token 저장한 후에는 cookie에 토큰을 저장하여 이용자를 식별합니다.
-                return res
-                  .cookie("refreshToken", refreshToken, {
-                    maxAge: 1000 * 60 * 60 * 24 * 14, // 쿠키 유효시간: 14일
-                    httpOnly: true,
-                  })
-                  .status(200)
-                  .json({ data: {accessToken: accessToken}, message: "로그인에 성공하였습니다."});
-              });
+              res
+              .cookie("refreshToken", refreshToken, {
+                maxAge: 1000 * 60 * 60 * 24 * 14, // 쿠키 유효시간: 14일
+                httpOnly: true,
+              })
+              .status(200)
+              .json({ data: {accessToken: accessToken}, message: "로그인에 성공하였습니다."});
+
             } 
             else {
               return res.status(401).json({message: "비밀번호를 확인해주세요"});
