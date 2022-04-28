@@ -39,8 +39,9 @@ module.exports = {
         const newUser = new User();
         newUser.name = name;
         newUser.email = email;
-        newUser.password = password;
         newUser.age = age;
+        newUser.area_name = area_name;
+        newUser.password = password;
  
       
         // console.log(User)
