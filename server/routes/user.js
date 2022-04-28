@@ -1,5 +1,31 @@
 const router = require('express').Router();
 const controller = require('../controllers');
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'images')
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + file.originalname)
+    }
+});
+
+const fileFilter = (req, file, cb) => {
+    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+        cb(null, true)
+    } else {
+        cb(null, false);
+    }
+}
+  
+const upload = multer({ 
+    storage: storage, 
+    limits: {
+        fileSize: 1024 * 1024 * 5
+    },
+    fileFilter: fileFilter
+});
 
 // 로그인 후 api주소와 동네주소 일치하는지 인증
 router.post('location', controller.user.location);
@@ -18,6 +44,12 @@ router.post('/', controller.user.auth);
 
 // 사는곳 비밀번호 수정
 router.patch('/', controller.user.changeInfo);
+
+// 이미지 등록
+router.post('/:email/image', upload.single('img'), controller.user.uploadImage);
+
+// 이미지 가져오기
+router.get('/:email/image', controller.user.getImage)
 
 // 회원탈퇴
 router.delete('/', controller.user.deleteInfo);
