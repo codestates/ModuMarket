@@ -64,6 +64,7 @@ module.exports = {
       newPost.category = req.body.category;
       newPost.area_name = req.body.area_name;
       newPost.title = req.body.title;
+      newPost.member_min = req.body.member_min;
       newPost.post_content = req.body.post_content;
       newPost.image = req.body.image;
       newPost.post_location = req.body.post_location;
@@ -90,6 +91,7 @@ module.exports = {
       newPost.category = req.body.category;
       newPost.area_name = req.body.area_name;
       newPost.title = req.body.title;
+      newPost.member_min = req.body.member_min;
       newPost.post_content = req.body.post_content;
       newPost.image = req.body.image;
       newPost.post_location = req.body.post_location;
@@ -116,6 +118,7 @@ module.exports = {
       newPost.category = req.body.category;
       newPost.area_name = req.body.area_name;
       newPost.title = req.body.title;
+      newPost.member_min = req.body.member_min;
       newPost.post_content = req.body.post_content;
       newPost.image = req.body.image;
       newPost.post_location = req.body.post_location;
@@ -147,12 +150,17 @@ module.exports = {
     const refTokenData = jwt.verify(req.cookies.refreshToken, process.env.REFRESH_SECRET);
 
     if (accTokenData && refTokenData) {
-      const {_id, category, area_name, title, post_content, 
-        image, post_location, isvalid, endtime} = req.body
-      const result = await Post.findOneAndUpdate({_id, category, area_name, title, post_content, 
-        image, post_location, isvalid, endtime},  
-        {new: true}).exec()
-        res.status(200).json({data : result, message: "게시글이 수정되었습니다"});
+      if(req.body.isvalid === true){
+        await Post.findOneAndUpdate(_id, {$set: {isvalid: true}})
+        res.status(200).json({data : null, message: "모집이 완료되었습니다"});
+      }else {
+        const {_id, category, area_name, title, member_min, post_content, 
+          image, post_location, endtime} = req.body
+        await Post.findOneAndUpdate(_id, {category, area_name, title, member_min, post_content, 
+          image, post_location, endtime},  
+          {new: true}).exec()
+          res.status(200).json({data : null, message: "게시글이 수정되었습니다"});
+      }
     }
     if (!accTokenData && refTokenData) {
       const { emaildata } = refTokenData
@@ -160,12 +168,17 @@ module.exports = {
       const {_id, email, area_name} = result
       const accTokenData = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
       if(refTokenData){
-        const {_id, category, area_name, title, post_content, 
-          image, post_location, isvalid, endtime} = req.body
-        const result = await Post.findOneAndUpdate({_id, category, area_name, title, post_content, 
-          image, post_location, isvalid, endtime},  
-          {new: true}).exec()
-          res.status(200).json({data : {data: result, accTokenData}, message: "게시글이 수정되었습니다"});
+        if(req.body.isvalid === true){
+          await Post.findOneAndUpdate(_id, {$set: {isvalid: true}})
+          res.status(200).json({data : {accTokenData}, message: "모집이 완료되었습니다"});
+        }else {
+          const {_id, category, area_name, title, member_min, post_content, 
+            image, post_location, endtime} = req.body
+          await Post.findOneAndUpdate(_id, {category, area_name, title, member_min, post_content, 
+            image, post_location, endtime},  
+            {new: true}).exec()
+            res.status(200).json({data : {data: null, accTokenData}, message: "게시글이 수정되었습니다"});
+        }
       }
     }
     if (accTokenData && !refTokenData) {
@@ -175,17 +188,27 @@ module.exports = {
       const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.REFRESH_SECRET, {expiresIn: '14d'});
       
       if(accTokenData){
-        const {_id, category, area_name, title, post_content, 
-          image, post_location, isvalid, endtime} = req.body
-        const result = await Post.findOneAndUpdate({_id, category, area_name, title, post_content, 
-          image, post_location, isvalid, endtime},  
-          {new: true}).exec()
-          res
+        if(req.body.isvalid === true){
+          await Post.findOneAndUpdate(_id, {$set: {isvalid: true}})
+          res.status(200)
           .cookie("refreshToken", refreshToken, {
             maxAge: 1000 * 60 * 60 * 24 * 14, // 쿠키 유효시간: 14일
             httpOnly: true,
           })
-          .status(200).json({data : result, message: "게시글이 수정되었습니다"});
+          .json({data : null, message: "모집이 완료되었습니다"});
+        }else {
+          const {_id, category, area_name, title, member_min, post_content, 
+            image, post_location, endtime} = req.body
+          await Post.findOneAndUpdate(_id, {category, area_name, title, member_min, post_content, 
+            image, post_location, endtime},  
+            {new: true}).exec()
+            res
+            .cookie("refreshToken", refreshToken, {
+              maxAge: 1000 * 60 * 60 * 24 * 14, // 쿠키 유효시간: 14일
+              httpOnly: true,
+            })
+            .status(200).json({data : null, message: "게시글이 수정되었습니다"});
+        }
       }
     }
     if (!accTokenData && !refTokenData) {
