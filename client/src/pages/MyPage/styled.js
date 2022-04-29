@@ -66,7 +66,7 @@ export const ButtonWrap = styled.div`
     padding-bottom : 4rem;
 `
 export const Button = styled.button`
-    width : 50%;
+    width : 100%;
     height : 3.5rem;
     font-size: 1.15rem;
     font-weight : 700;
@@ -77,7 +77,8 @@ export const Button = styled.button`
     border-radius: 0;
     color : white;
     background-color: ${(props) => 
-        props.background === '#FF6767' ? "#FF6767" : "#D9D9D9"  };
+    props.background === '#FF6767' ? "#FF6767" : "#D9D9D9"  };
+    
 `
 
 export const CardWrap = styled.div`
