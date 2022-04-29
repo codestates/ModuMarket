@@ -1,5 +1,7 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
+const fs = require('fs');
+const path = require('path')
 
 module.exports = {
   location: (req, res) => {

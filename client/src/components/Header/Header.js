@@ -8,7 +8,11 @@ function Header({ }) {
     return (
         <NavContainer>
             <NavLink to="/board">
-                <NavBoard>게시판</NavBoard>
+                <NavBoard>
+                    <span>
+                        게시판
+                    </span>
+                </NavBoard>
             </NavLink>
             <NavLink to="/">
                 <span>ModuMarket</span>
@@ -23,7 +27,7 @@ function Header({ }) {
                             <NavButton>회원가입</NavButton>
                         </NavLink>
                         <NavLink to="/login">
-                            <NavButton>로그인</NavButton>
+                            <NavButton>Login</NavButton>
                         </NavLink>
                     </NavButtons>
                 </>
