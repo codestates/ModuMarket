@@ -13,6 +13,7 @@ module.exports = {
     // 토큰 있으면 토큰안에 있는 area_name으로 필터링해서 보여주기 
     if (accTokenData && refTokenData) {
       const { area_name } = accTokenData;
+      await Post.updateMany({endtime:{$lt: Date.now()}},{isvalid: true})
       const result = await Post.find({area_name})
       res.status(200).json({data : result});
     }
@@ -22,6 +23,7 @@ module.exports = {
       if(refTokenData){
         const {_id, email, area_name} = userResult
         const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
+        await Post.updateMany({endtime:{$lt: Date.now()}},{isvalid: true})
         const result = await Post.find({area_name})
         res.status(200).json({data : {result,accessToken}});
       }
@@ -32,6 +34,7 @@ module.exports = {
       if(accTokenData){
         const {_id, email, area_name} = userResult
         const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.REFRESH_SECRET, {expiresIn: '14d'});
+        await Post.updateMany({endtime:{$lt: Date.now()}},{isvalid: true})
         const result = await Post.find({area_name})
         res.status(200)
         .cookie("refreshToken", refreshToken, {
@@ -42,6 +45,7 @@ module.exports = {
       }
     }    
     if (!accTokenData && !refTokenData) {
+      await Post.updateMany({endtime:{$lt: Date.now()}},{isvalid: true})
       const result = await Post.find({})
       res.status(200).json({data : result});
     }
