@@ -63,6 +63,7 @@ export const ProfileButtonWrap = styled.div`
 export const ButtonWrap = styled.div`
     display: flex;
     width : 100%;
+    padding-bottom : 4rem;
 `
 export const Button = styled.button`
     width : 50%;
@@ -77,4 +78,12 @@ export const Button = styled.button`
     color : white;
     background-color: ${(props) => 
         props.background === '#FF6767' ? "#FF6767" : "#D9D9D9"  };
+`
+
+export const CardWrap = styled.div`
+    display : flex;
+    flex-wrap : wrap;
+    width : 100%;
+    justify-content: space-evenly;
+    align-items : center;
 `

@@ -1,5 +1,7 @@
 import React ,{useState} from 'react';
 import Photo from '../../assets/example_profile.jpeg';
+import Cards from '../../components/Cards/Cards'
+import { myPageDummyData } from '../../assets/dummy';
 import {
     Section,
     Wrap,
@@ -7,9 +9,13 @@ import {
     ProfilePhotoWrap,
     ProfileContentWrap,
     ProfileButtonWrap,
-    ButtonWrap,Button } from './styled'
+    ButtonWrap,Button,
+    CardWrap} from './styled'
 
 function MyPage(){
+
+    const [mypageInfo, setMyPageInfo]  =useState(myPageDummyData.cardInfo)
+
     return (
         <Section>
             <Wrap>
@@ -36,6 +42,9 @@ function MyPage(){
                     내가 참여한 공고글
                 </Button>
             </ButtonWrap>
+            <CardWrap>
+                {mypageInfo.map((info, idx) => <Cards info={info} idx ={idx}/> )}
+            </CardWrap>
         </Section>
     )
 }
