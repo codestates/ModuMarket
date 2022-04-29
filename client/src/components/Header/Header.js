@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { React, useState } from 'react'
-import { NavLink, NavContainer, NavButtons, NavButton, NavBoard } from './style'
+import { NavLink, NavContainer, NavButtons, NavButton, NavBoard } from './styled'
 
 function Header({ }) {
 
