@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
-import { ModalBackground, ModalContainer, ModalText } from './styled'
+import { ModalBackground, ModalContainer, ModalText, LoginInput } from './styled'
 
 function Login() {
 
@@ -18,6 +18,9 @@ function Login() {
                             <button>회원가입하기</button>
                         </p>
                     </ModalText>
+                    <LoginInput>
+
+                    </LoginInput>
                 </ModalContainer>
             </ModalBackground>
         </>

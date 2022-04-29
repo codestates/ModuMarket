@@ -80,3 +80,5 @@ export const ModalText = styled.div`
     }
   }
 `;
+export const LoginInput = styled.div`
+`
