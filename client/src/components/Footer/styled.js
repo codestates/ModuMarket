@@ -1,14 +1,14 @@
 import styled from 'styled-components'
 
 
-export const FooterContainer = styled.footer `
+export const FooterContainer = styled.footer`
     width: 100vw;
     background-color : #333B52;
     padding-top : 6rem;
     padding-bottom : 1rem;
    
 `
-export const LogoContainer = styled.div `
+export const LogoContainer = styled.div`
     width: 100%;
     font-size : 2rem;
     text-align : center;
@@ -29,9 +29,9 @@ export const TeamContainer = styled.div`
 `
 
 
-export const ProfileContainer = styled.div `
+export const ProfileContainer = styled.div`
     display: flex;
-    position : relative;
+    /* position : relative; */
     padding: 1rem;
     justify-content : space-evenly;
     color : #CED4DA;

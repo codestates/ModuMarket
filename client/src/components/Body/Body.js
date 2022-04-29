@@ -4,14 +4,13 @@ import {
     Route,
 } from "react-router-dom";
 import MainPage from '../../pages/MainPage/MainPage'
-import Signup from '../Modals/Signup/Signup'
-import Login from '../Modals/Login/Login'
+import Signup from '../Modals/Signup'
+import Login from '../Modals/Login'
 import BoardPage from '../../pages/BoardPage/BoardPage'
 
 
 const Body = () => {
     return (
-
         <Routes>
             <Route path="/" element={<MainPage />} />
             <Route path="/board" element={<BoardPage />} />
