@@ -1,17 +1,24 @@
 import pizza from './example_pizza.png'
 import hotCake from './hotCake.png'
 import pasta from './pasta.png'
+import userImage from './example_profile.jpeg'
 
 export const dummyData = {
     cardInfo : [
         {
-            image : pizza,
+            image : hotCake,
             title : "오늘 빅스타 피자 먹으실분?",
             category : 0,
             location : "서울시 마포구 망원동",
             isValid : true,
-            content : "빅스타 피자 XXXL로 시킬건데 혼자서 먹으면 양이 너무 많아요. 어차피 박스 2개로 오는거 반띵해서 가져가실분 구합니당 오늘 저녁에 먹을거구요 맛은 프리미엄 쿼드에 갈릭엣지 추가할거에요. 가격은 27900원입니당."
-        
+            content : "빅스타 피자 XXXL로 시킬건데 혼자서 먹으면 양이 너무 많아요. 어차피 박스 2개로 오는거 반띵해서 가져가실분 구합니당 오늘 저녁에 먹을거구요 맛은 프리미엄 쿼드에 갈릭엣지 추가할거에요. 가격은 27900원입니당.",
+            member_num : 3,
+            member_min : 5,
+            endtime : "45분",
+            userImage : userImage,
+            userName : '김코딩',
+            post_location : '망원동'
+            
         },
 
         {
