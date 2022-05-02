@@ -108,7 +108,9 @@ function Signup() {
                         <input type='text' onChange={handleInputValue('name')} />
                         <span>나이</span>
                         <input type='number' onChange={handleInputValue('age')} />
-                        <button onClick={getUserLocation}>동네 인증하기</button>
+                        <span>동네인증</span>
+                        <input type='text' onChange={handleInputValue('area_name')} />
+                        {/* <button onClick={getUserLocation}>동네 인증하기</button> */}
                         {/* <input type="checkbox"/> */}
                         <button type='submit' onClick={handleSignup}>
                             회원가입
