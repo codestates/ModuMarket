@@ -1,0 +1,99 @@
+import React ,{useState} from 'react';
+import {dummyData} from "../../../assets/dummy"
+import FoodIcon from '../../../assets/food_icon.png'
+import BabiesIcon from '../../../assets/babies_icon.png'
+import FashionIcon from '../../../assets/fashion_icon.png'
+import HobbiesIcon from '../../../assets/hobbies_icon.png'
+import NecessityIcon from '../../../assets/necessity_icon.png'
+import MemberIcon from '../../../assets/member.png'
+import TimerIcon from '../../../assets/timer.png'
+import {Section, Wrap, 
+        TitleWrap, Title, 
+        ButtonWrap, Button,
+        SectionWrap, 
+        DetailWrap, Detail, 
+        DetailPhoto,DetailCategory, 
+        DetailMemberAndTimeWrap, 
+        DetailMemberAndTime, 
+        DetailButtonWrap, DetailButton } from './styled';
+
+function DetailSection (){
+
+    const [Data, setData] = useState(dummyData.cardInfo[0])
+    const category = ["패션, 뷰티","식품","생필품","취미, 반려","유아동"];
+        let categoryNumber = Data.category;
+        let categoryImg;
+
+        if(category[categoryNumber] === "패션, 뷰티"){
+            categoryImg = FashionIcon;
+        }
+        if(category[categoryNumber] === "식품"){
+            categoryImg = FoodIcon;
+        }
+        if(category[categoryNumber] === "생필품"){
+            categoryImg = NecessityIcon;
+        }
+        if(category[categoryNumber] === "취미, 반려"){
+            categoryImg = HobbiesIcon;
+        }
+        if(category[categoryNumber] === "유아동"){
+            categoryImg = BabiesIcon;
+        }
+
+    return (
+        <Section>
+            <Wrap>
+                <TitleWrap>
+                    <Title>
+                        <h2>귤 10봉지 공동구매 구해요.</h2>
+                    </Title>
+                    <ButtonWrap>
+                        <Button background="#FF6767">
+                            <button>수정하기</button>
+                        </Button>
+                        <Button background="white">
+                            <button>삭제하기</button>
+                        </Button>
+                    </ButtonWrap>
+                </TitleWrap>
+            </Wrap>
+            <SectionWrap>
+                <DetailWrap>
+                        <DetailPhoto>
+                            <img src= {Data.image} art ="Card Detail Photo"/>
+                        </DetailPhoto>
+                        <Detail>
+                            <DetailCategory>
+                            <img src ={categoryImg} alt='category icon'/>
+                            <span>{category[categoryNumber]}</span>
+                            </DetailCategory>
+                            <DetailMemberAndTimeWrap>
+                                <DetailMemberAndTime>
+                                    <img src = {MemberIcon} art = "Card Member Icon"/>
+                                    <span>참가인원</span>
+                                </DetailMemberAndTime>
+                                <span>{Data.member_num} / {Data.member_min}</span>
+                            </DetailMemberAndTimeWrap>
+                            <DetailMemberAndTimeWrap>
+                                <DetailMemberAndTime>
+                                    <img src = {TimerIcon} art = "Card Timer Icon"/>
+                                    <span>남은시간</span>
+                                </DetailMemberAndTime>
+                                <span>{Data.endtime}</span>
+                            </DetailMemberAndTimeWrap>
+                            <DetailButtonWrap>
+                                <DetailButton background="#FF6767">
+                                    <button>채팅하기</button>
+                                </DetailButton>
+                                <DetailButton background="white">
+                                    <button>모집 완료하기</button>
+                                </DetailButton>
+                            </DetailButtonWrap>
+                        </Detail>
+                    </DetailWrap>
+            </SectionWrap>
+        </Section>
+    )
+}
+
+export default DetailSection;

@@ -14,6 +14,7 @@ export const CardWrap = styled.div`
 
 export const Card = styled.div`
 margin: 0;
+cursor: pointer;
 border : none;
 width : 24rem;
 height : 30rem;

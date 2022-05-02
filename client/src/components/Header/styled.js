@@ -53,6 +53,7 @@ export const NavButton = styled.button`
     padding: 0.8rem;
     /* padding: 0.8rem 2rem; */
     margin-left: 0.5rem;
+    margin-right: 0.5rem;
     cursor: pointer;  
     font-size: 1rem;
     font-weight: 700;
