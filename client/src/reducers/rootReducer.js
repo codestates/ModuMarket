@@ -3,9 +3,10 @@ import loginSlice from './loginSlice';
 import userInfoSlice from './userInfoSlice';
 import modalSlice from './modalSlice';
 
-
-export const rootReducer = combineReducers({
+const rootReducer = combineReducers({
     login: loginSlice,
     userInfo: userInfoSlice,
     modal: modalSlice,
 })
+
+export default rootReducer;

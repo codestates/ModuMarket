@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { APP_URL } from '../config';
+import { REACT_APP_API_URL } from '../config';
 
-export const getUserInfo = id => {
-    axios.get(`${APP_URL}/login`);
+export const getLoginUserInfo = id => {
+    axios.get(`${REACT_APP_API_URL}/login`);
 }
