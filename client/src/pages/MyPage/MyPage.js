@@ -1,5 +1,7 @@
 import React ,{useState} from 'react';
 import Photo from '../../assets/example_profile.jpeg';
+import Cards from '../../components/Cards/Cards'
+import { myPageDummyData, myPageDummyData2 } from '../../assets/dummy';
 import {
     Section,
     Wrap,
@@ -7,9 +9,29 @@ import {
     ProfilePhotoWrap,
     ProfileContentWrap,
     ProfileButtonWrap,
-    ButtonWrap,Button } from './styled'
+    ButtonWrap,Button,
+    CardWrap} from './styled'
 
 function MyPage(){
+
+    const [mypageInfo, setMyPageInfo]  =useState(myPageDummyData.cardInfo);
+    const [writeBackgroundColor, setWriteBackgroundColor] = useState("#FF6767")
+    const [participateBackgroundColor, setParticipateBackgroundColor] = useState("#D9D9D9")
+
+    function handleParticipateBoard (){
+        setMyPageInfo(myPageDummyData2.cardInfo);
+        setWriteBackgroundColor("#D9D9D9")
+        setParticipateBackgroundColor("#FF6767")
+
+    }
+
+    function handleWriteBoard (){
+        setMyPageInfo(myPageDummyData.cardInfo)
+        setWriteBackgroundColor("#FF6767")
+        setParticipateBackgroundColor("#D9D9D9")
+    }
+
+
     return (
         <Section>
             <Wrap>
@@ -29,13 +51,16 @@ function MyPage(){
                 </ProfileWrap>
             </Wrap>
             <ButtonWrap>
-                <Button background = "#FF6767">
+                <Button background = {writeBackgroundColor} onClick={handleWriteBoard}>
                     내가 작성한 공고글
                 </Button>
-                <Button background = "#D9D9D9">
+                <Button background = {participateBackgroundColor} onClick={handleParticipateBoard}>
                     내가 참여한 공고글
                 </Button>
             </ButtonWrap>
+            <CardWrap>
+                {mypageInfo.map((info, idx) => <Cards info={info} idx ={idx}/> )}
+            </CardWrap>
         </Section>
     )
 }
