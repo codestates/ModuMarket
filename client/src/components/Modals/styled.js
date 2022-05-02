@@ -80,3 +80,11 @@ export const ModalText = styled.div`
     }
   }
 `;
+export const LoginInput = styled.div`
+`;
+export const SignupInput = styled.div`
+`
+export const ModalImg = styled.div`
+`
+export const ModalButton = styled.div`
+`
