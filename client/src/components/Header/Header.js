@@ -31,7 +31,7 @@ function Header() {
                 accessToken: accessToken
             })
             .then((result) => {
-                dispatch(inputModalText(result.message));
+                dispatch(inputModalText(result.data.message));
                 dispatch(changeModalImg('check_man'));
                 dispatch(showConfirmModal(true));
                 dispatch(logout());

@@ -1,9 +1,9 @@
 export const confirmImg = {
-    check_man: "./check_man.png",
-    check_circle: "./check_circle_icon.png",
-    check_woman1: "./check_woman_with_phone.png",
-    check_woman2: "./check_woman.png",
-    check_skull: "./skull_icon.png",
-    question: "./question.png"
+    check_man: "./images/check_man.png",
+    check_circle: "./images/check_circle_icon.png",
+    check_woman1: "./images/check_woman_with_phone.png",
+    check_woman2: "./images/check_woman.png",
+    check_skull: "./images/skull_icon.png",
+    question: "./images/question.png"
 
 }
