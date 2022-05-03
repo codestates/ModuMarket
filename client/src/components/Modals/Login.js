@@ -6,7 +6,12 @@ import { ModalBackground, ModalContainer, ModalText, LoginInput } from './styled
 import axios from 'axios';
 import { REACT_APP_API_URL } from '../../config';
 
+
 function Login() {
+    const REST_API_KEY = "582364e7342bc8ebe03c9fb7bfd980a0";
+    const REDIRECT_URI = "http://localhost:3000/sign/kakao/callback";
+    const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+  
 
     const [errorMessage, setErrorMessage] = useState('');
     const [loginInfo, setLoginInfo] = useState({
@@ -69,6 +74,9 @@ function Login() {
                         <button type='submit' onClick={handleLogin}>
                             로그인
                         </button>
+                        
+                        <h1><a href={KAKAO_AUTH_URL}>Kakao Login</a></h1>
+                        
                         <div className='alert-box'>{errorMessage}</div>
                     </form>
                 </LoginInput>
