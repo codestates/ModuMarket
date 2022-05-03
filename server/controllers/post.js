@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 
 module.exports = {
   postList: async(req, res) => {
-    if (!req.headers.authorization && !req.cookies.refreshToken) {
+    if (!req.headers.authorization || !req.cookies.refreshToken) {
       await Post.updateMany({endtime:{$lt: Date.now()}},{isvalid: true})
       const result = await Post.find({})
       res.status(200).json({data : result});
@@ -54,7 +54,7 @@ module.exports = {
   },
 
   postOne: async (req, res) => {
-    const result = await Post.findOne({_id : req.params.id})
+    const result = await Post.findOne({_id : req.params.id}).populate('userId', 'name').exec()
     res.status(200).json({data : result});
   },
 

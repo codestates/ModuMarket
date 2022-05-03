@@ -24,4 +24,10 @@ router.post('/out', controller.sign.out);
 // // (서버) Facebook callback
 // router.get('/in/facebook/callback', controller.user.get);
 
+// 카카오 로그인 or 회원가입 추가정보 받기전
+router.get('/kakao/callback', controller.sign.kakao);
+
+// 카카오 추가정보 받은 후 회원가입 완료
+router.get('/kakao/sign', controller.sign.kakaoSign);
+
 module.exports = router;
