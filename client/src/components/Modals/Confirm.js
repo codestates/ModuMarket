@@ -21,7 +21,12 @@ const Confirm = () => {
                 <ModalText>
                     <p>{text}</p>
                 </ModalText>
-                <ModalButton onClick={() => dispatch(showConfirmModal(false))}>확인</ModalButton>
+                {
+                    img === 'loading' ?
+                        <></>
+                        :
+                        <ModalButton onClick={() => dispatch(showConfirmModal(false))}>확인</ModalButton>
+                }
             </ModalContainer>
         </>
 

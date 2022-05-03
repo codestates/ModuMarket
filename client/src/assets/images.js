@@ -4,6 +4,7 @@ export const confirmImg = {
     check_woman1: "./images/check_woman_with_phone.png",
     check_woman2: "./images/check_woman.png",
     check_skull: "./images/skull_icon.png",
-    question: "./images/question.png"
+    question: "./images/question.png",
+    loading: "./images/loading.png",
 
 }
