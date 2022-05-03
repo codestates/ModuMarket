@@ -2,6 +2,9 @@ const User = require('../models/User');
 const bcrypt = require("bcrypt"); 
 const jwt = require('jsonwebtoken');
 const saltRounds = 10;  
+const axios = require('axios')
+
+
 
 module.exports = {
   up: async (req, res) => {
@@ -15,12 +18,6 @@ module.exports = {
 
     // // 비밀번호가 같지 않으면 팅겨내기
     // if (password !== passwordCheck) return res.json({message: "비밀번호가 같지 않습니다"});
-
-    // 이메일 검증
-    const sameEmailUser = await User.findOne({ email: email });
-    if (sameEmailUser !== null) {
-      return res.json({message: "이미 존재하는 이메일입니다"});
-    }
     
     // 솔트 생성 및 해쉬화 진행
     bcrypt.genSalt(saltRounds, (err, salt) => {
@@ -49,11 +46,21 @@ module.exports = {
         .then(() => {
           return res.status(201).json({data: newUser._id, message: '회원가입이 완료되었습니다'});
         })
-        .catch((err) => { //프론트에서 타입을 다 맞게 보내준다면, 이메일 중복을 여기서 잡아낼 수 있음
+        .catch((err) => { 
           throw new Error(err)
         })
       });
     });
+  },
+
+  emailCheck: async (req, res) => {
+    let { email } = req.body;
+    const sameEmailUser = await User.findOne({ email: email });
+    if (sameEmailUser) {
+      return res.json({message: "이미 존재하는 이메일입니다"});
+    }else {
+      return res.json({message: "사용가능한 이메일입니다"});
+    }
   },
 
   in:  (req, res) => {
@@ -115,4 +122,63 @@ module.exports = {
     .cookie('refreshToken',null,{ httpOnly: true})
     .send({accessToken: null, message: "로그아웃이 완료되었습니다."})
   },
+
+  kakao: async (req, res) => {
+    const token = req.headers.authorization.split(' ')[1]; 
+    // console.log(token)
+    const user = await axios({
+      method:'GET',
+      url:'https://kapi.kakao.com/v2/user/me',
+      headers:{
+          Authorization:`Bearer ${token}`
+      }
+    })
+    .then((data) => {
+      const {email} = data.data.kakao_account
+      const id = data.data.id
+      console.log(email)
+      console.log(id)
+
+      // 카카오에서 유저정보를 받아왔으면 카카오 유니크 키로, 가입했는지 여부 확인
+      const result = User.findOne({social_kakao:id}).exec()
+      if(result){ // 가입한 유저이면? 디비에 있는 유저의 동네정보, 아이디, 이메일을 갖고 토큰만들어서주기
+        const {_id, email, area_name} = result;
+        const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), 
+                process.env.ACCESS_SECRET, {expiresIn: '2h'});
+        // refreshToken 생성 14d 유효
+        const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), 
+                process.env.REFRESH_SECRET, {expiresIn: '14d'});
+        res
+        .cookie("refreshToken", refreshToken, {
+        maxAge: 1000 * 60 * 60 * 24 * 14, // 쿠키 유효시간: 14일
+        httpOnly: true,
+        })
+        .status(200)
+        .json({ data: {accessToken: accessToken}, message: "로그인에 성공하였습니다."});
+      } else { //가입안한 유저이면 추가정보 받는 경로로 아이디, 이메일 보내주기 .. 
+        return res.status(200).json({ id, email });
+      }
+    })
+  },
+
+  kakaoSign: async (req, res) => {
+    // req.body에 유저정보 (카카오고유 아이디, 이메일, 이름, 나이 , 동네주소)가 있을 것임
+    let {id, email, name, age, area_name} = req.body;
+    
+    const newUser = new User();
+    newUser.social_kakao = id;
+    newUser.name = name;
+    newUser.email = email;
+    newUser.age = age;
+    newUser.area_name = area_name;
+  
+    // console.log(User)
+    newUser.save()
+    .then(() => {
+      return res.status(201).json({data: newUser._id, message: '회원가입이 완료되었습니다'});
+    })
+    .catch((err) => { 
+      throw new Error(err)
+    })
+  }
 }
