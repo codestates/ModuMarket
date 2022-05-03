@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 
 module.exports = {
   postList: async(req, res) => {
-    if (!req.headers.authorization || !req.cookies.refreshToken) {
+    if (!req.headers.authorization && !req.cookies.refreshToken) {
       await Post.updateMany({endtime:{$lt: Date.now()}},{isvalid: true})
       const result = await Post.find({})
       res.status(200).json({data : result});
@@ -80,7 +80,7 @@ module.exports = {
       newPost.save()
       .then(() => {
         console.log('성공')
-        res.status(201).json({data : null, message: "게시글이 생성되었습니다"});
+        res.status(201).json({message: "게시글이 생성되었습니다"});
       })
       .catch((err) => { 
         console.log(err)
@@ -139,14 +139,14 @@ module.exports = {
           maxAge: 1000 * 60 * 60 * 24 * 14, // 쿠키 유효시간: 14일
           httpOnly: true,
         })
-        .status(201).json({data : null, message: "게시글이 생성되었습니다"});
+        .status(201).json({message: "게시글이 생성되었습니다"});
       })
       .catch((err) => { 
         console.log(err)
       })
     }
     if (!accTokenData && !refTokenData) {
-      return res.status(401).json({ data: null, message: "인증되지 않았습니다. 로그인이 필요합니다" })
+      return res.status(401).json({ message: "인증되지 않았습니다. 로그인이 필요합니다" })
     }
   },
 
@@ -158,14 +158,14 @@ module.exports = {
     if (accTokenData && refTokenData) {
       if(req.body.isvalid === true){
         await Post.findByIdAndUpdate(_id, {$set: {isvalid: true}})
-        res.status(200).json({data : null, message: "모집이 완료되었습니다"});
+        res.status(204).json({message: "모집이 완료되었습니다"});
       }else {
         const {_id, category, area_name, title, member_min, post_content, 
           image, post_location, endtime} = req.body
         await Post.findByIdAndUpdate(_id, {$set: {category, area_name, title, member_min, post_content, 
           image, post_location, endtime}},  
           {new: true}).exec()
-          res.status(200).json({data : null, message: "게시글이 수정되었습니다"});
+          res.status(200).json({message: "게시글이 수정되었습니다"});
       }
     }
     if (!accTokenData && refTokenData) {
@@ -201,7 +201,7 @@ module.exports = {
             maxAge: 1000 * 60 * 60 * 24 * 14, // 쿠키 유효시간: 14일
             httpOnly: true,
           })
-          .json({data : null, message: "모집이 완료되었습니다"});
+          .json({message: "모집이 완료되었습니다"});
         }else {
           const {_id, category, area_name, title, member_min, post_content, 
             image, post_location, endtime} = req.body
@@ -213,12 +213,12 @@ module.exports = {
               maxAge: 1000 * 60 * 60 * 24 * 14, // 쿠키 유효시간: 14일
               httpOnly: true,
             })
-            .status(200).json({data : null, message: "게시글이 수정되었습니다"});
+            .status(200).json({message: "게시글이 수정되었습니다"});
         }
       }
     }
     if (!accTokenData && !refTokenData) {
-      return res.status(401).json({ data: null, message: "인증되지 않았습니다. 로그인이 필요합니다" })
+      return res.status(401).json({ message: "인증되지 않았습니다. 로그인이 필요합니다" })
     }
 
   },
@@ -495,7 +495,7 @@ module.exports = {
       }
     }
     if (!accTokenData && !refTokenData) {
-      return res.status(401).json({ data: null, message: "인증되지 않았습니다. 로그인이 필요합니다" })
+      return res.status(401).json({ message: "인증되지 않았습니다. 로그인이 필요합니다" })
     }
   }
 }

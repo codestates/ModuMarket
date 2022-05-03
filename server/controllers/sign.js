@@ -13,7 +13,7 @@ module.exports = {
 
     // 빈값이 오면 팅겨내기
     if (!name || !email || !password || !age || !area_name) {
-      return res.json({message: "빠진 정보가 있습니다"});
+      return res.status(400).json({message: "빠진 정보가 있습니다"});
     }
 
     // // 비밀번호가 같지 않으면 팅겨내기
@@ -44,7 +44,7 @@ module.exports = {
         // console.log(User)
         newUser.save()
         .then(() => {
-          return res.status(201).json({data: newUser._id, message: '회원가입이 완료되었습니다'});
+          return res.status(201).json({message: '회원가입이 완료되었습니다'});
         })
         .catch((err) => { 
           throw new Error(err)
@@ -114,19 +114,16 @@ module.exports = {
   },
 
   out: async (req, res) => {
-    // 리프레시 토큰을 null로 주고 accessToken도 비워준다.
-
-    // delete user.refreshToken; // null값으로 수정
-    const result = await User.updateOne({email: req.body.email},{$set: {refreshToken: null}})
     res
-    .cookie('refreshToken',null,{ httpOnly: true})
-    .send({accessToken: null, message: "로그아웃이 완료되었습니다."})
+    .cookie('refreshToken',null,{ httpOnly: true, sameSite: 'none', secure: true, maxAge : 0 })
+    .send({message: "로그아웃이 완료되었습니다."})
+    .redirect('/')
   },
 
   kakao: async (req, res) => {
     const token = req.headers.authorization.split(' ')[1]; 
     // console.log(token)
-    const user = await axios({
+    await axios({
       method:'GET',
       url:'https://kapi.kakao.com/v2/user/me',
       headers:{
@@ -153,7 +150,7 @@ module.exports = {
         maxAge: 1000 * 60 * 60 * 24 * 14, // 쿠키 유효시간: 14일
         httpOnly: true,
         })
-        .status(200)
+        .status(201)
         .json({ data: {accessToken: accessToken}, message: "로그인에 성공하였습니다."});
       } else { //가입안한 유저이면 추가정보 받는 경로로 아이디, 이메일 보내주기 .. 
         return res.status(200).json({ id, email });
@@ -161,7 +158,7 @@ module.exports = {
     })
   },
 
-  kakaoSign: async (req, res) => {
+  inKakao: async (req, res) => {
     // req.body에 유저정보 (카카오고유 아이디, 이메일, 이름, 나이 , 동네주소)가 있을 것임
     let {id, email, name, age, area_name} = req.body;
     
@@ -175,7 +172,7 @@ module.exports = {
     // console.log(User)
     newUser.save()
     .then(() => {
-      return res.status(201).json({data: newUser._id, message: '회원가입이 완료되었습니다'});
+      return res.status(201).json({message: '회원가입이 완료되었습니다'});
     })
     .catch((err) => { 
       throw new Error(err)
