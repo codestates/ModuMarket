@@ -18,12 +18,6 @@ module.exports = {
 
     // // 비밀번호가 같지 않으면 팅겨내기
     // if (password !== passwordCheck) return res.json({message: "비밀번호가 같지 않습니다"});
-
-    // 이메일 검증
-    const sameEmailUser = await User.findOne({ email: email });
-    if (sameEmailUser !== null) {
-      return res.json({message: "이미 존재하는 이메일입니다"});
-    }
     
     // 솔트 생성 및 해쉬화 진행
     bcrypt.genSalt(saltRounds, (err, salt) => {
@@ -57,6 +51,16 @@ module.exports = {
         })
       });
     });
+  },
+
+  emailCheck: async (req, res) => {
+    let { email } = req.body;
+    const sameEmailUser = await User.findOne({ email: email });
+    if (sameEmailUser) {
+      return res.json({message: "이미 존재하는 이메일입니다"});
+    }else {
+      return res.json({message: "사용가능한 이메일입니다"});
+    }
   },
 
   in:  (req, res) => {

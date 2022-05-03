@@ -6,6 +6,9 @@ const controller = require('../controllers');
 // 회원가입
 router.post('/up', controller.sign.up);
 
+// 회원가입시 이메일 중복체크
+router.post('/emailcheck', controller.sign.emailCheck);
+
 // 로그인
 router.post('/in', controller.sign.in);
 
