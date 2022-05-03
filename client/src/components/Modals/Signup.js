@@ -41,10 +41,45 @@ function Signup() {
     const handleEmailCheck = () => {
 
     }
+    /* 카카오지도 API로 현재 유저 좌표를 동단위로 변환 */
+    const alterAddress = (position) => {
+        let x = position.coords.longitude;
+        let y = position.coords.latitude;
+        if (x && y) {
+            axios.get(
+                `https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x=${x}&y=${y}`,
+                {
+                    headers: {
+                        Authorization: `KakaoAK ${process.env.REACT_APP_KAKAO_API_KEY}`,
+                        "Content-Type": "application/json"
+                    }
+                }
+            ).then((result) => {
+                let location = result.data.documents[0].region_3depth_name;
+                setUserInputInfo({ ...userInputInfo, 'area_name': location });
+                dispatch(inputModalText(`${location} 동네 인증에 성공했습니다.`));
+                dispatch(changeModalImg('check_man'));
+                dispatch(showConfirmModal(true));
+            })
+        }
+    }
     /* 위치인증 확인 요청 */
     const getUserLocation = () => {
+        dispatch(inputModalText('로 딩 중'));
+        dispatch(changeModalImg('loading'));
+        dispatch(showConfirmModal(true));
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                alterAddress(position);
+            });
+        } else {
+            console.log('위치 인증 실패');
+            //loc.innerHTML = "이 문장은 사용자의 웹 브라우저가 Geolocation API를 지원하지 않을 때 나타납니다!";
+
+        }
 
     }
+
     /* 회원가입 요청 */
     const handleSignup = () => {
         //입력값이 모두 존재할 경우만 요청보냄
@@ -64,9 +99,12 @@ function Signup() {
                 },
                 { 'Content-Type': 'application/json', withCredentials: true }
             ).then((result) => {
-                dispatch(inputModalText(result.message));
+                //result.id값 어디에 저장할지 고민필요
+                dispatch(inputModalText(result.data.message));
                 dispatch(changeModalImg('check_man'));
+                dispatch(showSignupModal(false));
                 dispatch(showConfirmModal(true));
+
             })
         } else {
             setErrorMessage('모든 항목을 빠짐없이 입력해주세요.');
@@ -108,10 +146,9 @@ function Signup() {
                         <input type='text' onChange={handleInputValue('name')} />
                         <span>나이</span>
                         <input type='number' onChange={handleInputValue('age')} />
-                        <span>동네인증</span>
-                        <input type='text' onChange={handleInputValue('area_name')} />
-                        {/* <button onClick={getUserLocation}>동네 인증하기</button> */}
-                        {/* <input type="checkbox"/> */}
+                        <button onClick={getUserLocation}>동네 인증하기</button>
+                        {/* 서비스 이용동의 체크란
+                        <input type="checkbox"/> */}
                         <button type='submit' onClick={handleSignup}>
                             회원가입
                         </button>
