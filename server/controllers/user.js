@@ -1,4 +1,6 @@
 const User = require('../models/User');
+const Post = require('../models/Post');
+const Application = require('../models/Application');
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
 const path = require('path')
@@ -41,7 +43,7 @@ module.exports = {
     }
     if (accTokenData && !refTokenData) {
       const userinfo = await User.findOne({ email: accTokenData.email }).exec();
-      const { _id, email, area_name } = userinfo
+      const { _id, name, email, age, area_name } = userinfo
       const refreshToken = jwt.sign(JSON.parse(JSON.stringify({ _id, email, area_name })), process.env.REFRESH_SECRET, { expiresIn: '14d' });
 
       res
@@ -97,7 +99,7 @@ module.exports = {
         const accessToken = jwt.sign(JSON.parse(JSON.stringify({ _id, email, area_name })), process.env.ACCESS_SECRET, { expiresIn: '2h' });
         res.status(200).json({ data: { accessToken }, message: '인증이 완료되었습니다' });
       } else {
-        res.status(404).json({ data: null, message: '비밀번호가 일치하지않습니다' });
+        res.status(204).json({ data: null, message: '비밀번호가 일치하지않습니다' });
       }
     }
 
@@ -202,9 +204,7 @@ module.exports = {
     if (!accTokenData && !refTokenData) {
       res.status(404).json({ data: null, message: "access and refresh token has been tempered" })
     }
-  }
-  ,
-
+  },
 
   uploadImage: async (req, res) => {
     console.log(req.file);
@@ -231,7 +231,6 @@ module.exports = {
     const result = await User.findOne({ email: req.params.email }).select("user_image").exec();
 
     res.send(result);
-
   },
 
   deleteInfo: async (req, res) => {
@@ -261,7 +260,6 @@ module.exports = {
     }
   },
 
-
   writePost: async (req, res) => { //내가 작성한 공고글
     const token = req.headers.authorization.split(' ')[1];
     const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET);
@@ -272,6 +270,7 @@ module.exports = {
     if (accTokenData && refTokenData) {
       const { _id } = accTokenData
       try {
+        await Post.updateMany({endtime:{$lt: Date.now()}},{isvalid: true})
         const result = await Post.find({ userId: _id }).exec();
         if (result.length > 0) { //내가 작성한 공고글이 있을때
           res.status(200).json({ data: result, message: 'list fetch success' });
@@ -292,6 +291,7 @@ module.exports = {
         const accessToken = jwt.sign(JSON.parse(JSON.stringify({ _id, email, area_name })), process.env.ACCESS_SECRET, { expiresIn: '2h' });
 
         // 포스트 컬렉션에서 내가 작성한 공고글이 있는지 조회
+        await Post.updateMany({endtime:{$lt: Date.now()}},{isvalid: true})
         const result = await Post.find({ userId: _id }).exec();
         if (result.length > 0) { //내가 작성한 공고글이 있을때
           res.status(200).json({ data: { result, accessToken }, message: 'list fetch success' });
@@ -308,6 +308,7 @@ module.exports = {
         const refreshToken = jwt.sign(JSON.parse(JSON.stringify({ _id, email, area_name })), process.env.REFRESH_SECRET, { expiresIn: '14d' });
 
         // 포스트 컬렉션에서 내가 작성한 공고글이 있는지 조회
+        await Post.updateMany({endtime:{$lt: Date.now()}},{isvalid: true})
         const result = await Post.find({ userId: _id }).exec();
         if (result.length > 0) { //내가 작성한 공고글이 있을때
           res.status(200).json({ data: result, message: 'list fetch success' });
@@ -335,6 +336,7 @@ module.exports = {
     // application컬렉션에서 userId가 일치하고 isapplied상태가 true인것 필터링해서 해당 글의 post_id만 매핑하여 전달하기
     if (accTokenData && refTokenData) {
       const { _id } = accTokenData
+      await Post.updateMany({endtime:{$lt: Date.now()}},{isvalid: true})
       const result = await Application.find({ userId: _id, isapplied: true }).populate('post_id').exec();
       if (result.length > 0) {
         const postresult = result.map((data) => {
@@ -352,6 +354,7 @@ module.exports = {
         const { _id, email, area_name } = userdata
         const accessToken = jwt.sign(JSON.parse(JSON.stringify({ _id, email, area_name })), process.env.ACCESS_SECRET, { expiresIn: '2h' });
 
+        await Post.updateMany({endtime:{$lt: Date.now()}},{isvalid: true})
         const result = await Application.find({ userId: _id, isapplied: true }).populate('post_id').exec();
         if (result.length > 0) {
           const postresult = result.map((data) => {
@@ -370,6 +373,7 @@ module.exports = {
         const { _id, email, area_name } = userdata
         const refreshToken = jwt.sign(JSON.parse(JSON.stringify({ _id, email, area_name })), process.env.ACCESS_SECRET, { expiresIn: '2h' });
 
+        await Post.updateMany({endtime:{$lt: Date.now()}},{isvalid: true})
         const result = await Application.find({ userId: _id, isapplied: true }).populate('post_id').exec();
         if (result.length > 0) {
           const postresult = result.map((data) => {

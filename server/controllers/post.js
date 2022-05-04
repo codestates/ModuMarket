@@ -6,49 +6,55 @@ const jwt = require('jsonwebtoken');
 
 module.exports = {
   postList: async(req, res) => {
-    const token = req.headers.authorization.split(' ')[1]; 
-    const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET); 
-    const refTokenData = jwt.verify(req.cookies.refreshToken, process.env.REFRESH_SECRET);
-    // 토큰있는지 확인해서 없으면 다 보여주고
-    // 토큰 있으면 토큰안에 있는 area_name으로 필터링해서 보여주기 
-    if (accTokenData && refTokenData) {
-      const { area_name } = accTokenData;
-      const result = await Post.find({area_name})
-      res.status(200).json({data : result});
-    }
-    if (!accTokenData && refTokenData) {
-      const { email } = refTokenData;
-      const userResult =  await User.findOne({ email }).exec();
-      if(refTokenData){
-        const {_id, email, area_name} = userResult
-        const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
-        const result = await Post.find({area_name})
-        res.status(200).json({data : {result,accessToken}});
-      }
-    }    
-    if (accTokenData && !refTokenData) {
-      const { email } = accTokenData;
-      const userResult =  await User.findOne({ email }).exec();
-      if(accTokenData){
-        const {_id, email, area_name} = userResult
-        const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.REFRESH_SECRET, {expiresIn: '14d'});
-        const result = await Post.find({area_name})
-        res.status(200)
-        .cookie("refreshToken", refreshToken, {
-          maxAge: 1000 * 60 * 60 * 24 * 14, // 쿠키 유효시간: 14일
-          httpOnly: true,
-        })
-        .json({data : result});
-      }
-    }    
-    if (!accTokenData && !refTokenData) {
+    if (!req.headers.authorization && !req.cookies.refreshToken) {
+      await Post.updateMany({endtime:{$lt: Date.now()}},{isvalid: true})
       const result = await Post.find({})
       res.status(200).json({data : result});
+    } else {
+      const token = req.headers.authorization.split(' ')[1]; 
+      const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET); 
+      const refTokenData = jwt.verify(req.cookies.refreshToken, process.env.REFRESH_SECRET);
+      // 토큰있는지 확인해서 없으면 다 보여주고
+      // 토큰 있으면 토큰안에 있는 area_name으로 필터링해서 보여주기 
+      if (accTokenData && refTokenData) {
+        const { area_name } = accTokenData;
+        await Post.updateMany({endtime:{$lt: Date.now()}},{isvalid: true})
+        const result = await Post.find({area_name})
+        res.status(200).json({data : result});
+      }
+      if (!accTokenData && refTokenData) {
+        const { email } = refTokenData;
+        const userResult =  await User.findOne({ email }).exec();
+        if(refTokenData){
+          const {_id, email, area_name} = userResult
+          const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
+          await Post.updateMany({endtime:{$lt: Date.now()}},{isvalid: true})
+          const result = await Post.find({area_name})
+          res.status(200).json({data : {result,accessToken}});
+        }
+      }    
+      if (accTokenData && !refTokenData) {
+        const { email } = accTokenData;
+        const userResult =  await User.findOne({ email }).exec();
+        if(accTokenData){
+          const {_id, email, area_name} = userResult
+          const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.REFRESH_SECRET, {expiresIn: '14d'});
+          await Post.updateMany({endtime:{$lt: Date.now()}},{isvalid: true})
+          const result = await Post.find({area_name})
+          res.status(200)
+          .cookie("refreshToken", refreshToken, {
+            maxAge: 1000 * 60 * 60 * 24 * 14, // 쿠키 유효시간: 14일
+            httpOnly: true,
+          })
+          .json({data : result});
+        }
+      }    
     }
+
   },
 
   postOne: async (req, res) => {
-    const result = await Post.findOne({_id : req.params.id})
+    const result = await Post.findOne({_id : req.params.id}).populate('userId', 'name').exec()
     res.status(200).json({data : result});
   },
 
@@ -74,7 +80,7 @@ module.exports = {
       newPost.save()
       .then(() => {
         console.log('성공')
-        res.status(201).json({data : null, message: "게시글이 생성되었습니다"});
+        res.status(201).json({message: "게시글이 생성되었습니다"});
       })
       .catch((err) => { 
         console.log(err)
@@ -133,14 +139,14 @@ module.exports = {
           maxAge: 1000 * 60 * 60 * 24 * 14, // 쿠키 유효시간: 14일
           httpOnly: true,
         })
-        .status(201).json({data : null, message: "게시글이 생성되었습니다"});
+        .status(201).json({message: "게시글이 생성되었습니다"});
       })
       .catch((err) => { 
         console.log(err)
       })
     }
     if (!accTokenData && !refTokenData) {
-      return res.status(401).json({ data: null, message: "인증되지 않았습니다. 로그인이 필요합니다" })
+      return res.status(401).json({ message: "인증되지 않았습니다. 로그인이 필요합니다" })
     }
   },
 
@@ -152,14 +158,14 @@ module.exports = {
     if (accTokenData && refTokenData) {
       if(req.body.isvalid === true){
         await Post.findByIdAndUpdate(_id, {$set: {isvalid: true}})
-        res.status(200).json({data : null, message: "모집이 완료되었습니다"});
+        res.status(204).json({message: "모집이 완료되었습니다"});
       }else {
         const {_id, category, area_name, title, member_min, post_content, 
           image, post_location, endtime} = req.body
         await Post.findByIdAndUpdate(_id, {$set: {category, area_name, title, member_min, post_content, 
           image, post_location, endtime}},  
           {new: true}).exec()
-          res.status(200).json({data : null, message: "게시글이 수정되었습니다"});
+          res.status(200).json({message: "게시글이 수정되었습니다"});
       }
     }
     if (!accTokenData && refTokenData) {
@@ -195,7 +201,7 @@ module.exports = {
             maxAge: 1000 * 60 * 60 * 24 * 14, // 쿠키 유효시간: 14일
             httpOnly: true,
           })
-          .json({data : null, message: "모집이 완료되었습니다"});
+          .json({message: "모집이 완료되었습니다"});
         }else {
           const {_id, category, area_name, title, member_min, post_content, 
             image, post_location, endtime} = req.body
@@ -207,12 +213,12 @@ module.exports = {
               maxAge: 1000 * 60 * 60 * 24 * 14, // 쿠키 유효시간: 14일
               httpOnly: true,
             })
-            .status(200).json({data : null, message: "게시글이 수정되었습니다"});
+            .status(200).json({message: "게시글이 수정되었습니다"});
         }
       }
     }
     if (!accTokenData && !refTokenData) {
-      return res.status(401).json({ data: null, message: "인증되지 않았습니다. 로그인이 필요합니다" })
+      return res.status(401).json({ message: "인증되지 않았습니다. 로그인이 필요합니다" })
     }
 
   },
@@ -489,7 +495,7 @@ module.exports = {
       }
     }
     if (!accTokenData && !refTokenData) {
-      return res.status(401).json({ data: null, message: "인증되지 않았습니다. 로그인이 필요합니다" })
+      return res.status(401).json({ message: "인증되지 않았습니다. 로그인이 필요합니다" })
     }
   }
 }
