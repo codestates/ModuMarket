@@ -6,7 +6,7 @@ const app = express();
 const fs = require('fs');
 const https = require('https');
 const PORT = 4000;
-const db = require('./db/index'); 
+const db = require('./db/index');
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 

@@ -81,10 +81,61 @@ export const ModalText = styled.div`
   }
 `;
 export const LoginInput = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    > span {
+      position: absolute;
+      padding: 2rem;
+      top: 0;
+      right: 0;
+      font-size: 2rem;
+      cursor: pointer;
+    }
 `;
 export const SignupInput = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    > span {
+      position: absolute;
+      padding: 2rem;
+      top: 0;
+      right: 0;
+      font-size: 2rem;
+      cursor: pointer;
+    }
 `
 export const ModalImg = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 485px;
+    object-fit: cover;
+    img{
+      width: 20rem;
+      height: 20rem;
+    }
 `
 export const ModalButton = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background-color: #FF6767;
+    border: none;
+    border-radius: 4px;
+    color : white;
+    font-size : 1rem;
+    font-weight: 700;
+    height: 2.5rem;
+    &:hover {
+        color: #FF6767;
+        transition: all 0.3s;
+        border: 1px solid #FF6767;
+        background-color: #fff;
+    }
+    
 `

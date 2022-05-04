@@ -4,6 +4,7 @@ import { showConfirmModal } from '../../reducers/modalSlice';
 import { ModalBackground, ModalContainer, ModalText, ModalImg, ModalButton } from './styled';
 import { confirmImg } from '../../assets/images'
 
+
 const Confirm = () => {
 
     const img = useSelector((state) => state.modal.modalImg);
@@ -14,11 +15,19 @@ const Confirm = () => {
         <>
             <ModalBackground onClick={() => dispatch(showConfirmModal(false))} />
             <ModalContainer>
-                <ModalImg>{confirmImg.img}</ModalImg>
+
+                <ModalImg>
+                    <img src={confirmImg[`${img}`]} alt={`${img}`} />
+                </ModalImg>
                 <ModalText>
                     <p>{text}</p>
                 </ModalText>
-                <ModalButton onClick={() => dispatch(showConfirmModal(false))}>확인</ModalButton>
+                {
+                    img === 'loading' ?
+                        <></>
+                        :
+                        <ModalButton onClick={() => dispatch(showConfirmModal(false))}>확인</ModalButton>
+                }
             </ModalContainer>
         </>
 
