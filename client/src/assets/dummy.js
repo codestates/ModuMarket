@@ -17,7 +17,12 @@ export const dummyData = {
             endtime : "45분",
             userImage : userImage,
             userName : '김코딩',
-            post_location : '망원동'
+            post_location : '망원동',
+            userId : {
+                _id : "dd",
+                name : '김코딩',
+                image : pasta
+            }
             
         },
 
@@ -27,7 +32,13 @@ export const dummyData = {
             category : 1,
             location : "서울시 마포구 망원동",
             isValid : false,
-            content : "푸라닭 콘소메이징 먹으려고 하는데 혼자 먹기엔 너무 많아서 반띵해요!"
+            content : "푸라닭 콘소메이징 먹으려고 하는데 혼자 먹기엔 너무 많아서 반띵해요!",
+            member_num : 2,
+            member_min : 3,
+            endtime : "45분",
+            userImage : userImage,
+            userName : '랄라블라',
+            post_location : '망원동'
         
         },
 
@@ -37,7 +48,13 @@ export const dummyData = {
             category : 2,
             location : "서울시 마포구 망원동",
             isValid : true,
-            content : "엄마가 갖다줬는데 30인분을 가져다 줬어요 나눔해요"
+            content : "엄마가 갖다줬는데 30인분을 가져다 줬어요 나눔해요",
+            member_num : 4,
+            member_min : 5,
+            endtime : "45분",
+            userImage : userImage,
+            userName : '고갱님',
+            post_location : '망원동'
         
         
         },
@@ -47,7 +64,13 @@ export const dummyData = {
             category : 3,
             location : "서울시 마포구 망원동 망원유수지 라리루리 랄랄라룔ㄹ로 뵹뿅뿅뿅뿅뿅뿅ㅃ요ㅃ요ㅃ요ㅃ용ㅇ뾰요용요",
             isValid : true,
-            content : "한강공원에 나왔는데 치킨 한꺼번에 시켜서 나눔하실분 구합니당"
+            content : "한강공원에 나왔는데 치킨 한꺼번에 시켜서 나눔하실분 구합니당",
+            member_num : 5,
+            member_min : 6,
+            endtime : "45분",
+            userImage : userImage,
+            userName : '어서오세요',
+            post_location : '망원동'
         
         
         },
@@ -57,7 +80,13 @@ export const dummyData = {
             category : 4,
             location : "서울시 마포구 망원동",
             isValid : false,
-            content : "빅스타 피자 XXXL로 시킬건데 혼자서 먹으면 양이 너무 많아요. 어차피 박스 2개로 오는거 반띵해서 가져가실분 구합니당 오늘 저녁에 먹을거구요 맛은 프리미엄 쿼드에 갈릭엣지 추가할거에요. 가격은 27900원입니당."
+            content : "빅스타 피자 XXXL로 시킬건데 혼자서 먹으면 양이 너무 많아요. 어차피 박스 2개로 오는거 반띵해서 가져가실분 구합니당 오늘 저녁에 먹을거구요 맛은 프리미엄 쿼드에 갈릭엣지 추가할거에요. 가격은 27900원입니당.",
+            member_num : 6,
+            member_min : 7,
+            endtime : "45분",
+            userImage : userImage,
+            userName : '랄라블라',
+            post_location : '망원동'
         
         
         },
@@ -67,7 +96,13 @@ export const dummyData = {
             category : 1,
             location : "서울시 마포구 망원동",
             isValid : true,
-            content : "빅스타 피자 XXXL로 시킬건데 혼자서 먹으면 양이 너무 많아요. 어차피 박스 2개로 오는거 반띵해서 가져가실분 구합니당 오늘 저녁에 먹을거구요 맛은 프리미엄 쿼드에 갈릭엣지 추가할거에요. 가격은 27900원입니당."
+            content : "빅스타 피자 XXXL로 시킬건데 혼자서 먹으면 양이 너무 많아요. 어차피 박스 2개로 오는거 반띵해서 가져가실분 구합니당 오늘 저녁에 먹을거구요 맛은 프리미엄 쿼드에 갈릭엣지 추가할거에요. 가격은 27900원입니당.",
+            member_num : 7,
+            member_min : 8,
+            endtime : "45분",
+            userImage : userImage,
+            userName : '입니다',
+            post_location : '망원동'
         
         
         }

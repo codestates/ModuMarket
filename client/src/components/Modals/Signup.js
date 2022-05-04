@@ -23,7 +23,7 @@ function Signup() {
         password: '',
         name: '',
         age: '',
-        area_name: '',
+        area_name: '한라산',
     });
 
     /* 회원 정보 입력 관리 함수 */
@@ -51,8 +51,9 @@ function Signup() {
         if (userInputInfo.email &&
             userInputInfo.password &&
             userInputInfo.name &&
-            userInputInfo.age &&
-            userInputInfo.area_name) {
+            userInputInfo.age 
+            // &&userInputInfo.area_name
+            ) {
             axios.post(
                 `${REACT_APP_API_URL}/sign/up`,
                 {
@@ -108,7 +109,7 @@ function Signup() {
                         <input type='text' onChange={handleInputValue('name')} />
                         <span>나이</span>
                         <input type='number' onChange={handleInputValue('age')} />
-                        <button onClick={getUserLocation}>동네 인증하기</button>
+                        {/* <button onClick={getUserLocation}>동네 인증하기</button> */}
                         {/* <input type="checkbox"/> */}
                         <button type='submit' onClick={handleSignup}>
                             회원가입

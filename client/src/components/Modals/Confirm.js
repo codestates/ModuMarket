@@ -14,7 +14,7 @@ const Confirm = () => {
         <>
             <ModalBackground onClick={() => dispatch(showConfirmModal(false))} />
             <ModalContainer>
-                <ModalImg>{confirmImg[`${img}`]}</ModalImg>
+                <ModalImg>{confirmImg.img}</ModalImg>
                 <ModalText>
                     <p>{text}</p>
                 </ModalText>

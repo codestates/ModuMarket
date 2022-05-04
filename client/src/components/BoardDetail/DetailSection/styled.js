@@ -13,7 +13,7 @@ export const Wrap = styled.div`
     width : 100%;
     display : flex;
     justify-content:center;
-    padding : 7rem 0 5rem 0;
+    padding : 5rem 0 3rem 0;
 `
 
 export const TitleWrap = styled.div`
@@ -80,13 +80,15 @@ export const DetailWrap = styled.div`
 
 export const DetailPhoto = styled.div`
     img {
-        width :44rem;
-        height : 24.6rem;
+        width : ${(props) => 
+            (props.image === "" ? "32rem" : "40rem")};
+        height : ${(props) => 
+            (props.image === "" ? "28rem" : "24.6rem")};
     }
 `
 
 export const Detail = styled.div`
-    padding : 2rem 4rem 0 4rem;
+    padding : 4rem 2.5rem 0 5.5rem;
 `
 
 export const DetailCategory = styled.div`
