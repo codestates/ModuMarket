@@ -2,12 +2,12 @@ import styled from 'styled-components'
 
 export const Section = styled.section`
     width : 100vw;
-    height : 34rem;
+    height : 70%;
 `
 
 
 export const Wrap = styled.div`
-    padding-top : 3rem;
+    padding : 3rem 0;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -40,9 +40,9 @@ export const MapTitle = styled.div`
 export const Map = styled.div`
     display: flex;
     justify-content : center;
-    img{
-        width : 75%;
-    }
+    width : 75%;
+    height: 25rem;
+    
     
 
 `

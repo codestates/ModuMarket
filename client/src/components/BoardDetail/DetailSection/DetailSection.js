@@ -7,6 +7,7 @@ import HobbiesIcon from '../../../assets/hobbies_icon.png'
 import NecessityIcon from '../../../assets/necessity_icon.png'
 import MemberIcon from '../../../assets/member.png'
 import TimerIcon from '../../../assets/timer.png'
+import Photo from '../../../assets/photo.png'
 import {Section, Wrap, 
         TitleWrap, Title, 
         ButtonWrap, Button,
@@ -17,11 +18,12 @@ import {Section, Wrap,
         DetailMemberAndTime, 
         DetailButtonWrap, DetailButton } from './styled';
 
-function DetailSection (){
+function DetailSection ({info}){
+    
+    // console.log(info)
 
-    const [Data, setData] = useState(dummyData.cardInfo[0])
     const category = ["패션, 뷰티","식품","생필품","취미, 반려","유아동"];
-        let categoryNumber = Data.category;
+        let categoryNumber = info.category;
         let categoryImg;
 
         if(category[categoryNumber] === "패션, 뷰티"){
@@ -40,12 +42,16 @@ function DetailSection (){
             categoryImg = BabiesIcon;
         }
 
+        function handleDelete () {
+            
+        }
+
     return (
         <Section>
             <Wrap>
                 <TitleWrap>
                     <Title>
-                        <h2>귤 10봉지 공동구매 구해요.</h2>
+                        <h2>{info.title}</h2>
                     </Title>
                     <ButtonWrap>
                         <Button background="#FF6767">
@@ -59,9 +65,11 @@ function DetailSection (){
             </Wrap>
             <SectionWrap>
                 <DetailWrap>
-                        <DetailPhoto>
-                            <img src= {Data.image} art ="Card Detail Photo"/>
-                        </DetailPhoto>
+                            {
+                                info.image === ""
+                                    ? <DetailPhoto image = ""><img src= {Photo} art ="Card Detail Photo"/></DetailPhoto> 
+                                    : <DetailPhoto><img src= {info.image} art ="Card Detail Photo"/></DetailPhoto> 
+                            }
                         <Detail>
                             <DetailCategory>
                             <img src ={categoryImg} alt='category icon'/>
@@ -72,14 +80,14 @@ function DetailSection (){
                                     <img src = {MemberIcon} art = "Card Member Icon"/>
                                     <span>참가인원</span>
                                 </DetailMemberAndTime>
-                                <span>{Data.member_num} / {Data.member_min}</span>
+                                <span>{info.member_num} / {info.member_min}</span>
                             </DetailMemberAndTimeWrap>
                             <DetailMemberAndTimeWrap>
                                 <DetailMemberAndTime>
                                     <img src = {TimerIcon} art = "Card Timer Icon"/>
-                                    <span>남은시간</span>
+                                    <span>종료일</span>
                                 </DetailMemberAndTime>
-                                <span>{Data.endtime}</span>
+                                <span>{info.endtime}</span>
                             </DetailMemberAndTimeWrap>
                             <DetailButtonWrap>
                                 <DetailButton background="#FF6767">

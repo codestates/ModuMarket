@@ -1,6 +1,8 @@
-import React ,{useState} from 'react';
+import React ,{useState, useEffect} from 'react';
 import Cards from '../../components/Cards/Cards'
 import {dummyData} from '../../assets/dummy'
+import axios from 'axios'
+import { REACT_APP_API_URL } from '../../config'
 import {
     Section,
     Wrap,
@@ -15,9 +17,28 @@ import {
     } from "./styled"
 
 
-function BoardPage() {
+function BoardPage () {
 
     const [cardInfo, setCardInfo] = useState(dummyData.cardInfo)
+    
+    async function handleCardInfo(){
+        const result = await axios({
+            url : `${REACT_APP_API_URL}/post`,
+            method: 'GET',
+            headers : {
+                "Content-Type": "application/json",
+                //authorization : `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjZmOTk2YWYxOTg1OGQwZTZiNGVhYWQiLCJlbWFpbCI6IjIiLCJhcmVhX25hbWUiOiLshJzsmrgiLCJpYXQiOjE2NTE1MDk4MjIsImV4cCI6MTY1MTUxNzAyMn0.ALBw2B7lGDBpS-P6k-REKoYUs227u8zh15cGVvnDAqg`,
+            },
+            withCredentials : true
+        })
+        //console.log(result)
+        setCardInfo(result.data.data)
+
+    }
+    
+    useEffect(()=> {
+        handleCardInfo()
+    },[])
 
     return (
         <div>

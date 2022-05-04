@@ -1,5 +1,6 @@
-import React ,{useState} from 'react';
+import React ,{useState, useEffect} from 'react';
 import {dummyData} from "../../../assets/dummy"
+import NullPhoto from '../../../assets/null_photo.png'
 import {
     Section,
     Wrap,
@@ -9,22 +10,25 @@ import {
     UserNameWrap,
     UserContent} from './styled'
 
-function ContentSection (){
-    const [Data, setData] = useState(dummyData.cardInfo[0])
+function ContentSection ({info}){
+    // console.log(info)
+    
+    
     return (
         <Section>
             <Wrap>
                 <ContentWrap>
                     <UserWrap>
-                        <UserPhotoWrap>
-                            <img src = {Data.userImage}/>
-                        </UserPhotoWrap>
+                        {   info.userId.image === undefined || null
+                            ? <UserPhotoWrap photo = ''><img src = {NullPhoto}/></UserPhotoWrap>
+                            : <UserPhotoWrap photo = ''><img src = {info.userId.image}/></UserPhotoWrap>
+                        }
                         <UserNameWrap>
-                            <span>{Data.userName}</span>
+                            <span>{info.userId.name}</span>
                         </UserNameWrap>
                     </UserWrap>
                     <UserContent>
-                        <p>{Data.content}</p>
+                        <p>{info.post_content}</p>
                     </UserContent>
                 </ContentWrap>
             </Wrap>

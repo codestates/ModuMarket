@@ -11,7 +11,7 @@ export const Wrap = styled.div`
     padding-top: 3rem;
     justify-content: center;
     width : 100%;
-    margin-top: 5rem;
+    margin-top: 4rem;
 `
 
 export const ContentWrap = styled.div`
@@ -28,6 +28,7 @@ export const UserPhotoWrap = styled.div`
         width : 5rem;
         height : 5rem;
         border-radius: 70%;
+        border: 0.5px solid #858585;
     }
 `
 
@@ -47,7 +48,7 @@ export const UserContent = styled.div`
     & > p{
         padding: 0.8rem 0;
         overflow: hidden;
-        height : 5.5rem;
+        height : 4.8rem;
         margin: 0;
     }
     
