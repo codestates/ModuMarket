@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import {
     showLoginModal,
-    showSignupModal,
+    showSignupSocialModal,
     showConfirmModal,
     inputModalText,
     changeModalImg
@@ -13,23 +13,23 @@ import {
     ModalContainer,
     ModalText,
     SignupInput,
-    ModalButton
+    LoginSocial
 } from './styled'
 import axios from 'axios'
 import { REACT_APP_API_URL, REDIRECT_URI } from '../../config';
 
-function Signup() {
+function SignupSocial() {
 
     const dispatch = useDispatch();
     const [errorMessage, setErrorMessage] = useState('');
-    const [passwordCheck, setPasswordCheck] = useState('');
-    const [isPWCheck, setIsPWCheck] = useState(false);
+    const userSocialId = useSelector((state) => state.modal.socialInfoId);
+    const userSocialEmail = useSelector((state) => state.modal.socialInfoEmail);
     const [userInputInfo, setUserInputInfo] = useState({
-        email: '',
-        password: '',
+        id: userSocialId,
+        email: userSocialEmail,
         name: '',
         age: '',
-        area_name: '한라산',
+        area_name: '',
     });
     const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_KAKAO_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
 
@@ -37,17 +37,7 @@ function Signup() {
     const handleInputValue = (key) => (e) => {
         setUserInputInfo({ ...userInputInfo, [key]: e.target.value });
     }
-    /* 비밀번호 확인 */
-    const handlePWcheck = (key) => (e) => {
-        setPasswordCheck({ ...passwordCheck, [key]: e.target.value });
-        if (passwordCheck === userInputInfo.password) {
-            setIsPWCheck(true);
-        }
-    }
-    /* 이메일 중복확인 요청 */
-    const handleEmailCheck = () => {
 
-    }
     /* 카카오지도 API로 현재 유저 좌표를 동단위로 변환 */
     const alterAddress = (position) => {
         let x = position.coords.longitude;
@@ -90,17 +80,19 @@ function Signup() {
     /* 회원가입 요청 */
     const handleSignup = () => {
         //입력값이 모두 존재할 경우만 요청보냄
-        if (userInputInfo.email &&
-            userInputInfo.password &&
+        if (
+            userInputInfo.id &&
+            userInputInfo.email &&
             userInputInfo.name &&
-            userInputInfo.age
-            // &&userInputInfo.area_name
+            userInputInfo.age &&
+            userInputInfo.area_name
         ) {
+            // ! post요청으로 서버 바꿈
             axios.post(
-                `${REACT_APP_API_URL}/sign/up`,
+                `${REACT_APP_API_URL}/sign/in/kakao`,
                 {
+                    id: userInputInfo.id,
                     email: userInputInfo.email,
-                    password: userInputInfo.password,
                     name: userInputInfo.name,
                     age: userInputInfo.age,
                     area_name: userInputInfo.area_name
@@ -110,7 +102,7 @@ function Signup() {
                 //result.id값 어디에 저장할지 고민필요
                 dispatch(inputModalText(result.data.message));
                 dispatch(changeModalImg('check_man'));
-                dispatch(showSignupModal(false));
+                dispatch(showSignupSocialModal(false));
                 dispatch(showConfirmModal(true));
 
             })
@@ -121,35 +113,14 @@ function Signup() {
     return (
         <>
             {/* onClick시 모달창 닫히게끔 모달창 띄우는 상태가 리덕스로 관리*/}
-            <ModalBackground onClick={() => dispatch(showSignupModal(false))} />
+            <ModalBackground onClick={() => dispatch(showSignupSocialModal(false))} />
             <ModalContainer>
                 <ModalText>
-                    <span onClick={() => dispatch(showSignupModal(false))}>&times;</span>
-                    <h2>회원가입</h2>
-                    <p>이미 회원이신가요?
-                        {/* Login 모달창으로 변경하도록 해당 상태 관리*/}
-                        <button onClick={() => {
-                            dispatch(showSignupModal(false))
-                            dispatch(showLoginModal(true))
-                        }}>로그인 하기</button>
-                    </p>
+                    <span onClick={() => dispatch(showSignupSocialModal(false))}>&times;</span>
+                    <h2>소셜 회원가입</h2>
                 </ModalText>
                 <SignupInput>
                     <form onSubmit={(e) => e.preventDefault()}>
-                        <span>이메일</span>
-                        <input type='email' onChange={handleInputValue('email')} placeholder="E-mail을 입력해주세요" />
-                        {/* <button>중복확인</button> */}
-                        <span>비밀번호</span>
-                        <input
-                            type='password'
-                            onChange={handleInputValue('password')}
-                            placeholder="비밀번호를 입력해주세요" />
-                        <span>비밀번호 확인</span>
-                        <input
-                            type='password'
-                            onChange={handlePWcheck('passwordCheck')}
-                            placeholder="비밀번호 확인을 위해 다시 입력해주세요" />
-                        {isPWCheck ? <p>비밀번호가 일치합니다</p> : <p>비밀번호가 일치하지 않습니다</p>}
                         <span>이름</span>
                         <input type='text' onChange={handleInputValue('name')} />
                         <span>나이</span>
@@ -157,9 +128,9 @@ function Signup() {
                         <button onClick={getUserLocation}>동네 인증하기</button>
                         {/* 서비스 이용동의 체크란
                         <input type="checkbox"/> */}
-                        <ModalButton type='submit' onClick={handleSignup}>
+                        <button type='submit' onClick={handleSignup}>
                             회원가입
-                        </ModalButton>
+                        </button>
                         <div className='alert-box'>{errorMessage}</div>
                     </form>
                 </SignupInput>
@@ -168,4 +139,4 @@ function Signup() {
         </>
     )
 }
-export default Signup;
+export default SignupSocial;

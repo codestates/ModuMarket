@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../reducers/loginSlice';
 import {
     showLoginModal,
-    showSignupModal,
+    showSignupGateModal,
     showConfirmModal,
     inputModalText,
     changeModalImg
@@ -25,6 +25,9 @@ function Header() {
     const isLogin = useSelector((state) => state.login.isLogin);
     const accessToken = useSelector((state) => state.login.accessToken);
 
+    const handleGetUserInfo = () => {
+
+    }
     const handleLogout = () => {
         axios.post(`${REACT_APP_API_URL}/sign/out`,
             {
@@ -54,7 +57,7 @@ function Header() {
                 <>
                     <NavButtons>
                         <NavLink to="/mypage">
-                            <NavButton>마이페이지</NavButton>
+                            <NavButton onClick={handleGetUserInfo}>마이페이지</NavButton>
                         </NavLink>
                         <NavButton onClick={handleLogout}>Logout</NavButton>
                     </NavButtons>
@@ -62,7 +65,7 @@ function Header() {
             ) : (
                 <>
                     <NavButtons>
-                        <NavButton onClick={() => dispatch(showSignupModal(true))}>회원가입</NavButton>
+                        <NavButton onClick={() => dispatch(showSignupGateModal(true))}>회원가입</NavButton>
                         <NavButton onClick={() => dispatch(showLoginModal(true))}>Login</NavButton>
                     </NavButtons>
                 </>
