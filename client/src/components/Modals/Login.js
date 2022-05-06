@@ -7,10 +7,16 @@ import axios from 'axios';
 import { REACT_APP_API_URL } from '../../config';
 
 
+
 function Login() {
+    const GITGUB_APP_KEY = process.env.REACT_APP_GITGUB_APP_KEY;
+    const GITGUB_REDIRECT_URL = process.env.REACT_APP_GITGUB_REDIRECT_URL;
+    const GITGUB_AUTH_URL = `https://github.com/login/oauth/authorize?client_id=${GITGUB_APP_KEY}&redirect_uri=${GITGUB_REDIRECT_URL}`
+
     const REST_API_KEY = "582364e7342bc8ebe03c9fb7bfd980a0";
-    const REDIRECT_URI = "http://localhost:3000/sign/kakao/callback";
+    const REDIRECT_URI = "https://localhost:3000/sign/kakao/callback";
     const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+
   
 
     const [errorMessage, setErrorMessage] = useState('');
@@ -76,6 +82,8 @@ function Login() {
                         </button>
                         
                         <h1><a href={KAKAO_AUTH_URL}>Kakao Login</a></h1>
+                        <h1><a href={GITGUB_AUTH_URL}>Github Login</a></h1>
+
                         
                         <div className='alert-box'>{errorMessage}</div>
                     </form>
