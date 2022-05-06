@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 
 module.exports = {
   postList: async(req, res) => {
-    if (!req.headers.authorization && !req.cookies.refreshToken) {
+    if (!req.headers.authorization || !req.cookies.refreshToken) {
       await Post.updateMany({endtime:{$lt: Date.now()}},{isvalid: true})
       const result = await Post.find({})
       res.status(200).json({data : result});
