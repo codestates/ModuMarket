@@ -2,16 +2,20 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { login } from '../../reducers/loginSlice';
 import { showLoginModal, showSignupModal } from '../../reducers/modalSlice';
-import { ModalBackground, ModalContainer, ModalText, LoginInput } from './styled';
+import {
+    ModalBackground,
+    ModalContainer,
+    ModalText,
+    LoginInput,
+    ModalButton,
+} from './styled';
 import axios from 'axios';
-import { REACT_APP_API_URL } from '../../config';
+import { REACT_APP_API_URL, REDIRECT_URI } from '../../config';
 
 
 function Login() {
-    const REST_API_KEY = "582364e7342bc8ebe03c9fb7bfd980a0";
-    const REDIRECT_URI = "http://localhost:3000/sign/kakao/callback";
-    const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
-  
+    const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_KAKAO_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+
 
     const [errorMessage, setErrorMessage] = useState('');
     const [loginInfo, setLoginInfo] = useState({
@@ -36,7 +40,7 @@ function Login() {
                 },
                 { headers: { "Content-Type": "application/json" }, withCredentials: true }
             ).then((result) => {
-                dispatch(login(result.accessToken))
+                dispatch(login(result.data.data.accessToken))
                 dispatch(showLoginModal(false));
             }
             )
@@ -71,15 +75,15 @@ function Login() {
                             type='password'
                             onChange={handleInputValue('password')}
                             placeholder="비밀번호를 입력해주세요" />
-                        <button type='submit' onClick={handleLogin}>
+                        <ModalButton type='submit' onClick={handleLogin}>
                             로그인
-                        </button>
-                        
-                        <h1><a href={KAKAO_AUTH_URL}>Kakao Login</a></h1>
-                        
+                        </ModalButton>
                         <div className='alert-box'>{errorMessage}</div>
                     </form>
                 </LoginInput>
+                <ModalButton onClick={() => window.location.href = `${KAKAO_AUTH_URL}`}>
+                    카카오로 로그인하기
+                </ModalButton>
             </ModalContainer>
         </>
     )

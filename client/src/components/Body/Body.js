@@ -17,7 +17,7 @@ const Body = () => {
             <Route path="/board" element={<BoardPage />} />
             <Route path="/mypage" element={isLogin ? <MyPage /> : <Navigate to="/" />} />
             <Route path="/detail" element={<Detail />} />
-            <Route path="/sign/kakao/callback" element={<Auth />} />
+            <Route path="/sign/kakao/callback" element={isLogin ? <Navigate to="/" /> : <Auth />} />
         </Routes>
     )
 }

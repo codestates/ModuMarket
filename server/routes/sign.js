@@ -31,6 +31,6 @@ router.post('/out', controller.sign.out);
 router.get('/kakao/callback', controller.sign.kakao);
 
 // 카카오 추가정보 받은 후 회원가입 완료
-router.get('/in/kakao', controller.sign.inKakao);
+router.post('/in/kakao', controller.sign.inKakao);
 
 module.exports = router;
