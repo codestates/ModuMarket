@@ -90,14 +90,15 @@ module.exports = {
                 process.env.REFRESH_SECRET, { expiresIn: '14d' });
 
               res
-                .cookie("refreshToken", refreshToken, {
-                  maxAge: 1000 * 60 * 60 * 24 * 14, // 쿠키 유효시간: 14일
-                  httpOnly: true,
-                })
-                .status(200)
-                .json({ data: { accessToken: accessToken }, message: "로그인에 성공하였습니다." });
+              .cookie("refreshToken", refreshToken, {
+                maxAge: 1000 * 60 * 60 * 24 * 14, // 쿠키 유효시간: 14일
+                httpOnly: true,
+              })
+              .status(200)
+              .json({ data: {id:_id, accessToken: accessToken}, message: "로그인에 성공하였습니다."});
 
-            }
+            } 
+
             else {
               return res.status(401).json({ message: "비밀번호를 확인해주세요" });
             }
@@ -172,11 +173,78 @@ module.exports = {
 
     // console.log(User)
     newUser.save()
-      .then(() => {
-        return res.status(201).json({ message: '회원가입이 완료되었습니다' });
+    .then(() => {
+      return res.status(201).json({message: '회원가입이 완료되었습니다'});
+    })
+    .catch((err) => { 
+      throw new Error(err)
+    })
+  },
+
+  github: async (req, res) => {
+    const CODE = req.query.code;
+    
+    axios({
+      method: 'post',
+      url: `https://github.com/login/oauth/access_token?client_id=${process.env.REACT_APP_GITGUB_APP_KEY}&client_secret=${process.env.REACT_APP_GITGUB_SECRET}&code=${CODE}`,
+      headers: {
+        accept: 'application/json',
+      },
+    })
+    .then((data) => {
+      console.log(data.data.access_token)
+      axios.get('https://api.github.com/user', {
+        headers: {
+          Authorization: `token ${data.data.access_token}`,
+        },
       })
-      .catch((err) => {
-        throw new Error(err)
+      .then(async(data) => { //토큰으로 유저정보 받아오기 
+        const id = data.data.id;
+        const email = data.data.email;
+        console.log(data.data.id)
+        console.log(data.data.email)
+
+        const result = await User.findOne({social_github:id}).exec()
+        if(result){ // 가입한 유저이면? 디비에 있는 유저의 동네정보, 아이디, 이메일을 갖고 토큰만들어서주기
+          
+          const {_id, email, area_name} = result;
+          const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), 
+                  process.env.ACCESS_SECRET, {expiresIn: '2h'});
+          // refreshToken 생성 14d 유효
+          const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), 
+                  process.env.REFRESH_SECRET, {expiresIn: '14d'});
+          res
+          .cookie("refreshToken", refreshToken, { 
+          maxAge: 1000 * 60 * 60 * 24 * 14, // 쿠키 유효시간: 14일
+          httpOnly: true,
+          })
+          .status(201)
+          .json({ data: {id:_id, accessToken: accessToken}, message: "로그인에 성공하였습니다."});
+        } else { //가입안한 유저이면 추가정보 받는 경로로 아이디, 이메일 보내주기 .. 
+          return res.status(200).json({ id, email });
+        }
       })
+    })
+  },
+
+  inGithub: async (req, res) => {
+    let {id, email, name, age, area_name} = req.body;
+    
+    const newUser = new User();
+    newUser.social_kakao = id;
+    newUser.name = name;
+    newUser.email = email;
+    newUser.age = age;
+    newUser.area_name = area_name;
+  
+    // console.log(User)
+    newUser.save()
+    .then(() => {
+      return res.status(201).json({message: '회원가입이 완료되었습니다'});
+    })
+    .catch((err) => { 
+      throw new Error(err)
+    })
+
   }
 }

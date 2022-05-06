@@ -14,12 +14,13 @@ import {
     changeModalImg
 } from '../../reducers/modalSlice';
 
-
-const Auth = () => {
-    const REDIRECT_URI = "https://localhost:3000/sign/kakao/callback";
+const Auth = ({social}) => {
+  
+   const dispatch = useDispatch();
+    
+    if(social === 'kakao'){
+      const REDIRECT_URI = "https://localhost:3000/sign/kakao/callback";
     const code = new URL(window.location.href).searchParams.get("code");
-
-    const dispatch = useDispatch();
     const kakaoToken = () => {
         let kakaoAccessToken = ' ';
         axios.post(`https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${process.env.REACT_APP_KAKAO_API_KEY}&redirect_uri=${REDIRECT_URI}&code=${code}`,
@@ -48,13 +49,18 @@ const Auth = () => {
 
                     })
             })
-
-
-    }
-    const facebookToken = () => {
-
-    }
-
+      }
+    } else if(social === 'gitgub') {
+        const code = new URL(window.location.href).searchParams.get("code");
+        const token = () => {
+            console.log(code)
+            axios.get(`${REACT_APP_API_URL}/sign/github/callback`,
+            {params: {code: code}}, 
+            {withCredentials: true })
+            .then(data => console.log(data.data)) //엑세스토큰이 들어오면 로그인처리, 안들어오면 추가정보입력 받긔용
+        }
+      }
+  
     useEffect(() => {
         kakaoToken();
     }, [])
@@ -66,5 +72,6 @@ const Auth = () => {
             <img src={confirmImg.loading} alt={`loading`} />
         </AuthContainer>
     )
+
 };
 export default Auth;
