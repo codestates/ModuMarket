@@ -9,7 +9,7 @@ import { REACT_APP_API_URL } from '../../config';
 
 function Login() {
     const REST_API_KEY = "582364e7342bc8ebe03c9fb7bfd980a0";
-    const REDIRECT_URI = "http://localhost:3000/sign/kakao/callback";
+    const REDIRECT_URI = "https://localhost:3000/sign/kakao/callback";
     const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
   
 

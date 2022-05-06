@@ -2,6 +2,7 @@ import { useSelector } from 'react-redux';
 import Login from './Login';
 import Signup from './Signup';
 import Confirm from './Confirm';
+import Register from './Register/Register';
 
 
 const ModalController = () => {
@@ -9,6 +10,7 @@ const ModalController = () => {
         loginModal,
         signupModal,
         confirmModal,
+        registerModal
 
     } = useSelector((state) => state.modal);
 
@@ -17,6 +19,7 @@ const ModalController = () => {
             {loginModal && <Login />}
             {signupModal && <Signup />}
             {confirmModal && <Confirm />}
+            {registerModal && <Register />}
         </>
     )
 }

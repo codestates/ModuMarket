@@ -22,6 +22,7 @@ import {
     } from './styled'
 
 function Cards({info}){
+    // console.log(info)
     const navigate = useNavigate();
     const category = ["패션, 뷰티","식품","생필품","취미, 반려","유아동"];
     let categoryNumber = info.category;

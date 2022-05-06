@@ -31,6 +31,9 @@ export const modalSlice = createSlice({
         },
         changeModalImg: (state, action) => {
             state.modalImg = action.payload
+        },
+        showRegisterModal: (state, action) => {
+            state.registerModal = action.payload
         }
     }
 })
@@ -40,7 +43,8 @@ export const {
     showSignupModal,
     showConfirmModal,
     inputModalText,
-    changeModalImg
+    changeModalImg,
+    showRegisterModal
 } = modalSlice.actions;
 
 export default modalSlice.reducer;
