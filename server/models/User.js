@@ -9,7 +9,8 @@ const userSchema = new mongoose.Schema({
     age: {type: Number, required: true},
     area_name: { type: String },
     user_image: { type: String },
-    social_kakao: {type: Number}
+    social_kakao: {type: Number},
+    social_github: {type: Number},
 },{
   //데이터를 생성, 수정시 자동으로 시간을 기록해줌 
   timestamps: true
