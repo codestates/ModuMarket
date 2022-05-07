@@ -1,7 +1,10 @@
 import React ,{useState, useEffect} from 'react';
 import Cards from '../../components/Cards/Cards'
+import Datepicker from '../../components/Modals/Register/Register'
 import {dummyData} from '../../assets/dummy'
 import axios from 'axios'
+import { useDispatch, useSelector } from 'react-redux';
+import { showRegisterModal } from '../../reducers/modalSlice';
 import { REACT_APP_API_URL } from '../../config'
 import {
     Section,
@@ -19,7 +22,8 @@ import {
 
 function BoardPage () {
 
-    const [cardInfo, setCardInfo] = useState(dummyData.cardInfo)
+    const dispatch = useDispatch();
+    const [cardInfo, setCardInfo] = useState()
     
     async function handleCardInfo(){
         const result = await axios({
@@ -27,7 +31,7 @@ function BoardPage () {
             method: 'GET',
             headers : {
                 "Content-Type": "application/json",
-                //authorization : `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjZmOTk2YWYxOTg1OGQwZTZiNGVhYWQiLCJlbWFpbCI6IjIiLCJhcmVhX25hbWUiOiLshJzsmrgiLCJpYXQiOjE2NTE1MDk4MjIsImV4cCI6MTY1MTUxNzAyMn0.ALBw2B7lGDBpS-P6k-REKoYUs227u8zh15cGVvnDAqg`,
+                authorization : `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjZmOTk2YWYxOTg1OGQwZTZiNGVhYWQiLCJlbWFpbCI6IjIiLCJhcmVhX25hbWUiOiLshJzsmrgiLCJpYXQiOjE2NTE5MDYxNjgsImV4cCI6MTY1MTkxMzM2OH0.ZIYmz4FEou4YBS1jpiHxSAKfWV7JXFB48ToK3F8y1TQ` 
             },
             withCredentials : true
         })
@@ -56,11 +60,15 @@ function BoardPage () {
                         </SearchCategory>
                         <SearchButton>검색</SearchButton>
                     </SearchWrap>
+                    {/* 로그인을 했을 경우에 아래의 모달창이 뜰 수 있도록 하고 로그인이 안되어있다면 로그인 페이지로 가게해야한다. */}
                     <ReservationButtonWrap>
-                        <ReservationButton>공구글 등록하기</ReservationButton>
+                        <ReservationButton onClick ={() => dispatch(showRegisterModal(true))}>공구글 등록하기</ReservationButton>
                     </ReservationButtonWrap>
                     <CardWrap>
-                        {cardInfo.map((info, idx) => <Cards info={info} key ={idx}/>)}
+                        {
+                            cardInfo ? cardInfo.map((info, idx) => <Cards info={info} key ={idx}/>)
+                                     : <div>Loading</div>
+                        }
                     </CardWrap>
                 </Wrap>
             </Section>

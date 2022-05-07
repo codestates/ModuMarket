@@ -1,5 +1,7 @@
 const router = require('express').Router();
 const controller = require('../controllers');
+const multer = require('multer')
+const upload = multer({dest: 'uploads/', limits: { fileSize: 5 * 1024 * 1024 }})
 
 // GET /items Router와 Controller를 연결합니다.
 // 공고글 게시판 목록
@@ -9,7 +11,7 @@ router.get('/', controller.post.postList);
 router.get('/:id', controller.post.postOne);
 
 // 공고글 등록
-router.post('/', controller.post.registerPost);
+router.post('/', upload.single('image'),controller.post.registerPost);
 
 // 공고글 수정
 router.patch('/:id', controller.post.modifyPost);

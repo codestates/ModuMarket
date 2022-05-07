@@ -93,7 +93,9 @@ module.exports = {
                 httpOnly: true,
               })
               .status(200)
+
               .json({ data: {id:_id, accessToken: accessToken}, message: "로그인에 성공하였습니다."});
+
 
             } 
 
