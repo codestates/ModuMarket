@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+
 export const ModalBackground = styled.div`
   position: fixed;
   top: 0;
@@ -93,6 +94,8 @@ export const LoginInput = styled.div`
       cursor: pointer;
     }
 `;
+
+
 export const SignupInput = styled.div`
     display: flex;
     flex-direction: column;
@@ -118,7 +121,7 @@ export const ModalImg = styled.div`
       height: 20rem;
     }
 `
-export const ModalButton = styled.div`
+export const ModalButton = styled.button`
     display: flex;
     flex-direction: column;
     align-items: center;
