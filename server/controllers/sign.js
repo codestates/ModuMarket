@@ -153,7 +153,7 @@ module.exports = {
               httpOnly: true,
             })
             .status(201)
-            .json({ data: { id: _id, accessToken: accessToken }, message: "로그인에 성공하였습니다." });
+            .json({  id: _id, accessToken: accessToken , message: "로그인에 성공하였습니다." });
         } else { //가입안한 유저이면 추가정보 받는 경로로 아이디, 이메일 보내주기 .. 
           return res.status(200).json({ id, email });
         }
@@ -219,7 +219,7 @@ module.exports = {
           httpOnly: true,
           })
           .status(201)
-          .json({ data: {id:_id, accessToken: accessToken}, message: "로그인에 성공하였습니다."});
+          .json({  id: _id, accessToken: accessToken , message: "로그인에 성공하였습니다." });
         } else { //가입안한 유저이면 추가정보 받는 경로로 아이디, 이메일 보내주기 .. 
           return res.status(200).json({ id, email });
         }

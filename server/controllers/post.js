@@ -88,7 +88,7 @@ module.exports = {
         })
     }
     if (!accTokenData && refTokenData) {
-      const { emaildata } = refTokenData
+      const { emaildata } = refTokenData.email
       const result = await User.findOne({ email: emaildata }).exec();
       const { _id, email, area_name } = result
       const accessToken = jwt.sign(JSON.parse(JSON.stringify({ _id, email, area_name })), process.env.ACCESS_SECRET, { expiresIn: '2h' });
@@ -115,7 +115,7 @@ module.exports = {
         })
     }
     if (accTokenData && !refTokenData) {
-      const { emaildata } = accTokenData
+      const { emaildata } = accTokenData.email
       const result = await User.findOne({ email: emaildata }).exec();
       const { _id, email, area_name } = result
       const refreshToken = jwt.sign(JSON.parse(JSON.stringify({ _id, email, area_name })), process.env.REFRESH_SECRET, { expiresIn: '14d' });
