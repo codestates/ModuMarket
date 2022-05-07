@@ -3,13 +3,14 @@ const controller = require('../controllers');
 const multer = require('multer');
 const {getFileStream} = require('../s3');
 const { applyPost } = require('../controllers/post');
+const moment = require('moment');
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'images')
     },
     filename: (req, file, cb) => {
-        cb(null, Date.now() + file.originalname)
+        cb(null, moment(new Date()).format("h:mm A") + ' ' + file.originalname)
     }
 });
 

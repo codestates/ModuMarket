@@ -16,11 +16,11 @@ const {Post, Chatroom, ChatroomMessage} = require('./models/Post');
 
   let arr = [];
 
-  const deleteChatroom = async () => {
-    await Chatroom.deleteMany({roomname: '채팅방1'})
-  }
+  // const deleteChatroom = async () => {
+  //   await Chatroom.deleteMany({roomname: '채팅방1'})
+  // }
 
-  deleteChatroom();
+  // deleteChatroom();
 
   Chatroom.find({roomname: "채팅방1"}).populate('message', ['message_content', 'username']).exec((err, data) => {
     console.log(data)
@@ -53,7 +53,8 @@ app.use(
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use('/images', express.static('images'))
+app.use('/images', express.static('images'));
+app.use('/uploads', express.static('uploads'))
 app.use(cors({
   origin: true,
   credentials: true,

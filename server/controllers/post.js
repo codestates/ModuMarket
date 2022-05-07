@@ -1,16 +1,35 @@
 const User = require('../models/User');
-const Post = require('../models/Post');
+const { Post } = require('../models/Post');
 const Application = require('../models/Application');
 const jwt = require('jsonwebtoken');
-
+const { uploadFile } = require('../s3');
+const { up } = require('./sign');
+const fs = require('fs');
+const util = require('util');
+const unlinkFile = util.promisify(fs.unlink);
 
 module.exports = {
 
   postList: async (req, res) => {
+    console.log(Post);
+    
+    // const deletePost = async () => {
+    //   await Post.deleteMany({})
+    // }
+  
+    // deletePost();
+    // const result = await Post.find({}).exec((err, data) => {
+    //   if (err) {
+    //     console.log(err)
+    //   }
+    //   console.log(data);
+    // })
+    // console.log(result);
+
     if (!req.headers.authorization || !req.cookies.refreshToken) {
-      await Post.updateMany({ endtime: { $lt: Date.now() } }, { isvalid: true })
-      const result = await Post.find({})
-      res.status(200).json({ data: result });
+      // await Post.updateMany({ endtime: { $lt: Date.now() } }, { isvalid: true })
+      // const result = await Post.find({})
+      // res.status(200).json({ data: result });
     } else {
       const token = req.headers.authorization.split(' ')[1];
       const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET);
@@ -60,16 +79,19 @@ module.exports = {
   },
 
   registerPost: async (req, res) => {
-
+    // if (req.headers.authorization) {
+    // }
+    // console.log(req.file)
     const token = req.headers.authorization.split(' ')[1];
     const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET);
-
     const refTokenData = jwt.verify(req.cookies.refreshToken, process.env.REFRESH_SECRET);
     //console.log(refTokenData);
 
-    if (accTokenData && refTokenData) {
+    if (refTokenData) {
       console.log(req.body)
       console.log(req.file)
+      await uploadFile(req.file);
+      await unlinkFile(req.file.path)
       const newPost = new Post();
       newPost.userId = req.body.userId;
       newPost.category = req.body.category;
@@ -81,6 +103,7 @@ module.exports = {
       newPost.post_location = req.body.post_location;
       newPost.isvalid = req.body.isvalid;
       newPost.endtime = req.body.endtime;
+
 
       newPost.save()
         .then(() => {

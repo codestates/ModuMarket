@@ -32,17 +32,17 @@ const Body = () => {
         console.log(room + '에 입장하셨습니다.')
         // setChat([...chat,{name, message, time}]);
         let temp = [];
-        arr.forEach(el => {
-          console.log(el)
-          temp.push({
-            name: el.username,
-            message: el.message_content,
-            time
-          })
-          setChat([...temp]);
-        });
-      })
-    }, [])
+          arr.forEach(el => {
+            console.log(el)
+            temp.push({
+              name: el.username,
+              message: el.message_content,
+              time
+            })
+            setChat([...temp]);
+          });
+        })
+      }, [])
 
     useEffect(()=>{
       // 이벤트 수신: socket.on("EVENT", function(data) {})

@@ -214,7 +214,8 @@ module.exports = {
     
     const result1 = await uploadFile(req.file);
     await unlinkFile(req.file.path)
-    console.log(result1);
+    // console.log(result1);
+    ace
 
     await User.updateOne({ email: req.params.email }, { $set: { user_image: req.file.path } })
 
@@ -222,7 +223,6 @@ module.exports = {
 
     res.send({imagePath: `/:email/image/${result1.key}`})
     // res.send('1')
-
 
     // uploadImage.save()
     // .then(() => {

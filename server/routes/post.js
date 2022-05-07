@@ -1,7 +1,27 @@
 const router = require('express').Router();
 const controller = require('../controllers');
-const multer = require('multer')
-const upload = multer({dest: 'uploads/', limits: { fileSize: 5 * 1024 * 1024 }})
+const multer = require('multer');
+const moment = require('moment');
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads')
+    },
+    filename: (req, file, cb) => {
+        cb(null, moment(new Date()).format("YYYY-MM-DD") + ' ' + file.originalname)
+        // 이진 파일 이름으로 바로 들어가게
+    }
+});
+
+const fileFilter = (req, file, cb) => {
+    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+        cb(null, true)
+    } else {
+        cb(null, false);
+    }
+}
+
+const upload = multer({storage: storage, limits: { fileSize: 5 * 1024 * 1024 }, fileFilter: fileFilter})
 
 // GET /items Router와 Controller를 연결합니다.
 // 공고글 게시판 목록
