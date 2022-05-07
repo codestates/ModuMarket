@@ -20,7 +20,7 @@ import {Section, Wrap,
 
 function DetailSection ({info}){
     
-    // console.log(info)
+    //console.log(info)
 
     const category = ["패션, 뷰티","식품","생필품","취미, 반려","유아동"];
         let categoryNumber = info.category;

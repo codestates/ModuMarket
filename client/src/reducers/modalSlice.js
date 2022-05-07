@@ -40,6 +40,7 @@ export const modalSlice = createSlice({
             state.modalInformText = action.payload;
         },
         changeModalImg: (state, action) => {
+
             state.modalImg = action.payload;
         },
         inputSocialId: (state, action) => {
@@ -47,6 +48,10 @@ export const modalSlice = createSlice({
         },
         inputSocialEmail: (state, action) => {
             state.socialInfoEmail = action.payload;
+        },
+        showRegisterModal: (state, action) => {
+            state.registerModal = action.payload
+
         }
     }
 })
@@ -60,7 +65,9 @@ export const {
     inputModalText,
     changeModalImg,
     inputSocialId,
-    inputSocialEmail
+    inputSocialEmail,
+    showRegisterModal
+
 } = modalSlice.actions;
 
 export default modalSlice.reducer;

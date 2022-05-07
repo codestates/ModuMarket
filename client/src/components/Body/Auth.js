@@ -14,6 +14,7 @@ import {
     changeModalImg
 } from '../../reducers/modalSlice';
 
+
 const Auth = ({ social }) => {
 
     const dispatch = useDispatch();
@@ -52,7 +53,7 @@ const Auth = ({ social }) => {
         }
         kakaoToken();
 
-    } else if (social === 'gitgub') {
+    } else if (social === 'github') {
         const code = new URL(window.location.href).searchParams.get("code");
         const githubToken = () => {
             axios.get(`${REACT_APP_API_URL}/sign/github/callback`,

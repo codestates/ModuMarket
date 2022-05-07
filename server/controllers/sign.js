@@ -4,8 +4,6 @@ const jwt = require('jsonwebtoken');
 const saltRounds = 10;
 const axios = require('axios')
 
-
-
 module.exports = {
   up: async (req, res) => {
 
@@ -98,6 +96,7 @@ module.exports = {
                 .json({ data: { id: _id, accessToken: accessToken }, message: "로그인에 성공하였습니다." });
 
             }
+
 
             else {
               return res.status(401).json({ message: "비밀번호를 확인해주세요" });
@@ -224,7 +223,6 @@ module.exports = {
               return res.status(200).json({ id, email });
             }
           })
-      })
   },
 
   inGithub: async (req, res) => {
