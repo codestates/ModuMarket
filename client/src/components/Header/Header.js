@@ -28,18 +28,19 @@ function Header() {
     const handleGetUserInfo = () => {
 
     }
-    const handleLogout = () => {
-        axios.post(`${REACT_APP_API_URL}/sign/out`,
-            {
-                accessToken: accessToken
-            })
-            .then((result) => {
-                dispatch(inputModalText(result.data.message));
-                dispatch(changeModalImg('check_man'));
-                dispatch(showConfirmModal(true));
-                dispatch(logout());
-            })
+    const handleLogout = async() => {
+        // axios.post(`${REACT_APP_API_URL}/sign/out`,
+        //     {
+        //         accessToken: accessToken
+        //     })
+        //     .then((result) => {
+        //         dispatch(inputModalText(result.data.message));
+        //         dispatch(changeModalImg('check_man'));
+        //         dispatch(showConfirmModal(true));
+        //         dispatch(logout());
+        //     })
     }
+    const KAKAO_LOGOUT_LEDERECT_URL = `https://kauth.kakao.com/oauth/logout?client_id=${process.env.REACT_APP_KAKAO_API_KEY}&logout_redirect_uri=${process.env.REACT_APP_KAKAO_LOGOUT_URI}`
 
     return (
         <NavContainer>
@@ -59,7 +60,8 @@ function Header() {
                         <NavLink to="/mypage">
                             <NavButton onClick={handleGetUserInfo}>마이페이지</NavButton>
                         </NavLink>
-                        <NavButton onClick={handleLogout}>Logout</NavButton>
+                        {/* <NavButton onClick={handleLogout}>Logout</NavButton> */}
+                        <NavButton onClick={() => window.location.href = `${KAKAO_LOGOUT_LEDERECT_URL}`}>Logout</NavButton>
                     </NavButtons>
                 </>
             ) : (

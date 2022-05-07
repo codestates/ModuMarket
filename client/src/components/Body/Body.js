@@ -7,8 +7,8 @@ import Detail from '../../pages/BoardDetailPage/BoardDetailPage'
 import Auth from './Auth';
 
 
-const Body = () => {
 
+const Body = () => {
     const isLogin = useSelector((state) => state.login.isLogin);
 
     return (
