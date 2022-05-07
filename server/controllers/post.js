@@ -59,12 +59,16 @@ module.exports = {
   },
 
   registerPost: async (req, res) => {
+    //console.log(req.headers.authorization)
     const token = req.headers.authorization.split(' ')[1]; 
     const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET); 
+    //console.log(accTokenData);
     const refTokenData = jwt.verify(req.cookies.refreshToken, process.env.REFRESH_SECRET);
-
+    //console.log(refTokenData);
 
     if (accTokenData && refTokenData) {
+      console.log(req.body)
+      console.log(req.file)
       const newPost = new Post();
       newPost.userId = req.body.userId;
       newPost.category = req.body.category;
@@ -72,7 +76,7 @@ module.exports = {
       newPost.title = req.body.title;
       newPost.member_min = req.body.member_min;
       newPost.post_content = req.body.post_content;
-      newPost.image = req.body.image;
+      newPost.image = req.file.filename;
       newPost.post_location = req.body.post_location;
       newPost.isvalid = req.body.isvalid;
       newPost.endtime = req.body.endtime;
@@ -87,7 +91,8 @@ module.exports = {
       })
     }
     if (!accTokenData && refTokenData) {
-      const { emaildata } = refTokenData
+      
+      const emaildata  = refTokenData.email
       const result =  await User.findOne({ email: emaildata }).exec();
       const {_id, email, area_name} = result
       const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
@@ -99,7 +104,7 @@ module.exports = {
       newPost.title = req.body.title;
       newPost.member_min = req.body.member_min;
       newPost.post_content = req.body.post_content;
-      newPost.image = req.body.image;
+      newPost.image = req.file.filename;
       newPost.post_location = req.body.post_location;
       newPost.isvalid = req.body.isvalid;
       newPost.endtime = req.body.endtime;
@@ -114,7 +119,8 @@ module.exports = {
       })
     }
     if (accTokenData && !refTokenData) {
-      const { emaildata } = accTokenData
+      
+      const emaildata  = accTokenData.email
       const result =  await User.findOne({ email: emaildata }).exec();
       const {_id, email, area_name} = result
       const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.REFRESH_SECRET, {expiresIn: '14d'});
@@ -126,7 +132,7 @@ module.exports = {
       newPost.title = req.body.title;
       newPost.member_min = req.body.member_min;
       newPost.post_content = req.body.post_content;
-      newPost.image = req.body.image;
+      newPost.image = req.file.filename;
       newPost.post_location = req.body.post_location;
       newPost.isvalid = req.body.isvalid;
       newPost.endtime = req.body.endtime;

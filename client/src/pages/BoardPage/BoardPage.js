@@ -31,7 +31,7 @@ function BoardPage () {
             method: 'GET',
             headers : {
                 "Content-Type": "application/json",
-                //authorization : `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjZmOTk2YWYxOTg1OGQwZTZiNGVhYWQiLCJlbWFpbCI6IjIiLCJhcmVhX25hbWUiOiLshJzsmrgiLCJpYXQiOjE2NTE1MDk4MjIsImV4cCI6MTY1MTUxNzAyMn0.ALBw2B7lGDBpS-P6k-REKoYUs227u8zh15cGVvnDAqg`,
+                authorization : `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjZmOTk2YWYxOTg1OGQwZTZiNGVhYWQiLCJlbWFpbCI6IjIiLCJhcmVhX25hbWUiOiLshJzsmrgiLCJpYXQiOjE2NTE5MDYxNjgsImV4cCI6MTY1MTkxMzM2OH0.ZIYmz4FEou4YBS1jpiHxSAKfWV7JXFB48ToK3F8y1TQ` 
             },
             withCredentials : true
         })

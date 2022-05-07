@@ -135,8 +135,8 @@ export const Photo = styled.div`
 
     img{
         border-radius: 4px;
-        width : 24.5rem;
-        height: 10rem;
+        width : 100%;
+        height: 100%;
     }
 
 `
@@ -284,7 +284,7 @@ export const RegisterButtonWrap = styled.div`
 
     & > button {
         width : 100%;
-        height: 2.3rem;
+        height: 2.5rem;
         border : none;
         background-color: #FF6767 ;
         color : white;
