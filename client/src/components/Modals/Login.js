@@ -16,9 +16,9 @@ import { REACT_APP_API_URL, REDIRECT_URI } from '../../config';
 
 function Login() {
 
-    const GITGUB_APP_KEY = process.env.REACT_APP_GITGUB_APP_KEY;
-    const GITGUB_REDIRECT_URL = process.env.REACT_APP_GITGUB_REDIRECT_URL;
-    const GITGUB_AUTH_URL = `https://github.com/login/oauth/authorize?client_id=${GITGUB_APP_KEY}&redirect_uri=${GITGUB_REDIRECT_URL}`
+    const GITHUB_APP_KEY = process.env.REACT_APP_GITHUB_APP_KEY;
+    const GITHUB_REDIRECT_URL = process.env.REACT_APP_GITHUB_REDIRECT_URL;
+    const GITHUB_AUTH_URL = `https://github.com/login/oauth/authorize?client_id=${GITHUB_APP_KEY}&redirect_uri=${GITHUB_REDIRECT_URL}`
     const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_KAKAO_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
 
 
@@ -84,15 +84,15 @@ function Login() {
                         <ModalButton type='submit' onClick={handleLogin}>
                             로그인
                         </ModalButton>
-        <div className='alert-box'>{errorMessage}</div>
+                        <div className='alert-box'>{errorMessage}</div>
                     </form>
                 </LoginInput>
                 <ModalButton onClick={() => window.location.href = `${KAKAO_AUTH_URL}`}>
                     카카오로 로그인하기
                 </ModalButton>
-<ModalButton onClick={() => window.location.href = `${GITGUB_AUTH_URL}`}>
-                    Github으로 로그인하기  
-                      </ModalButton>
+                <ModalButton onClick={() => window.location.href = `${GITHUB_AUTH_URL}`}>
+                    Github으로 로그인하기
+                </ModalButton>
             </ModalContainer>
         </>
     )
