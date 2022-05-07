@@ -4,8 +4,6 @@ const jwt = require('jsonwebtoken');
 const saltRounds = 10;  
 const axios = require('axios')
 
-
-
 module.exports = {
   up: async (req, res) => {
 

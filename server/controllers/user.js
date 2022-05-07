@@ -2,8 +2,10 @@ const User = require('../models/User');
 const Post = require('../models/Post');
 const Application = require('../models/Application');
 const jwt = require('jsonwebtoken');
+const { uploadFile } = require('../s3');
 const fs = require('fs');
-const path = require('path')
+const util = require('util');
+const unlinkFile = util.promisify(fs.unlink);
 
 module.exports = {
   location: (req, res) => {
@@ -209,12 +211,18 @@ module.exports = {
   uploadImage: async (req, res) => {
     console.log(req.file);
     console.log(req.params)
+    
+    const result1 = await uploadFile(req.file);
+    await unlinkFile(req.file.path)
+    console.log(result1);
 
     await User.updateOne({ email: req.params.email }, { $set: { user_image: req.file.path } })
 
     const result = await User.findOne({ email: req.body.email }).exec();
 
-    res.send(result)
+    res.send({imagePath: `/:email/image/${result1.key}`})
+    // res.send('1')
+
 
     // uploadImage.save()
     // .then(() => {
