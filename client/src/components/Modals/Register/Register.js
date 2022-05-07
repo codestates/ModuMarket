@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import "react-datepicker/dist/react-datepicker.css";
 import { showRegisterModal } from '../../../reducers/modalSlice';
 import {ko} from 'date-fns/esm/locale';
@@ -17,6 +17,7 @@ import {
 
 function Register(){
     const dispatch = useDispatch();
+    const accessToken = useSelector((state) => state.login.accessToken);
     const [errorMessage, setErrorMessage] = useState('');
     const [address, setAddress] = useState("") // 공고글의 post_location
     const [endDate, setEndDate] = useState(new Date()) // 공고글의 endtime
@@ -74,7 +75,7 @@ function Register(){
                 data : formData,
                 headers : {
                     'Content-Type': 'multipart/form-data',
-                    authorization : `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjZmOTk2YWYxOTg1OGQwZTZiNGVhYWQiLCJlbWFpbCI6IjIiLCJhcmVhX25hbWUiOiLshJzsmrgiLCJpYXQiOjE2NTE5MDYxNjgsImV4cCI6MTY1MTkxMzM2OH0.ZIYmz4FEou4YBS1jpiHxSAKfWV7JXFB48ToK3F8y1TQ` 
+                    authorization : `Bearer ${accessToken}` 
                 },
                 withCredentials : true
             })
