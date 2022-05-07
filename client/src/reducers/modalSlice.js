@@ -65,7 +65,7 @@ export const {
     inputModalText,
     changeModalImg,
     inputSocialId,
-    inputSocialEmail
+    inputSocialEmail,
     showRegisterModal
 
 } = modalSlice.actions;

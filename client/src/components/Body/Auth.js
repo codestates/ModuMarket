@@ -50,6 +50,7 @@ const Auth = ({social}) => {
                     })
             })
       }
+      kakaoToken()
     } else if(social === 'gitgub') {
         const code = new URL(window.location.href).searchParams.get("code");
         const token = () => {
@@ -61,9 +62,7 @@ const Auth = ({social}) => {
         }
       }
   
-    useEffect(() => {
-        kakaoToken();
-    }, [])
+  
 
     return (
         <AuthContainer>
