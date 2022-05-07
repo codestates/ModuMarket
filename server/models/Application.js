@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 
-
 const applicationSchema = new mongoose.Schema({
     id: mongoose.Schema.Types.ObjectId,
     post_id: {type: mongoose.Schema.Types.ObjectId, ref: 'Post'},

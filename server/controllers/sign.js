@@ -4,8 +4,6 @@ const jwt = require('jsonwebtoken');
 const saltRounds = 10;
 const axios = require('axios')
 
-
-
 module.exports = {
   up: async (req, res) => {
 
@@ -95,7 +93,9 @@ module.exports = {
                 httpOnly: true,
               })
               .status(200)
+
               .json({ data: {id:_id, accessToken: accessToken}, message: "로그인에 성공하였습니다."});
+
 
             } 
 

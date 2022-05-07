@@ -1,13 +1,16 @@
 const router = require('express').Router();
 const controller = require('../controllers');
 const multer = require('multer');
+const {getFileStream} = require('../s3');
+const { applyPost } = require('../controllers/post');
+const moment = require('moment');
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'images')
     },
     filename: (req, file, cb) => {
-        cb(null, Date.now() + file.originalname)
+        cb(null, moment(new Date()).format("h:mm A") + ' ' + file.originalname)
     }
 });
 
@@ -44,6 +47,15 @@ router.post('/', controller.user.auth);
 
 // 사는곳 비밀번호 수정
 router.patch('/', controller.user.changeInfo);
+
+router.get('/:email/image/:key', (req, res) => {
+    console.log(req.params)
+    const key = req.params.key;
+
+    const readStream = getFileStream(key)
+
+    readStream.pipe(res);
+})
 
 // 이미지 등록
 router.post('/:email/image', upload.single('img'), controller.user.uploadImage);

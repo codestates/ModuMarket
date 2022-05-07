@@ -1,5 +1,5 @@
 const config = {
-    REACT_APP_API_URL: 'https://localhost:4000',
+    REACT_APP_API_URL: 'http://localhost:4000',
     REDIRECT_URI: "https://localhost:3000/sign/kakao/callback",
 
 
