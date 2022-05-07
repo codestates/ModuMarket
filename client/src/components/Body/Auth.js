@@ -19,38 +19,36 @@ const Auth = ({social}) => {
    const dispatch = useDispatch();
     
     if(social === 'kakao'){
-      const REDIRECT_URI = "https://localhost:3000/sign/kakao/callback";
-    const code = new URL(window.location.href).searchParams.get("code");
-    const kakaoToken = () => {
-        let kakaoAccessToken = ' ';
-        axios.post(`https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${process.env.REACT_APP_KAKAO_API_KEY}&redirect_uri=${REDIRECT_URI}&code=${code}`,
-            { headers: { "Content-type": "application/x-www-form-urlencoded;charset=utf-8" } })
-            .then((result) => {
-                kakaoAccessToken = result.data.access_token
-                console.log(kakaoAccessToken)
-                axios.get(`${REACT_APP_API_URL}/sign/kakao/callback`,
-                    { headers: { "authorization": `Bearer ${kakaoAccessToken}` } })
-                    .then((result) => {
-                        //자체 서버의 accessToken이 있을 경우 로그인
-                        if (result.data.data.accessToken) {
-                            // ! 소셜 로그인 시 id값 서버에서 받아와야함
-                            console.log(result);
-                            dispatch(inputModalText(result.data.message));
-                            dispatch(login(result.data.data.accessToken))
-                            dispatch(changeModalImg('check_man'));
-                            dispatch(showConfirmModal(true));
-                        } else {
-                            //자체 서버의 accessToken이 없을 경우 회원가입으로 추가정보 입력필요
-                            console.log(result);
-                            dispatch(inputSocialId(result.data.id));
-                            dispatch(inputSocialEmail(result.data.email));
-                            dispatch(showSignupSocialModal(true));
-                        }
+        const REDIRECT_URI = "https://localhost:3000/sign/kakao/callback";
+        const code = new URL(window.location.href).searchParams.get("code");
+        const kakaoToken = () => {
+            let kakaoAccessToken = ' ';
+            axios.post(`https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${process.env.REACT_APP_KAKAO_API_KEY}&redirect_uri=${REDIRECT_URI}&code=${code}`,
+                { headers: { "Content-type": "application/x-www-form-urlencoded;charset=utf-8" } })
+                .then((result) => {
+                    kakaoAccessToken = result.data.access_token
+                    console.log(kakaoAccessToken)
+                    axios.get(`${REACT_APP_API_URL}/sign/kakao/callback`,
+                        { headers: { "authorization": `Bearer ${kakaoAccessToken}` } })
+                        .then((result) => {
+                            //자체 서버의 accessToken이 있을 경우 로그인
+                            if (result.data.accessToken) {
+                                // ! 소셜 로그인 시 id값 서버에서 받아와야함
+                                dispatch(inputModalText(result.data.message));
+                                dispatch(login(result.data.accessToken))
+                                dispatch(changeModalImg('check_man'));
+                                dispatch(showConfirmModal(true));
+                            } else {
+                                //자체 서버의 accessToken이 없을 경우 회원가입으로 추가정보 입력필요
+                                dispatch(inputSocialId(result.data.id));
+                                dispatch(inputSocialEmail(result.data.email));
+                                dispatch(showSignupSocialModal(true));
+                            }
+                        })
+                })
+        }
+        kakaoToken();
 
-                    })
-            })
-      }
-      kakaoToken()
     } else if(social === 'gitgub') {
         const code = new URL(window.location.href).searchParams.get("code");
         const token = () => {
@@ -61,8 +59,6 @@ const Auth = ({social}) => {
             .then(data => console.log(data.data)) //엑세스토큰이 들어오면 로그인처리, 안들어오면 추가정보입력 받긔용
         }
       }
-  
-  
 
     return (
         <AuthContainer>

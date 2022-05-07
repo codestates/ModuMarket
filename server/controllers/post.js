@@ -115,8 +115,6 @@ module.exports = {
         })
     }
     if (!accTokenData && refTokenData) {
-
-      
       const emaildata  = refTokenData.email
       const result =  await User.findOne({ email: emaildata }).exec();
       const {_id, email, area_name} = result
@@ -144,7 +142,6 @@ module.exports = {
         })
     }
     if (accTokenData && !refTokenData) {
-      
       const emaildata  = accTokenData.email
       const result =  await User.findOne({ email: emaildata }).exec();
       const {_id, email, area_name} = result

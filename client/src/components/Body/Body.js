@@ -13,6 +13,7 @@ import Auth from './Auth';
 const socket =  io.connect('http://localhost:4000')
 // console.log(socket)
 
+
 let room = '채팅방1'
 
 const Body = () => {
