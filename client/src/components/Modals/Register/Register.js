@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import "react-datepicker/dist/react-datepicker.css";
-import { showRegisterModal } from '../../../reducers/modalSlice';
-import { ko } from 'date-fns/esm/locale';
+import { showRegisterModal, showConfirmModal, inputModalText, changeModalImg } from '../../../reducers/modalSlice';
+import {ko} from 'date-fns/esm/locale';
 import axios from 'axios';
 import { REACT_APP_API_URL } from '../../../config'
 import {
@@ -19,24 +19,25 @@ import {
 function Register() {
     const dispatch = useDispatch();
     const accessToken = useSelector((state) => state.login.accessToken);
+    const [errorMessage, setErrorMessage] = useState('사진을 제외한 모든 항목은 필수입니다.');
     const userId = useSelector((state) => state.userInfo.userInfo.id);
     const area_name = useSelector((state) => state.userInfo.userInfo.area_name);
-    const [errorMessage, setErrorMessage] = useState('');
     const [address, setAddress] = useState("") // 공고글의 post_location
     const [endDate, setEndDate] = useState(new Date()) // 공고글의 endtime
     const [files, setFiles] = useState("") // 공고글의 사진 파일 미리보기를 위한 상태값
     const [boardInfo, setBoardInfo] = useState({
         title: "",
-        userId: "", //공고글을 작성한 유저의 id state에 저장해둔 값을 넣어둘것임.
+        userId: userId, //공고글을 작성한 유저의 id state에 저장해둔 값을 넣어둘것임.
         category: 0,
         image: files,
         post_content: "",
-        area_name: "", // 공고글을 작성한 유저의 동네위치 정보
-        post_location: address,
-        isvalid: true,
-        member_num: 1,
-        member_min: 0,
-        endtime: endDate,
+        area_name : area_name, // 공고글을 작성한 유저의 동네위치 정보
+        post_location : address,
+        isvalid : true,
+        member_num : 1,
+        member_min : 0,
+        endtime : endDate,
+
     })
 
     const handleInputValue = (key) => (e) => { // onChange 가 발생할 경우 값을 넣어주는 함수
@@ -46,45 +47,49 @@ function Register() {
     async function handleRegister() { // 입력한 값을 서버로 보내는 함수 
         let photoFile = document.getElementById("photofile");
         const formData = new FormData(); // 폼 태그로 이미지와 데이터를 한번에 보낼 수 있도록 하기 위한 접근
-        const { title, userId, category, post_content, area_name, post_location, isvalid, member_num, member_min, endtime } = boardInfo
-
-
-        console.log(photoFile.files[0])
-        formData.append("title", JSON.stringify(title));
+        const {title, userId, category, post_content, area_name, post_location, isvalid, member_num, member_min, endtime} = boardInfo 
+        formData.append("title", title);
         formData.append("category", category);
         formData.append("image", photoFile.files[0]);
-        formData.append("post_content", JSON.stringify(post_content));
-        formData.append("area_name", JSON.stringify(area_name));
-        formData.append("post_location", JSON.stringify(address));
-        formData.append("isvalid", JSON.stringify(isvalid));
+        formData.append("post_content", post_content);
+        formData.append("area_name", area_name); 
+        formData.append("userId", userId); 
+        formData.append("post_location", address);
+        formData.append("isvalid", isvalid);
         formData.append("member_num", member_num);
         formData.append("member_min", member_min);
         formData.append("endtime", endtime);
 
-        // console.log(formData.values) 이렇게 접근하면 안된다.å
-        for (var pair of formData.entries()) {
-            console.log(pair[0] + ', ' + pair[1]);
+        /* 
+        ? formData.values 접근하는 방법
+        ! console.log(formData.values) 이렇게 접근하면 안된다.
+        * for (var pair of formData.entries()) {
+        *       console.log(pair[0]+ ', ' + pair[1]);
+        *   } 
+        */
+        
+
+        if(title === "" || address === "" || post_content === "" || member_min === 0){
+            alert(errorMessage)
+        }else{
+            console.log("아무거나")
+            const result  = await axios({
+                url : `${ REACT_APP_API_URL }/post`,
+                method : 'POST',
+                data : formData,
+                headers : {
+                    'Content-Type': 'multipart/form-data',
+                    authorization : `Bearer ${accessToken}` 
+                },
+                withCredentials : true
+            }).then((result) =>{
+                dispatch(inputModalText(result.data.message));
+                dispatch(changeModalImg('check_man'));
+                dispatch(showRegisterModal(false))
+                dispatch(showConfirmModal(true));
+                
+            })
         }
-
-
-        // if(title === "" || area_name === "" || post_content === "" || member_min === 0){
-
-        //     setErrorMessage("사진을 제외한 모든 항목은 필수입니다.")
-        //     //alert(errorMessage)
-        // }else{
-        const result = await axios({
-            url: `${REACT_APP_API_URL}/post`,
-            method: 'POST',
-            data: formData,
-            headers: {
-                'Content-Type': 'multipart/form-data',
-                authorization: `Bearer ${accessToken}`
-            },
-            withCredentials: true
-        })
-
-        console.log(result)
-        //}
 
     }
 

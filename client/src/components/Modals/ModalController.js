@@ -5,12 +5,11 @@ import Signup from './Signup';
 import SignupSocial from './SignupSocial'
 import Confirm from './Confirm';
 import Register from './Register/Register';
+import Chatting from './Chatting/Chatting'
 import MyInfo from './MyPageModal/MyInfo';
 import PwCheck from './MyPageModal/PwCheck';
 import PwInput from './MyPageModal/PwCheck';
 import Signout from './SignoutModal/Signout'
-
-
 
 
 const ModalController = () => {
@@ -20,7 +19,8 @@ const ModalController = () => {
         signupSocialModal,
         signupModal,
         confirmModal,
-        registerModal,
+        registerModal, 
+        chattingModal
         myInfoModal,
         myPwCheckModal,
         myNewPwModal,
@@ -36,6 +36,7 @@ const ModalController = () => {
             {signupModal && <Signup />}
             {signupSocialModal && <SignupSocial />}
             {registerModal && <Register />}
+            {chattingModal && <Chatting />}
             {myInfoModal && <MyInfo />}
             {myPwCheckModal && <PwCheck />}
             {myNewPwModal && <PwInput />}

@@ -11,6 +11,7 @@ export const initialState = {
     findPWModal: false,
     registerModal: false,
     locationModal: false,
+    chattingModal: false,
     notificationModal: false,
     confirmModal: false,
     myInfoModal: false,
@@ -57,6 +58,9 @@ export const modalSlice = createSlice({
         showRegisterModal: (state, action) => {
             state.registerModal = action.payload
         },
+        showChattingModal :(state, action) => {
+            state.chattingModal = action.payload
+        },
         showMyInfoModal: (state, action) => {
             state.myInfoModal = action.payload;
         },
@@ -86,6 +90,7 @@ export const {
     inputSocialId,
     inputSocialEmail,
     showRegisterModal,
+    showChattingModal
     showMyInfoModal,
     showMyPwCheckModal,
     showMyNewPwModal,

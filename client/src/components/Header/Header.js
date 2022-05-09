@@ -41,6 +41,7 @@ function Header() {
         })
 
     }
+
     const handleLogout = async () => {
         axios.post(`${REACT_APP_API_URL}/sign/out`,
             {
