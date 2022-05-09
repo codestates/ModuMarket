@@ -13,21 +13,22 @@ const s3 = new S3({
     region
 });
 
-
 // uploads a file to s3
 function uploadFile(file) {
     console.log(file)
-    const fileStream = fs.createReadStream(file.path);
 
-    const uploadParams = {
-        Bucket: bucketName,
-        Body: fileStream,
-        Key: file.filename
+    if (file) {
+        const fileStream = fs.createReadStream(file.path);
+        const uploadParams = {
+            Bucket: bucketName,
+            Body: fileStream,
+            Key: file.filename
+        }
+    
+        console.log(uploadParams);
+    
+        return s3.upload(uploadParams).promise();
     }
-
-    console.log(uploadParams);
-
-    return s3.upload(uploadParams).promise();
 }
 exports.uploadFile = uploadFile;
 
@@ -42,3 +43,15 @@ function getFileStream(fileKey) {
     return s3.getObject(downloadParams).createReadStream();
 }
 exports.getFileStream = getFileStream;
+
+// deletes a file from s3
+function deleteFile(fileKey) {
+    console.log(fileKey)
+    const deleteParams = {
+        Key: fileKey,
+        Bucket: bucketName
+    }
+
+    return s3.deleteObject(deleteParams).promise();
+}
+exports.deleteFile = deleteFile;

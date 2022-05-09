@@ -10,7 +10,7 @@ import Detail from '../../pages/BoardDetailPage/BoardDetailPage'
 import Auth from './Auth';
 
 // io를 만들면서 서버로 접속시도(io()). => 연결이 되면 connect event 발생.
-const socket =  io.connect('http://localhost:4000')
+const socket =  io.connect('http://localhost:4000');
 // console.log(socket)
 
 

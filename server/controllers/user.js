@@ -215,7 +215,6 @@ module.exports = {
     const result1 = await uploadFile(req.file);
     await unlinkFile(req.file.path)
     // console.log(result1);
-    ace
 
     await User.updateOne({ email: req.params.email }, { $set: { user_image: req.file.path } })
 
