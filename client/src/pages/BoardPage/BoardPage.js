@@ -23,6 +23,7 @@ function BoardPage () {
     const dispatch = useDispatch();
     const accessToken = useSelector((state) => state.login.accessToken);
     const [cardInfo, setCardInfo] = useState()
+    console.log(cardInfo)
     
     async function handleCardInfo(){
         const result = await axios({
@@ -34,7 +35,7 @@ function BoardPage () {
             },
             withCredentials : true
         })
-        //console.log(result)
+        console.log(result)
         setCardInfo(result.data.data)
 
     }
@@ -67,6 +68,7 @@ function BoardPage () {
                         {
                             cardInfo ? cardInfo.map((info, idx) => <Cards info={info} key ={idx}/>)
                                      : <div>Loading</div>
+                            // <img src={cardInfo} alt='없음'/>
                         }
                     </CardWrap>
                 </Wrap>
