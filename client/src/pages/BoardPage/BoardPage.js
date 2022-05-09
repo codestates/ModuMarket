@@ -1,7 +1,7 @@
-import React ,{useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import Cards from '../../components/Cards/Cards'
 import Datepicker from '../../components/Modals/Register/Register'
-import {dummyData} from '../../assets/dummy'
+import { dummyData } from '../../assets/dummy'
 import axios from 'axios'
 import { useDispatch, useSelector } from 'react-redux';
 import { showRegisterModal } from '../../reducers/modalSlice';
@@ -17,32 +17,33 @@ import {
     ReservationButtonWrap,
     ReservationButton,
     CardWrap
-    } from "./styled"
+} from "./styled"
 
 
-function BoardPage () {
+function BoardPage() {
 
     const dispatch = useDispatch();
+    const accessToken = useSelector((state) => state.login.accessToken);
     const [cardInfo, setCardInfo] = useState()
-    
-    async function handleCardInfo(){
+
+    async function handleCardInfo() {
         const result = await axios({
-            url : `${REACT_APP_API_URL}/post`,
+            url: `${REACT_APP_API_URL}/post`,
             method: 'GET',
-            headers : {
+            headers: {
                 "Content-Type": "application/json",
-                authorization : `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjZmOTk2YWYxOTg1OGQwZTZiNGVhYWQiLCJlbWFpbCI6IjIiLCJhcmVhX25hbWUiOiLshJzsmrgiLCJpYXQiOjE2NTE5MDYxNjgsImV4cCI6MTY1MTkxMzM2OH0.ZIYmz4FEou4YBS1jpiHxSAKfWV7JXFB48ToK3F8y1TQ` 
+                authorization: `Bearer ${accessToken}`
             },
-            withCredentials : true
+            withCredentials: true
         })
         //console.log(result)
         setCardInfo(result.data.data)
 
     }
-    
-    useEffect(()=> {
+
+    useEffect(() => {
         handleCardInfo()
-    },[])
+    }, [])
 
     return (
         <div>
@@ -62,18 +63,18 @@ function BoardPage () {
                     </SearchWrap>
                     {/* 로그인을 했을 경우에 아래의 모달창이 뜰 수 있도록 하고 로그인이 안되어있다면 로그인 페이지로 가게해야한다. */}
                     <ReservationButtonWrap>
-                        <ReservationButton onClick ={() => dispatch(showRegisterModal(true))}>공구글 등록하기</ReservationButton>
+                        <ReservationButton onClick={() => dispatch(showRegisterModal(true))}>공구글 등록하기</ReservationButton>
                     </ReservationButtonWrap>
                     <CardWrap>
                         {
-                            cardInfo ? cardInfo.map((info, idx) => <Cards info={info} key ={idx}/>)
-                                     : <div>Loading</div>
+                            cardInfo ? cardInfo.map((info, idx) => <Cards info={info} key={idx} />)
+                                : <div>Loading</div>
                         }
                     </CardWrap>
                 </Wrap>
             </Section>
         </div>
-        
+
     )
 }
 export default BoardPage;

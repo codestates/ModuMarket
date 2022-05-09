@@ -1,15 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-const actionName = 'authentication';
+const actionName = 'user';
 
 export const initialState = {
     userInfo: {
-        id: "",
+        _id: "",
         email: "",
         name: "",
         age: 0,
         area_name: "",
-    }
+    },
+    userStatus: ""
 };
 
 export const userInfoSlice = createSlice({
@@ -17,10 +18,13 @@ export const userInfoSlice = createSlice({
     initialState,
     reducers: {
         getUserInfo: (state, action) => {
-            state.userInfo = action.payload
+            state.userInfo = action.payload.userInfo
+        },
+        setUserStatus: (state, action) => {
+            state.userStatus = action.payload
         }
     }
 })
 
-export const { getUserInfo } = userInfoSlice.actions;
+export const { getUserInfo, setUserStatus } = userInfoSlice.actions;
 export default userInfoSlice.reducer;

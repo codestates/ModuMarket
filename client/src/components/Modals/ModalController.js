@@ -5,6 +5,12 @@ import Signup from './Signup';
 import SignupSocial from './SignupSocial'
 import Confirm from './Confirm';
 import Register from './Register/Register';
+import MyInfo from './MyPageModal/MyInfo';
+import PwCheck from './MyPageModal/PwCheck';
+import PwInput from './MyPageModal/PwCheck';
+import Signout from './SignoutModal/Signout'
+
+
 
 
 const ModalController = () => {
@@ -14,7 +20,12 @@ const ModalController = () => {
         signupSocialModal,
         signupModal,
         confirmModal,
-        registerModal
+        registerModal,
+        myInfoModal,
+        myPwCheckModal,
+        myNewPwModal,
+        signoutModal,
+        signoutSocialModal
 
     } = useSelector((state) => state.modal);
 
@@ -24,8 +35,13 @@ const ModalController = () => {
             {signupGateModal && <SignupGate />}
             {signupModal && <Signup />}
             {signupSocialModal && <SignupSocial />}
-            {confirmModal && <Confirm />}
             {registerModal && <Register />}
+            {myInfoModal && <MyInfo />}
+            {myPwCheckModal && <PwCheck />}
+            {myNewPwModal && <PwInput />}
+            {signoutModal && <Signout />}
+            {signoutSocialModal && <Signout />}
+            {confirmModal && <Confirm />}
         </>
     )
 }

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { login } from '../../reducers/loginSlice';
 import { showLoginModal, showSignupModal } from '../../reducers/modalSlice';
+import { setUserStatus } from '../../reducers/userInfoSlice'
 import {
     ModalBackground,
     ModalContainer,
@@ -81,16 +82,26 @@ function Login() {
                             type='password'
                             onChange={handleInputValue('password')}
                             placeholder="비밀번호를 입력해주세요" />
-                        <ModalButton type='submit' onClick={handleLogin}>
+                        <ModalButton type='submit'
+                            onClick={() => {
+                                handleLogin();
+                                dispatch(setUserStatus('own'));
+                            }}>
                             로그인
                         </ModalButton>
                         <div className='alert-box'>{errorMessage}</div>
                     </form>
                 </LoginInput>
-                <ModalButton onClick={() => window.location.href = `${KAKAO_AUTH_URL}`}>
+                <ModalButton onClick={() => {
+                    window.location.href = `${KAKAO_AUTH_URL}`
+                    dispatch(setUserStatus('kakao'))
+                }}>
                     카카오로 로그인하기
                 </ModalButton>
-                <ModalButton onClick={() => window.location.href = `${GITHUB_AUTH_URL}`}>
+                <ModalButton onClick={() => {
+                    window.location.href = `${GITHUB_AUTH_URL}`
+                    dispatch(setUserStatus('github'));
+                }}>
                     Github으로 로그인하기
                 </ModalButton>
             </ModalContainer>

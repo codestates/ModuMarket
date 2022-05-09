@@ -6,11 +6,16 @@ export const initialState = {
     signupGateModal: false,
     signupModal: false,
     signupSocialModal: false,
+    signoutModal: false,
+    signoutSocialModal: false,
     findPWModal: false,
     registerModal: false,
     locationModal: false,
     notificationModal: false,
     confirmModal: false,
+    myInfoModal: false,
+    myPwCheckModal: false,
+    myNewPwModal: false,
     modalInformText: "",
     modalImg: "",
     socialInfoId: '',
@@ -51,7 +56,21 @@ export const modalSlice = createSlice({
         },
         showRegisterModal: (state, action) => {
             state.registerModal = action.payload
-
+        },
+        showMyInfoModal: (state, action) => {
+            state.myInfoModal = action.payload;
+        },
+        showMyPwCheckModal: (state, action) => {
+            state.myPwCheckModal = action.payload;
+        },
+        showMyNewPwModal: (state, action) => {
+            state.myNewPwModal = action.payload;
+        },
+        showSignoutModal: (state, action) => {
+            state.signoutModal = action.payload;
+        },
+        showSignoutSocialModal: (state, action) => {
+            state.signoutSocialModal = action.payload;
         }
     }
 })
@@ -66,7 +85,12 @@ export const {
     changeModalImg,
     inputSocialId,
     inputSocialEmail,
-    showRegisterModal
+    showRegisterModal,
+    showMyInfoModal,
+    showMyPwCheckModal,
+    showMyNewPwModal,
+    showSignoutModal,
+    showSignoutSocialModal,
 
 } = modalSlice.actions;
 
