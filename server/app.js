@@ -12,6 +12,7 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const listen = require('socket.io');
 const moment = require('moment')
+
 const {Post, Chatroom, ChatroomMessage} = require('./models/Post');
 
   let arr = [];
@@ -36,6 +37,7 @@ const {Post, Chatroom, ChatroomMessage} = require('./models/Post');
   //   }
   //   console.log(arr);
   // })  
+
 
 // newPost.save()
 // .then((data) => {
@@ -89,7 +91,7 @@ if (fs.existsSync("./key.pem") && fs.existsSync("./cert.pem")) {
   // 위에서 만들어둔 listen이란 변수에 서버를 담고 CORS 처리하기.
   // io 객체를 통해 메시지를 전달하고 받음.
   const io = listen(server, {
-    cors : {
+    cors: {
       origin: "*",
       credentials: true,
     }
@@ -104,33 +106,33 @@ if (fs.existsSync("./key.pem") && fs.existsSync("./cert.pem")) {
     jokes: [],
     javascript: []
   }
-  
+
   // 클라이언트에서 접속 요쳥이 오면 connection event 발생
-  io.on('connection', socket=>{
+  io.on('connection', socket => {
     // socket: connection이 성공했을 때 커넥션에 대한 정보를 담고 있는 변수(객체)(req 객체랑 유사)
     console.log("연결이 완료되었습니다.")
     // socket.on('message',({name,message}) => {
-      //     // socket.emit("EVENT", data) => 이벤트 발생(개별 소켓)
-      //     // socket.io.emit("Broadcast Event", [data]) => 연결된 모든 소켓에 이벤트 발생(io.emit 가능)
-      //     const time = moment(new Date()).format("h:mm A")
-      //     io.emit('message',({name, message, time}))
-      // });
-      // socket.on('join_room', (room) => {
-        //   console.log(room + '에 입장하셨습니다.')
-        
-        // })
-        
-        socket.on('join server', (username) => {
-          const user = {
-            username,
-            // 클라이언트마다 다름
-            id: socket.id
+    //     // socket.emit("EVENT", data) => 이벤트 발생(개별 소켓)
+    //     // socket.io.emit("Broadcast Event", [data]) => 연결된 모든 소켓에 이벤트 발생(io.emit 가능)
+    //     const time = moment(new Date()).format("h:mm A")
+    //     io.emit('message',({name, message, time}))
+    // });
+    // socket.on('join_room', (room) => {
+    //   console.log(room + '에 입장하셨습니다.')
+
+    // })
+
+    socket.on('join server', (username) => {
+      const user = {
+        username,
+        // 클라이언트마다 다름
+        id: socket.id
       }
-      
+
       users.push(user);
       io.emit('new user', users);
     })
-    
+
     socket.on('join room', (roomName, cb) => {
       socket.join(roomName);
       cb(messages[roomName])
@@ -142,17 +144,17 @@ if (fs.existsSync("./key.pem") && fs.existsSync("./cert.pem")) {
       // socket.emit("EVENT", data) => 이벤트 발생(개별 소켓)
       // socket.io.emit("Broadcast Event", [data]) => 연결된 모든 소켓에 이벤트 발생(io.emit 가능)
       const time = moment(new Date()).format("h:mm A")
-      io.to(room).emit('type', {arr, time, room})
+      io.to(room).emit('type', { arr, time, room })
     })
-    
-    socket.on('message', async ({name, to, chatname, message, room}) => {
-      
+
+    socket.on('message', async ({ name, to, chatname, message, room }) => {
+
       // const chatt = await Chatroom.findOne({roomname: "채팅방1"});
       // console.log(result);
       // console.log(chatt);
-      
+
       // Post.findOne({member_min: 5 }).populate("chatroom").exec((err, data) => {
-        //   console.log(data);
+      //   console.log(data);
       // })
 
       // Post, Chatroom, ChatroomMessage collection 존재
@@ -181,11 +183,11 @@ if (fs.existsSync("./key.pem") && fs.existsSync("./cert.pem")) {
       //   const newChatroom = new Chatroom();
       //   return newChatroom;
       // }
-      
+
       // // 모델 뼈대만 존재
       // const getChatroom = getChatroomConnection();
       // // console.log(getChatroom)
-      
+
       // let chatMessage  =  new ChatroomMessage({ message_content: message, username: name});
       // // save 실행만 시켜주면 됨.
       // chatMessage.save((err, data1) => {
@@ -206,19 +208,19 @@ if (fs.existsSync("./key.pem") && fs.existsSync("./cert.pem")) {
       //   });
       //   // console.log(data1);
       // });
-      
+
       // Post.findOne({member_min: 5 }).populate("chatroom").exec((err, data) => {
-        //   console.log(data);
-        // })
-        
-        // const result = await Post.findOne({name: name});
-        
+      //   console.log(data);
+      // })
+
+      // const result = await Post.findOne({name: name});
+
       socket.join(room);
       console.log(room + '에 입장하셨습니다.');
       // socket.emit("EVENT", data) => 이벤트 발생(개별 소켓)
       // socket.io.emit("Broadcast Event", [data]) => 연결된 모든 소켓에 이벤트 발생(io.emit 가능)
       const time = moment(new Date()).format("h:mm A")
-      io.to(room).emit('message',({name, message, time, room}))
+      io.to(room).emit('message', ({ name, message, time, room }))
       // io.to(to).emit('message',({name, message, time}))
 
       // if (messages[chatname]) {

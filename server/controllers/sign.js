@@ -93,7 +93,8 @@ module.exports = {
                   httpOnly: true,
                 })
                 .status(200)
-                .json({ data: { id: _id, area_name:area_name, accessToken: accessToken }, message: "로그인에 성공하였습니다." });
+                .json({ data: { id: _id, area_name: area_name, accessToken: accessToken }, message: "로그인에 성공하였습니다." });
+
 
             }
 
@@ -226,6 +227,7 @@ module.exports = {
 
         })
 
+
   },
 
   inGithub: async (req, res) => {
@@ -248,4 +250,5 @@ module.exports = {
       })
 
   }
+
 }

@@ -25,7 +25,6 @@ module.exports = {
   },
 
   mypage: async (req, res) => {
-
     // accessToken으로 유저정보 가져오기  || accessToken이 만료돼고 refreshToken
     if (!req.headers.authorization) {
       return res.status(401).json({ data: null, message: 'invalid access token' })
@@ -41,7 +40,7 @@ module.exports = {
     if (accTokenData && refTokenData) {
       const userinfo = await User.findOne({ email: accTokenData.email }).exec();
       const { _id, name, email, age, area_name } = userinfo
-      res.status(200).json({ data: { userInfo: { _id, name, email, age, area_name } }, message: 'ok' })
+      res.status(200).json({ data: { userInfo: { id: _id, name, email, age, area_name } }, message: 'ok' })
     }
     if (accTokenData && !refTokenData) {
       const userinfo = await User.findOne({ email: accTokenData.email }).exec();
@@ -54,14 +53,14 @@ module.exports = {
           httpOnly: true,
         })
         .status(200)
-        .json({ data: { userinfo: { _id, name, email, age, area_name } }, message: 'ok' });
+        .json({ data: { userinfo: { id: _id, name, email, age, area_name } }, message: 'ok' });
 
     }
     if (!accTokenData && refTokenData) {
       const userinfo = await User.findOne({ email: refTokenData.email }).exec();
       const { _id, name, email, password, age, area_name } = userinfo
       const accessToken = jwt.sign(JSON.parse(JSON.stringify({ _id, email, area_name })), process.env.ACCESS_SECRET, { expiresIn: '2h' });
-      return res.send({ data: { accessToken, userInfo: { _id, name, email, age, area_name } }, message: "ok" })
+      return res.send({ data: { accessToken, userInfo: { id: _id, name, email, age, area_name } }, message: "ok" })
     }
     if (!accTokenData && !refTokenData) {
       res.status(404).send({ "data": null, "message": "access and refresh token has been tempered" })
@@ -211,7 +210,7 @@ module.exports = {
   uploadImage: async (req, res) => {
     console.log(req.file);
     console.log(req.params)
-    
+
     const result1 = await uploadFile(req.file);
     await unlinkFile(req.file.path)
     // console.log(result1);
@@ -220,7 +219,7 @@ module.exports = {
 
     const result = await User.findOne({ email: req.body.email }).exec();
 
-    res.send({imagePath: `/:email/image/${result1.key}`})
+    res.send({ imagePath: `/:email/image/${result1.key}` })
     // res.send('1')
 
     // uploadImage.save()
@@ -253,7 +252,7 @@ module.exports = {
         res.status(404).json({ data: null, message: '잘못된 요청입니다' });
       }
     }
-    if (refTokenData) {
+    else if (refTokenData) {
       const { email } = refTokenData
       const result = await User.deleteOne({ email })
       if (result.deletedCount === 1) {
@@ -277,7 +276,7 @@ module.exports = {
     if (accTokenData && refTokenData) {
       const { _id } = accTokenData
       try {
-        await Post.updateMany({endtime:{$lt: Date.now()}},{isvalid: true})
+        await Post.updateMany({ endtime: { $lt: Date.now() } }, { isvalid: true })
         const result = await Post.find({ userId: _id }).exec();
         if (result.length > 0) { //내가 작성한 공고글이 있을때
           res.status(200).json({ data: result, message: 'list fetch success' });
@@ -298,7 +297,7 @@ module.exports = {
         const accessToken = jwt.sign(JSON.parse(JSON.stringify({ _id, email, area_name })), process.env.ACCESS_SECRET, { expiresIn: '2h' });
 
         // 포스트 컬렉션에서 내가 작성한 공고글이 있는지 조회
-        await Post.updateMany({endtime:{$lt: Date.now()}},{isvalid: true})
+        await Post.updateMany({ endtime: { $lt: Date.now() } }, { isvalid: true })
         const result = await Post.find({ userId: _id }).exec();
         if (result.length > 0) { //내가 작성한 공고글이 있을때
           res.status(200).json({ data: { result, accessToken }, message: 'list fetch success' });
@@ -315,7 +314,7 @@ module.exports = {
         const refreshToken = jwt.sign(JSON.parse(JSON.stringify({ _id, email, area_name })), process.env.REFRESH_SECRET, { expiresIn: '14d' });
 
         // 포스트 컬렉션에서 내가 작성한 공고글이 있는지 조회
-        await Post.updateMany({endtime:{$lt: Date.now()}},{isvalid: true})
+        await Post.updateMany({ endtime: { $lt: Date.now() } }, { isvalid: true })
         const result = await Post.find({ userId: _id }).exec();
         if (result.length > 0) { //내가 작성한 공고글이 있을때
           res.status(200).json({ data: result, message: 'list fetch success' });
@@ -343,7 +342,7 @@ module.exports = {
     // application컬렉션에서 userId가 일치하고 isapplied상태가 true인것 필터링해서 해당 글의 post_id만 매핑하여 전달하기
     if (accTokenData && refTokenData) {
       const { _id } = accTokenData
-      await Post.updateMany({endtime:{$lt: Date.now()}},{isvalid: true})
+      await Post.updateMany({ endtime: { $lt: Date.now() } }, { isvalid: true })
       const result = await Application.find({ userId: _id, isapplied: true }).populate('post_id').exec();
       if (result.length > 0) {
         const postresult = result.map((data) => {
@@ -361,7 +360,7 @@ module.exports = {
         const { _id, email, area_name } = userdata
         const accessToken = jwt.sign(JSON.parse(JSON.stringify({ _id, email, area_name })), process.env.ACCESS_SECRET, { expiresIn: '2h' });
 
-        await Post.updateMany({endtime:{$lt: Date.now()}},{isvalid: true})
+        await Post.updateMany({ endtime: { $lt: Date.now() } }, { isvalid: true })
         const result = await Application.find({ userId: _id, isapplied: true }).populate('post_id').exec();
         if (result.length > 0) {
           const postresult = result.map((data) => {
@@ -380,7 +379,7 @@ module.exports = {
         const { _id, email, area_name } = userdata
         const refreshToken = jwt.sign(JSON.parse(JSON.stringify({ _id, email, area_name })), process.env.ACCESS_SECRET, { expiresIn: '2h' });
 
-        await Post.updateMany({endtime:{$lt: Date.now()}},{isvalid: true})
+        await Post.updateMany({ endtime: { $lt: Date.now() } }, { isvalid: true })
         const result = await Application.find({ userId: _id, isapplied: true }).populate('post_id').exec();
         if (result.length > 0) {
           const postresult = result.map((data) => {
