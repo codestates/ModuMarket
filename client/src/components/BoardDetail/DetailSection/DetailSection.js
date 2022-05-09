@@ -8,6 +8,8 @@ import NecessityIcon from '../../../assets/necessity_icon.png'
 import MemberIcon from '../../../assets/member.png'
 import TimerIcon from '../../../assets/timer.png'
 import Photo from '../../../assets/photo.png'
+import { useDispatch, useSelector } from 'react-redux';
+import { showChattingModal } from '../../../reducers/modalSlice';
 import {Section, Wrap, 
         TitleWrap, Title, 
         ButtonWrap, Button,
@@ -21,7 +23,7 @@ import {Section, Wrap,
 function DetailSection ({info}){
     
     //console.log(info)
-
+    const dispatch = useDispatch();
     const category = ["패션, 뷰티","식품","생필품","취미, 반려","유아동"];
         let categoryNumber = info.category;
         let categoryImg;
@@ -91,7 +93,7 @@ function DetailSection ({info}){
                             </DetailMemberAndTimeWrap>
                             <DetailButtonWrap>
                                 <DetailButton background="#FF6767">
-                                    <button>채팅하기</button>
+                                <button onClick ={() => dispatch(showChattingModal(true))} >채팅하기</button>
                                 </DetailButton>
                                 <DetailButton background="white">
                                     <button>모집 완료하기</button>

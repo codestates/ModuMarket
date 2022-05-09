@@ -5,6 +5,8 @@ import Signup from './Signup';
 import SignupSocial from './SignupSocial'
 import Confirm from './Confirm';
 import Register from './Register/Register';
+import Chatting from './Chatting/Chatting';
+
 
 
 const ModalController = () => {
@@ -14,7 +16,8 @@ const ModalController = () => {
         signupSocialModal,
         signupModal,
         confirmModal,
-        registerModal
+        registerModal,
+        chattingModal
 
     } = useSelector((state) => state.modal);
 
@@ -26,6 +29,8 @@ const ModalController = () => {
             {signupSocialModal && <SignupSocial />}
             {confirmModal && <Confirm />}
             {registerModal && <Register />}
+            {chattingModal && <Chatting />}
+
         </>
     )
 }
