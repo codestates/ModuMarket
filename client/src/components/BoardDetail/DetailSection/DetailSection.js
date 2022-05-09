@@ -22,9 +22,11 @@ import {Section, Wrap,
 
 function DetailSection ({info}){
     
-    //console.log(info)
+    // console.log(info.userId._id)
+
     const dispatch = useDispatch();
-    const isLogin = useSelector((state) => state.login.isLogin);
+    const cardUserId = info.userId._id
+    // const userId = useSelector((state) => state.login.isLogin);
     const category = ["패션, 뷰티","식품","생필품","취미, 반려","유아동"];
         let categoryNumber = info.category;
         let categoryImg;
