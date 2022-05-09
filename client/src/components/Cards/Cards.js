@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {useNavigate} from 'react-router-dom';
 import FoodIcon from '../../assets/food_icon.png';
 import BabiesIcon from '../../assets/babies_icon.png';
@@ -7,6 +7,7 @@ import HobbiesIcon from '../../assets/hobbies_icon.png';
 import NecessityIcon from '../../assets/necessity_icon.png';
 import LocationIcon from '../../assets/location_icon.png';
 import NullImage from '../../assets/photo.png';
+import { REACT_APP_API_URL } from '../../config'
 import {
     Section,
     CardWrap,
@@ -56,7 +57,7 @@ function Cards({info}){
                     <Card>
                         {
                             info.image
-                            ? <CardPhoto><img src={`http://localhost:4000/post/image/${info.image}/`} alt='card main img'/></CardPhoto>
+                            ? <CardPhoto><img src={`${ REACT_APP_API_URL }/post/image/${info.image}/`} alt='card main img'/></CardPhoto>
                             : <CardPhoto image = ""><img src={NullImage} alt='card main img'/></CardPhoto>
                         }
                         <CardCategoryWrap>

@@ -8,7 +8,7 @@ const rootReducer = combineReducers({
     login: loginSlice,
     userInfo: userInfoSlice,
     modal: modalSlice,
-    // board : boardSlice,
+    board : boardSlice,
 })
 
 export default rootReducer;

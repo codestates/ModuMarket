@@ -9,7 +9,8 @@ import Chatting from './Chatting/Chatting'
 import MyInfo from './MyPageModal/MyInfo';
 import PwCheck from './MyPageModal/PwCheck';
 import PwInput from './MyPageModal/PwCheck';
-import Signout from './SignoutModal/Signout'
+import Signout from './SignoutModal/Signout';
+import ReviseRegister from './ReviseRegister/ReviseRegister'
 
 
 const ModalController = () => {
@@ -20,12 +21,13 @@ const ModalController = () => {
         signupModal,
         confirmModal,
         registerModal, 
-        chattingModal
+        chattingModal,
         myInfoModal,
         myPwCheckModal,
         myNewPwModal,
         signoutModal,
-        signoutSocialModal
+        signoutSocialModal,
+        reviseRegisterModal
 
     } = useSelector((state) => state.modal);
 
@@ -43,6 +45,7 @@ const ModalController = () => {
             {signoutModal && <Signout />}
             {signoutSocialModal && <Signout />}
             {confirmModal && <Confirm />}
+            {reviseRegisterModal && <ReviseRegister />}
         </>
     )
 }

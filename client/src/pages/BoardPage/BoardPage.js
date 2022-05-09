@@ -49,7 +49,7 @@ function BoardPage() {
         <div>
             <Section>
                 <Wrap>
-                    <TitleWrap>망원동 공구찾기</TitleWrap>
+                    <TitleWrap> 공구찾기</TitleWrap>
                     <SearchWrap>
                         <SearchTab type="text"></SearchTab>
                         <SearchCategory>

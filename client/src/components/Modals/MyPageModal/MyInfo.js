@@ -15,8 +15,8 @@ import {
     changeModalImg
 } from '../../../reducers/modalSlice';
 import {
-    ModalBackground,
-    ModalContainer,
+    ModalBackground,ModalNameWrap,
+    ModalContainer,ModalAgeWrap,
     ModalText,
     ModalImg,
     ModalInform,
@@ -83,10 +83,14 @@ const MyInfo = () => {
                         <img src={profileImg[1]} alt='profileImg' />
                     </ModalImg>
                     <ModalInformRow>
-                        <span>이름</span>
-                        <p>{myInfo.name}</p>
-                        <p>나이</p>
-                        <p>{myInfo.age}</p>
+                        <ModalNameWrap>
+                            <span>이름</span>
+                            <p>{myInfo.name}</p>
+                        </ModalNameWrap>
+                        <ModalAgeWrap>
+                            <p>나이</p>
+                            <p>{myInfo.age}</p>
+                        </ModalAgeWrap>
                     </ModalInformRow>
                     <ModalInformRow>
                         <span>이메일</span>
