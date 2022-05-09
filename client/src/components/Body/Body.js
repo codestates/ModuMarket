@@ -10,8 +10,7 @@ import Detail from '../../pages/BoardDetailPage/BoardDetailPage'
 import Auth from './Auth';
 
 // io를 만들면서 서버로 접속시도(io()). => 연결이 되면 connect event 발생.
-const socket =  io.connect('http://localhost:4000')
-// console.log(socket)
+// const socket =  io.connect('https://localhost:4000')
 
 
 let room = '채팅방1'
@@ -21,61 +20,61 @@ const Body = () => {
     const [state, setState] = useState({message:'', name:''})
     const [chat, setChat] =useState([])
   
-    useEffect(()=>{
-      // 이벤트 수신: socket.on("EVENT", function(data) {})
-      // data(parameter)는 서버에서 등록한 data 어떤 식으로 data를 보내주는지
-      socket.emit('type', (room));
+    // useEffect(()=>{
+    //   // 이벤트 수신: socket.on("EVENT", function(data) {})
+    //   // data(parameter)는 서버에서 등록한 data 어떤 식으로 data를 보내주는지
+    //   socket.emit('type', (room));
 
-      socket.on('type', (data)=>{
+    //   socket.on('type', (data)=>{
 
-        const {arr, time, room} = data;
-        // console.log(data);
-        console.log(room + '에 입장하셨습니다.')
-        // setChat([...chat,{name, message, time}]);
-        let temp = [];
-          arr.forEach(el => {
-            console.log(el)
-            temp.push({
-              name: el.username,
-              message: el.message_content,
-              time
-            })
-            setChat([...temp]);
-          });
-        })
-      }, [])
+    //     const {arr, time, room} = data;
+    //     // console.log(data);
+    //     console.log(room + '에 입장하셨습니다.')
+    //     // setChat([...chat,{name, message, time}]);
+    //     let temp = [];
+    //       arr.forEach(el => {
+    //         console.log(el)
+    //         temp.push({
+    //           name: el.username,
+    //           message: el.message_content,
+    //           time
+    //         })
+    //         setChat([...temp]);
+    //       });
+    //     })
+    //   }, [])
 
-    useEffect(()=>{
-      // 이벤트 수신: socket.on("EVENT", function(data) {})
-      // data(parameter)는 서버에서 등록한 data 어떤 식으로 data를 보내주는지
-      socket.on('message', ({name, message, time, room}) => {
-        // console.log(data);
-        console.log(room + '에 입장하셨습니다.')
-        setChat([...chat,{name, message, time}]);
-      })});
+    // useEffect(()=>{
+    //   // 이벤트 수신: socket.on("EVENT", function(data) {})
+    //   // data(parameter)는 서버에서 등록한 data 어떤 식으로 data를 보내주는지
+    //   socket.on('message', ({name, message, time, room}) => {
+    //     // console.log(data);
+    //     console.log(room + '에 입장하셨습니다.')
+    //     setChat([...chat,{name, message, time}]);
+    //   })});
   
-    console.log(chat)
-    const onTextChange = e =>{
-      setState({...state,[e.target.name]: e.target.value})
-    }
+    // console.log(chat)
+    // const onTextChange = e =>{
+    //   setState({...state,[e.target.name]: e.target.value})
+    // }
   
-    const onMessageSubmit =(e)=>{
-      e.preventDefault()
-      const {name, message} = state
-      // socket.emit('message',{name, message})
-      // socket.emit('join_room', 'room1');
-      socket.emit('message',{name, message, room})
-      setState({message : '',name})
-    }
+    // const onMessageSubmit =(e)=>{
+    //   e.preventDefault()
+    //   const {name, message} = state
+    //   // socket.emit('message',{name, message})
+    //   // socket.emit('join_room', 'room1');
+    //   socket.emit('message',{name, message, room})
+    //   setState({message : '',name})
+    // }
     
-    const renderChat =()=>{
-      return chat.map(({name, message, time},index)=>(
-        <div key={index}>
-          <h3>{name}</h3>
-          <span>{message + ' ' + time}</span>
-        </div>
-      ))
-    }
+    // const renderChat =()=>{
+    //   return chat.map(({name, message, time},index)=>(
+    //     <div key={index}>
+    //       <h3>{name}</h3>
+    //       <span>{message + ' ' + time}</span>
+    //     </div>
+    //   ))
+    // }
 
     return (
         <Routes>

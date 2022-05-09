@@ -1,7 +1,5 @@
 import React ,{useState, useEffect} from 'react';
 import Cards from '../../components/Cards/Cards'
-import Datepicker from '../../components/Modals/Register/Register'
-import {dummyData} from '../../assets/dummy'
 import axios from 'axios'
 import { useDispatch, useSelector } from 'react-redux';
 import { showRegisterModal } from '../../reducers/modalSlice';
@@ -23,6 +21,7 @@ import {
 function BoardPage () {
 
     const dispatch = useDispatch();
+    const accessToken = useSelector((state) => state.login.accessToken);
     const [cardInfo, setCardInfo] = useState()
     
     async function handleCardInfo(){
@@ -31,7 +30,7 @@ function BoardPage () {
             method: 'GET',
             headers : {
                 "Content-Type": "application/json",
-                authorization : `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjZmOTk2YWYxOTg1OGQwZTZiNGVhYWQiLCJlbWFpbCI6IjIiLCJhcmVhX25hbWUiOiLshJzsmrgiLCJpYXQiOjE2NTE5MDYxNjgsImV4cCI6MTY1MTkxMzM2OH0.ZIYmz4FEou4YBS1jpiHxSAKfWV7JXFB48ToK3F8y1TQ` 
+                authorization : `Bearer ${accessToken}` 
             },
             withCredentials : true
         })

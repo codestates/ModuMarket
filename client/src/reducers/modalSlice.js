@@ -9,6 +9,7 @@ export const initialState = {
     findPWModal: false,
     registerModal: false,
     locationModal: false,
+    chattingModal: false,
     notificationModal: false,
     confirmModal: false,
     modalInformText: "",
@@ -51,7 +52,9 @@ export const modalSlice = createSlice({
         },
         showRegisterModal: (state, action) => {
             state.registerModal = action.payload
-
+        },
+        showChattingModal :(state, action) => {
+            state.chattingModal = action.payload
         }
     }
 })
@@ -66,7 +69,8 @@ export const {
     changeModalImg,
     inputSocialId,
     inputSocialEmail,
-    showRegisterModal
+    showRegisterModal,
+    showChattingModal
 
 } = modalSlice.actions;
 

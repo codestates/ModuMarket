@@ -29,16 +29,16 @@ function Header() {
 
     }
     const handleLogout = async() => {
-        // axios.post(`${REACT_APP_API_URL}/sign/out`,
-        //     {
-        //         accessToken: accessToken
-        //     })
-        //     .then((result) => {
-        //         dispatch(inputModalText(result.data.message));
-        //         dispatch(changeModalImg('check_man'));
-        //         dispatch(showConfirmModal(true));
-        //         dispatch(logout());
-        //     })
+        axios.post(`${REACT_APP_API_URL}/sign/out`,
+            {
+                accessToken: accessToken
+            })
+            .then((result) => {
+                dispatch(inputModalText(result.data.message));
+                dispatch(changeModalImg('check_man'));
+                dispatch(showConfirmModal(true));
+                dispatch(logout());
+            })
     }
     const KAKAO_LOGOUT_LEDERECT_URL = `https://kauth.kakao.com/oauth/logout?client_id=${process.env.REACT_APP_KAKAO_API_KEY}&logout_redirect_uri=${process.env.REACT_APP_KAKAO_LOGOUT_URI}`
 
