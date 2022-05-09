@@ -32,7 +32,6 @@ function BoardPage() {
             headers: {
                 "Content-Type": "application/json",
                 authorization : `Bearer ${accessToken}` 
-
             },
             withCredentials: true
         })

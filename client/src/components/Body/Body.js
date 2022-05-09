@@ -11,7 +11,6 @@ import Auth from './Auth';
 const Body = () => {
     const isLogin = useSelector((state) => state.login.isLogin);
 
-
     return (
         <Routes>
             <Route path="/" element={<Main />} />

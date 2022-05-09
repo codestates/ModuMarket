@@ -90,7 +90,7 @@ export const {
     inputSocialId,
     inputSocialEmail,
     showRegisterModal,
-    showChattingModal
+    showChattingModal,
     showMyInfoModal,
     showMyPwCheckModal,
     showMyNewPwModal,
