@@ -40,7 +40,7 @@ function Header() {
         //         dispatch(logout());
         //     })
     }
-    const KAKAO_LOGOUT_LEDERECT_URL = `https://kauth.kakao.com/oauth/logout?client_id=${process.env.REACT_APP_KAKAO_API_KEY}&logout_redirect_uri=${process.env.REACT_APP_KAKAO_LOGOUT_URI}`
+    const KAKAO_LOGOUT_LEDERECT_URL = `https://kauth.kakao.com/oauth/logout?client_id=${process.env.REACT_APP_KAKAO_API_KEY}&logout_redirect_uri=${process.env.REACT_APP_KAKAO_LOGOUT_REDIRECT_URL}`
 
     return (
         <NavContainer>

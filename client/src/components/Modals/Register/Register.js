@@ -48,7 +48,7 @@ function Register(){
 
         console.log(photoFile.files[0])
         formData.append("title", JSON.stringify(title));
-        formData.append("category", JSON.stringify(category));
+        formData.append("category", category);
         formData.append("image", photoFile.files[0]);
         formData.append("post_content", JSON.stringify(post_content));
         formData.append("area_name", JSON.stringify(area_name));

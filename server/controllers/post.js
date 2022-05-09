@@ -11,25 +11,11 @@ const unlinkFile = util.promisify(fs.unlink);
 module.exports = {
 
   postList: async (req, res) => {
-    console.log(Post);
-    
-    // const deletePost = async () => {
-    //   await Post.deleteMany({})
-    // }
-  
-    // deletePost();
-    // const result = await Post.find({}).exec((err, data) => {
-    //   if (err) {
-    //     console.log(err)
-    //   }
-    //   console.log(data);
-    // })
-    // console.log(result);
 
-    if (!req.headers.authorization || !req.cookies.refreshToken) {
-      // await Post.updateMany({ endtime: { $lt: Date.now() } }, { isvalid: true })
-      // const result = await Post.find({})
-      // res.status(200).json({ data: result });
+    if (req.headers.authorization === 'Bearer') {
+      await Post.updateMany({ endtime: { $lt: Date.now() } }, { isvalid: true })
+      const result = await Post.find({})
+      res.status(200).json({ data: result });
     } else {
       const token = req.headers.authorization.split(' ')[1];
       const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET);
