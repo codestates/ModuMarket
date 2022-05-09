@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { React, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../reducers/loginSlice';
+import { getUserInfo } from '../../reducers/userInfoSlice'
 import {
     showLoginModal,
     showSignupGateModal,
@@ -26,9 +27,22 @@ function Header() {
     const accessToken = useSelector((state) => state.login.accessToken);
 
     const handleGetUserInfo = () => {
+        axios.get(`${REACT_APP_API_URL}/user`,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${accessToken}`,
+                },
+                withCredentials: true
+            }
+
+        ).then((result) => {
+            dispatch(getUserInfo(result.data.data));
+        })
 
     }
-    const handleLogout = async() => {
+
+    const handleLogout = async () => {
         axios.post(`${REACT_APP_API_URL}/sign/out`,
             {
                 accessToken: accessToken
@@ -40,7 +54,7 @@ function Header() {
                 dispatch(logout());
             })
     }
-    const KAKAO_LOGOUT_LEDERECT_URL = `https://kauth.kakao.com/oauth/logout?client_id=${process.env.REACT_APP_KAKAO_API_KEY}&logout_redirect_uri=${process.env.REACT_APP_KAKAO_LOGOUT_URI}`
+    const KAKAO_LOGOUT_LEDERECT_URL = `https://kauth.kakao.com/oauth/logout?client_id=${process.env.REACT_APP_KAKAO_API_KEY}&logout_redirect_uri=${process.env.REACT_APP_KAKAO_LOGOUT_REDIRECT_URL}`
 
     return (
         <NavContainer>

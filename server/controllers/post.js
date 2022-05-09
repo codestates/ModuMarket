@@ -16,7 +16,6 @@ module.exports = {
       await Post.updateMany({ endtime: { $lt: Date.now() } }, { isvalid: true })
       const result = await Post.find({})
       res.status(200).json({ data: result });
-
     } else if (req.headers.authorization && req.cookies.refreshToken) {
       const token = req.headers.authorization.split(' ')[1];
       const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET);
@@ -104,11 +103,11 @@ module.exports = {
         })
     }
     if (!accTokenData && refTokenData) {
-      const emaildata  = refTokenData.email
-      const result =  await User.findOne({ email: emaildata }).exec();
-      const {_id, email, area_name} = result
-      const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
-      
+      const emaildata = refTokenData.email
+      const result = await User.findOne({ email: emaildata }).exec();
+      const { _id, email, area_name } = result
+      const accessToken = jwt.sign(JSON.parse(JSON.stringify({ _id, email, area_name })), process.env.ACCESS_SECRET, { expiresIn: '2h' });
+
       const newPost = new Post();
       newPost.userId = req.body.userId;
       newPost.category = req.body.category;
@@ -131,11 +130,11 @@ module.exports = {
         })
     }
     if (accTokenData && !refTokenData) {
-      const emaildata  = accTokenData.email
-      const result =  await User.findOne({ email: emaildata }).exec();
-      const {_id, email, area_name} = result
-      const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.REFRESH_SECRET, {expiresIn: '14d'});
-      
+      const emaildata = accTokenData.email
+      const result = await User.findOne({ email: emaildata }).exec();
+      const { _id, email, area_name } = result
+      const refreshToken = jwt.sign(JSON.parse(JSON.stringify({ _id, email, area_name })), process.env.REFRESH_SECRET, { expiresIn: '14d' });
+
       const newPost = new Post();
       newPost.userId = req.body.userId;
       newPost.category = req.body.category;
