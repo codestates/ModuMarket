@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import { useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
+import { useState, useEffect } from 'react'
 import Main from '../../pages/MainPage/Main'
 import BoardPage from '../../pages/BoardPage/BoardPage'
 import MyPage from '../../pages/MyPage/MyPage'
@@ -16,8 +17,8 @@ const Body = () => {
             <Route path="/board" element={<BoardPage />} />
             <Route path="/mypage" element={isLogin ? <MyPage /> : <Navigate to="/" />} />
             <Route path="/detail" element={<Detail />} />
-            <Route path="/sign/kakao/callback" element={isLogin ? <Navigate to="/" /> : <Auth social="kakao"/>} />
-            <Route path="/sign/github/callback" element={isLogin ? <Navigate to="/" /> : <Auth social="gitgub"/>} />
+            <Route path="/sign/kakao/callback" element={isLogin ? <Navigate to="/" /> : <Auth social="kakao" />} />
+            <Route path="/sign/github/callback" element={isLogin ? <Navigate to="/" /> : <Auth social="gitgub" />} />
         </Routes>
     )
 }

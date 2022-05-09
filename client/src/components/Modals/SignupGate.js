@@ -4,8 +4,8 @@ import {
     showSignupModal,
     showSignupSocialModal,
     showSignupGateModal,
-
 } from '../../reducers/modalSlice';
+import { setUserStatus } from '../../reducers/userInfoSlice';
 import { ModalBackground, ModalContainer, ModalText, ModalButton } from './styled'
 import { REDIRECT_URI } from '../../config';
 
@@ -37,14 +37,16 @@ const SignupGate = () => {
                 <ModalButton onClick={() => {
                     window.location.href = `${KAKAO_AUTH_URL}`
                     dispatch(showSignupGateModal(false))
+                    dispatch(setUserStatus('kakao'))
                 }}>
                     카카오로 회원가입
                 </ModalButton>
                 <ModalButton onClick={() => {
                     dispatch(showSignupSocialModal(true))
                     dispatch(showSignupGateModal(false))
+                    dispatch(setUserStatus('github'))
                 }}>
-                    Facebook으로 회원가입
+                    Github으로 회원가입
                 </ModalButton>
             </ModalContainer>
         </>

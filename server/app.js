@@ -12,6 +12,7 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const listen = require('socket.io');
 const moment = require('moment')
+
 const {Post, Chatroom, ChatroomMessage} = require('./models/Post');
 
   let arr = [];
@@ -72,7 +73,7 @@ if (!fs.existsSync("./key.pem") && !fs.existsSync("./cert.pem")) {
   // 위에서 만들어둔 listen이란 변수에 서버를 담고 CORS 처리하기.
   // io 객체를 통해 메시지를 전달하고 받음.
   const io = listen(server, {
-    cors : {
+    cors: {
       origin: "*",
       credentials: true,
     }
@@ -88,11 +89,10 @@ if (!fs.existsSync("./key.pem") && !fs.existsSync("./cert.pem")) {
       // socket.emit("EVENT", data) => 이벤트 발생(개별 소켓)
       // socket.io.emit("Broadcast Event", [data]) => 연결된 모든 소켓에 이벤트 발생(io.emit 가능)
       const time = moment(new Date()).format("h:mm A")
-      io.to(room).emit('type', {arr, time, room}) // arr= 채팅내역,  요 채팅방에만 메시지를 보내겠다 
+      io.to(room).emit('type', {arr, time, room}) // arr= 채팅내역, 요 채팅방에만 메시지를 보내겠다
     })
     
     socket.on('message', async ({name, to, chatname, message, room}) => {
-
       const chatroomMessage = new ChatroomMessage({
         message_content: message,
         username: name
@@ -100,13 +100,11 @@ if (!fs.existsSync("./key.pem") && !fs.existsSync("./cert.pem")) {
       chatroomMessage.save((err, data) => {
         // console.log(data)
       });
-
       const chatroom = new Chatroom({
         roomname: room,
         message: chatroomMessage._id
       });
       chatroom.save((err, data) => {
-
       });
         
       socket.join(room);

@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { showConfirmModal, showChattingModal } from '../../../reducers/modalSlice';
 import { ModalBackground, ModalContainer, ModalText, ModalImg, ModalButton } from './styled';
@@ -84,7 +83,7 @@ const Chatting = () => {
                     <form onSubmit={onMessageSubmit}>
                         <TextField name ="name" onChange={onTextChange} value={state.name} label="Name"></TextField>
                         <TextField name ="message" placeholder="메시지를 입력해주세요." onChange={onTextChange} value={state.message} variant="outlined"></TextField>
-                   
+
                         <button>확인</button>
                     </form>
                 </ModalText>

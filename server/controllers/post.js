@@ -16,7 +16,7 @@ module.exports = {
       await Post.updateMany({ endtime: { $lt: Date.now() } }, { isvalid: true })
       const result = await Post.find({})
       res.status(200).json({ data: result });
-    } else {
+    } else if (req.headers.authorization && req.cookies.refreshToken) {
       const token = req.headers.authorization.split(' ')[1];
       const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET);
       const refTokenData = jwt.verify(req.cookies.refreshToken, process.env.REFRESH_SECRET);
@@ -74,22 +74,24 @@ module.exports = {
     //console.log(refTokenData);
 
     if (refTokenData) {
-      console.log(req.body)
-      console.log(req.file)
-      await uploadFile(req.file);
-      await unlinkFile(req.file.path)
+      // console.log(req.body)
+      // console.log(req.file)
       const newPost = new Post();
+      if (req.file) {
+        await uploadFile(req.file);
+        console.log(await uploadFile(req.file))
+        await unlinkFile(req.file.path)
+        newPost.image = req.file.filename;
+      }
       newPost.userId = req.body.userId;
       newPost.category = req.body.category;
       newPost.area_name = req.body.area_name;
       newPost.title = req.body.title;
       newPost.member_min = req.body.member_min;
       newPost.post_content = req.body.post_content;
-      newPost.image = req.file.filename;
       newPost.post_location = req.body.post_location;
       newPost.isvalid = req.body.isvalid;
       newPost.endtime = req.body.endtime;
-
 
       newPost.save()
         .then(() => {
@@ -101,11 +103,11 @@ module.exports = {
         })
     }
     if (!accTokenData && refTokenData) {
-      const emaildata  = refTokenData.email
-      const result =  await User.findOne({ email: emaildata }).exec();
-      const {_id, email, area_name} = result
-      const accessToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.ACCESS_SECRET, {expiresIn: '2h'});
-      
+      const emaildata = refTokenData.email
+      const result = await User.findOne({ email: emaildata }).exec();
+      const { _id, email, area_name } = result
+      const accessToken = jwt.sign(JSON.parse(JSON.stringify({ _id, email, area_name })), process.env.ACCESS_SECRET, { expiresIn: '2h' });
+
       const newPost = new Post();
       newPost.userId = req.body.userId;
       newPost.category = req.body.category;
@@ -128,11 +130,11 @@ module.exports = {
         })
     }
     if (accTokenData && !refTokenData) {
-      const emaildata  = accTokenData.email
-      const result =  await User.findOne({ email: emaildata }).exec();
-      const {_id, email, area_name} = result
-      const refreshToken = jwt.sign(JSON.parse(JSON.stringify({_id, email, area_name})), process.env.REFRESH_SECRET, {expiresIn: '14d'});
-      
+      const emaildata = accTokenData.email
+      const result = await User.findOne({ email: emaildata }).exec();
+      const { _id, email, area_name } = result
+      const refreshToken = jwt.sign(JSON.parse(JSON.stringify({ _id, email, area_name })), process.env.REFRESH_SECRET, { expiresIn: '14d' });
+
       const newPost = new Post();
       newPost.userId = req.body.userId;
       newPost.category = req.body.category;

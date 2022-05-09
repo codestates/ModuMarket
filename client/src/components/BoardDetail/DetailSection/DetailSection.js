@@ -24,6 +24,7 @@ function DetailSection ({info}){
     
     //console.log(info)
     const dispatch = useDispatch();
+    const isLogin = useSelector((state) => state.login.isLogin);
     const category = ["패션, 뷰티","식품","생필품","취미, 반려","유아동"];
         let categoryNumber = info.category;
         let categoryImg;
@@ -44,6 +45,7 @@ function DetailSection ({info}){
             categoryImg = BabiesIcon;
         }
 
+
         function handleDelete () {
             
         }
@@ -56,6 +58,7 @@ function DetailSection ({info}){
                         <h2>{info.title}</h2>
                     </Title>
                     <ButtonWrap>
+                        
                         <Button background="#FF6767">
                             <button>수정하기</button>
                         </Button>
@@ -93,7 +96,7 @@ function DetailSection ({info}){
                             </DetailMemberAndTimeWrap>
                             <DetailButtonWrap>
                                 <DetailButton background="#FF6767">
-                                <button onClick ={() => dispatch(showChattingModal(true))} >채팅하기</button>
+                                    <button onClick ={() => dispatch(showChattingModal(true))} >채팅하기</button>
                                 </DetailButton>
                                 <DetailButton background="white">
                                     <button>모집 완료하기</button>
