@@ -2,15 +2,12 @@ const router = require('express').Router();
 const controller = require('../controllers');
 const multer = require('multer');
 const moment = require('moment');
+const {getFileStream} = require('../s3');
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'uploads')
     },
-    filename: (req, file, cb) => {
-        cb(null, moment(new Date()).format("YYYY-MM-DD") + ' ' + file.originalname)
-        // 이진 파일 이름으로 바로 들어가게
-    }
 });
 
 const fileFilter = (req, file, cb) => {
@@ -30,8 +27,19 @@ router.get('/', controller.post.postList);
 // 특정 공고글 보기
 router.get('/:id', controller.post.postOne);
 
+// 공고글 AWS s3에서 가져오기
+router.get('/image/:key', (req, res) => {
+    console.log(req.params)
+    const key = req.params.key;
+
+    const readStream = getFileStream(key)
+    // console.log(readStream);
+
+    readStream.pipe(res);
+})
+
 // 공고글 등록
-router.post('/', upload.single('image'),controller.post.registerPost);
+router.post('/', upload.single('image'), controller.post.registerPost);
 
 // 공고글 수정
 router.patch('/:id', controller.post.modifyPost);

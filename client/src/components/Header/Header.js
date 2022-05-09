@@ -60,8 +60,8 @@ function Header() {
                         <NavLink to="/mypage">
                             <NavButton onClick={handleGetUserInfo}>마이페이지</NavButton>
                         </NavLink>
-                        {/* <NavButton onClick={handleLogout}>Logout</NavButton> */}
-                        <NavButton onClick={() => window.location.href = `${KAKAO_LOGOUT_LEDERECT_URL}`}>Logout</NavButton>
+                        <NavButton onClick={handleLogout}>Logout</NavButton>
+                        {/* <NavButton onClick={() => window.location.href = `${KAKAO_LOGOUT_LEDERECT_URL}`}>Logout</NavButton> */}
                     </NavButtons>
                 </>
             ) : (

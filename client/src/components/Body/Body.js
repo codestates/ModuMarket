@@ -10,7 +10,9 @@ import Detail from '../../pages/BoardDetailPage/BoardDetailPage'
 import Auth from './Auth';
 
 // io를 만들면서 서버로 접속시도(io()). => 연결이 되면 connect event 발생.
+
 // const socket =  io.connect('https://localhost:4000')
+
 
 
 let room = '채팅방1'

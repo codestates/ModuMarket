@@ -22,7 +22,7 @@ import {
     } from './styled'
 
 function Cards({info}){
-    // console.log(info)
+    console.log(info.image)
     const navigate = useNavigate();
     const category = ["패션, 뷰티","식품","생필품","취미, 반려","유아동"];
     let categoryNumber = info.category;
@@ -55,9 +55,9 @@ function Cards({info}){
             <CardWrap id={info._id} onClick={(e) => handleGetId(e) }>
                     <Card>
                         {
-                            info.image === ""
-                            ? <CardPhoto image = ""><img src={NullImage} alt='card main img'/></CardPhoto>
-                            : <CardPhoto><img src={info.image} alt='card main img'/></CardPhoto>
+                            info.image
+                            ? <CardPhoto><img src={`http://localhost:4000/post/image/${info.image}/`} alt='card main img'/></CardPhoto>
+                            : <CardPhoto image = ""><img src={NullImage} alt='card main img'/></CardPhoto>
                         }
                         <CardCategoryWrap>
                             <CardCategoryPhoto>

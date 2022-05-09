@@ -53,6 +53,7 @@ router.get('/:email/image/:key', (req, res) => {
     const key = req.params.key;
 
     const readStream = getFileStream(key)
+    console.log(readStream)
 
     readStream.pipe(res);
 })
