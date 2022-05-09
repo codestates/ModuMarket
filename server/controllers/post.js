@@ -11,25 +11,12 @@ const unlinkFile = util.promisify(fs.unlink);
 module.exports = {
 
   postList: async (req, res) => {
-    // const deletePost = async () => {
-    //   await Post.deleteMany({})
-    // }
-  
-    // deletePost();
-    // const result = await Post.find({}).exec((err, data) => {
-    //   if (err) {
-    //     console.log(err)
-    //   }
-    //   console.log(data);
-    // })
-    // console.log(result);
 
     if (req.headers.authorization === 'Bearer') {
       await Post.updateMany({ endtime: { $lt: Date.now() } }, { isvalid: true })
-      const result = await Post.find({});
-      // database에 key(사진 이름)을 저장하고 그 값으로 s3에 있는 파일 불러오기
-      
-      res.status(200).json({ data: result});
+      const result = await Post.find({})
+      res.status(200).json({ data: result });
+
     } else if (req.headers.authorization && req.cookies.refreshToken) {
       const token = req.headers.authorization.split(' ')[1];
       const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET);

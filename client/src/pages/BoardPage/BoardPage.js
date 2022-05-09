@@ -1,7 +1,5 @@
 import React ,{useState, useEffect} from 'react';
 import Cards from '../../components/Cards/Cards'
-import Datepicker from '../../components/Modals/Register/Register'
-import {dummyData} from '../../assets/dummy'
 import axios from 'axios'
 import { useDispatch, useSelector } from 'react-redux';
 import { showRegisterModal } from '../../reducers/modalSlice';
