@@ -11,8 +11,6 @@ const unlinkFile = util.promisify(fs.unlink);
 module.exports = {
 
   postList: async (req, res) => {
-    console.log(Post);
-    
     // const deletePost = async () => {
     //   await Post.deleteMany({})
     // }
@@ -26,11 +24,13 @@ module.exports = {
     // })
     // console.log(result);
 
-    if (!req.headers.authorization || !req.cookies.refreshToken) {
-      // await Post.updateMany({ endtime: { $lt: Date.now() } }, { isvalid: true })
-      // const result = await Post.find({})
-      // res.status(200).json({ data: result });
-    } else {
+    if (req.headers.authorization === 'Bearer') {
+      await Post.updateMany({ endtime: { $lt: Date.now() } }, { isvalid: true })
+      const result = await Post.find({});
+      // database에 key(사진 이름)을 저장하고 그 값으로 s3에 있는 파일 불러오기
+      
+      res.status(200).json({ data: result});
+    } else if (req.headers.authorization && req.cookies.refreshToken) {
       const token = req.headers.authorization.split(' ')[1];
       const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET);
       const refTokenData = jwt.verify(req.cookies.refreshToken, process.env.REFRESH_SECRET);
@@ -88,22 +88,24 @@ module.exports = {
     //console.log(refTokenData);
 
     if (refTokenData) {
-      console.log(req.body)
-      console.log(req.file)
-      await uploadFile(req.file);
-      await unlinkFile(req.file.path)
+      // console.log(req.body)
+      // console.log(req.file)
       const newPost = new Post();
+      if (req.file) {
+        await uploadFile(req.file);
+        console.log(await uploadFile(req.file))
+        await unlinkFile(req.file.path)
+        newPost.image = req.file.filename;
+      }
       newPost.userId = req.body.userId;
       newPost.category = req.body.category;
       newPost.area_name = req.body.area_name;
       newPost.title = req.body.title;
       newPost.member_min = req.body.member_min;
       newPost.post_content = req.body.post_content;
-      newPost.image = req.file.filename;
       newPost.post_location = req.body.post_location;
       newPost.isvalid = req.body.isvalid;
       newPost.endtime = req.body.endtime;
-
 
       newPost.save()
         .then(() => {

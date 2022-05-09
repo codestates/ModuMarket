@@ -22,20 +22,20 @@ const {Post, Chatroom, ChatroomMessage} = require('./models/Post');
 
   // deleteChatroom();
 
-  Chatroom.find({roomname: "채팅방1"}).populate('message', ['message_content', 'username']).exec((err, data) => {
-    console.log(data)
-    if (data.length === 0) {
-      return;
-    } else if (data[0].message.username && data[0].message.message_content) {
-      data.forEach(el => {
-        arr.push({
-          username: el.message.username, 
-          message_content: el.message.message_content
-        })
-      })
-    }
-    console.log(arr);
-  })  
+  // Chatroom.find({roomname: "채팅방1"}).populate('message', ['message_content', 'username']).exec((err, data) => {
+  //   console.log(data)
+  //   if (data.length === 0) {
+  //     return;
+  //   } else if (data[0].message.username && data[0].message.message_content) {
+  //     data.forEach(el => {
+  //       arr.push({
+  //         username: el.message.username, 
+  //         message_content: el.message.message_content
+  //       })
+  //     })
+  //   }
+  //   console.log(arr);
+  // })  
 
 // newPost.save()
 // .then((data) => {
