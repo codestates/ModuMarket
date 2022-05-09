@@ -37,7 +37,6 @@ function Header() {
             }
 
         ).then((result) => {
-            console.log(result.data.data.userInfo);
             dispatch(getUserInfo(result.data.data));
         })
 

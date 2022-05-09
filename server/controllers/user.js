@@ -40,7 +40,7 @@ module.exports = {
     if (accTokenData && refTokenData) {
       const userinfo = await User.findOne({ email: accTokenData.email }).exec();
       const { _id, name, email, age, area_name } = userinfo
-      res.status(200).json({ data: { userInfo: { _id, name, email, age, area_name } }, message: 'ok' })
+      res.status(200).json({ data: { userInfo: { id: _id, name, email, age, area_name } }, message: 'ok' })
     }
     if (accTokenData && !refTokenData) {
       const userinfo = await User.findOne({ email: accTokenData.email }).exec();
@@ -53,14 +53,14 @@ module.exports = {
           httpOnly: true,
         })
         .status(200)
-        .json({ data: { userinfo: { _id, name, email, age, area_name } }, message: 'ok' });
+        .json({ data: { userinfo: { id: _id, name, email, age, area_name } }, message: 'ok' });
 
     }
     if (!accTokenData && refTokenData) {
       const userinfo = await User.findOne({ email: refTokenData.email }).exec();
       const { _id, name, email, password, age, area_name } = userinfo
       const accessToken = jwt.sign(JSON.parse(JSON.stringify({ _id, email, area_name })), process.env.ACCESS_SECRET, { expiresIn: '2h' });
-      return res.send({ data: { accessToken, userInfo: { _id, name, email, age, area_name } }, message: "ok" })
+      return res.send({ data: { accessToken, userInfo: { id: _id, name, email, age, area_name } }, message: "ok" })
     }
     if (!accTokenData && !refTokenData) {
       res.status(404).send({ "data": null, "message": "access and refresh token has been tempered" })

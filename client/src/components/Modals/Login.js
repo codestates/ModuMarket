@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { login } from '../../reducers/loginSlice';
 import { showLoginModal, showSignupModal } from '../../reducers/modalSlice';
-import { setUserStatus } from '../../reducers/userInfoSlice'
+import { getUserInfo, setUserStatus } from '../../reducers/userInfoSlice'
 import {
     ModalBackground,
     ModalContainer,
@@ -47,6 +47,15 @@ function Login() {
                 },
                 { headers: { "Content-Type": "application/json" }, withCredentials: true }
             ).then((result) => {
+                let data = {
+                    userInfo: {
+
+                        id: result.data.data.id,
+                        area_name: result.data.data.area_name
+                    }
+                }
+
+                dispatch(getUserInfo(data))
                 dispatch(login(result.data.data.accessToken))
                 dispatch(showLoginModal(false));
             }

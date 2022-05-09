@@ -19,6 +19,8 @@ import {
 function Register() {
     const dispatch = useDispatch();
     const accessToken = useSelector((state) => state.login.accessToken);
+    const userId = useSelector((state) => state.userInfo.userInfo.id);
+    const area_name = useSelector((state) => state.userInfo.userInfo.area_name);
     const [errorMessage, setErrorMessage] = useState('');
     const [address, setAddress] = useState("") // 공고글의 post_location
     const [endDate, setEndDate] = useState(new Date()) // 공고글의 endtime

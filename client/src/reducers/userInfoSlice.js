@@ -4,7 +4,7 @@ const actionName = 'user';
 
 export const initialState = {
     userInfo: {
-        _id: "",
+        id: "",
         email: "",
         name: "",
         age: 0,
