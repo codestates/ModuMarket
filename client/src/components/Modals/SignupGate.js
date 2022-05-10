@@ -11,6 +11,7 @@ import { REDIRECT_URI } from '../../config';
 
 const SignupGate = () => {
     const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_KAKAO_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+    const GITHUB_AUTH_URL = `https://github.com/login/oauth/authorize?client_id=${process.env.REACT_APP_GITHUB_APP_KEY}&redirect_uri=${process.env.REACT_APP_GITHUB_REDIRECT_URL}`
     const dispatch = useDispatch();
 
     return (
@@ -42,7 +43,7 @@ const SignupGate = () => {
                     카카오로 회원가입
                 </ModalButton>
                 <ModalButton onClick={() => {
-                    dispatch(showSignupSocialModal(true))
+                    window.location.href = `${GITHUB_AUTH_URL}`
                     dispatch(showSignupGateModal(false))
                     dispatch(setUserStatus('github'))
                 }}>

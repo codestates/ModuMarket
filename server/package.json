@@ -28,7 +28,8 @@
     "multer-s3": "^2.10.0",
     "mysql": "^2.18.1",
     "nodemon": "^2.0.7",
-    "socket.io": "^4.5.0"
+    "socket.io": "^4.5.0",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@mochajs/json-file-reporter": "^1.2.1",
