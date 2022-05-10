@@ -99,31 +99,56 @@ export const ModalInform = styled.div`
     font-weight: 500;
     font-size: 1.2rem;
     line-height: 1.45em;
-  } 
-  
+} 
+
 `
 
 export const ModalInformRow = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-around;
+  width: 100%;
   & > span {
-    justify-self: end;
-    color: black;
-    font-weight: 500;
-    font-size: 1.2rem;
-  }
-  & > p {
-    color: black;
-    font-weight: 500;
-    font-size: 1.2rem;
-    line-height: 1.45em;
-  }
-
-
+      justify-self: end;
+      color: black;
+      font-weight: 500;
+      font-size: 1.2rem;
+    }
+    & > p {
+        color: black;
+        font-weight: 500;
+        font-size: 1.2rem;
+        line-height: 1.45em;
+    }
+    
 `
 
+export const ModalNameWrap = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items : center;
+    & > p {
+        display:flex;
+        flex-direction: row-reverse;
+        width: 8rem;
+        color: black;
+        font-weight: 500;
+        font-size: 1.2rem;
+        padding-right: 1rem;
+    }
+
+`
+export const ModalAgeWrap = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items : center;
+    & > span {
+        padding-right: 0.5rem;
+    }
+`
 
 export const ModalImg = styled.div`
     display: flex;

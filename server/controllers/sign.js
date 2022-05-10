@@ -79,7 +79,7 @@ module.exports = {
             // 비밀번호가 일치할 경우 
             if (isMatch) {
               // 비밀번호가 맞으면 token을 생성해야함
-              const { _id, email, area_name } = data;
+              const { _id, email, area_name, name } = data;
               // acessToken 생성 2h 유효
               const accessToken = jwt.sign(JSON.parse(JSON.stringify({ _id, email, area_name })),
                 process.env.ACCESS_SECRET, { expiresIn: '2h' });
@@ -93,7 +93,7 @@ module.exports = {
                   httpOnly: true,
                 })
                 .status(200)
-                .json({ data: { id: _id, area_name: area_name, accessToken: accessToken }, message: "로그인에 성공하였습니다." });
+                .json({ data: { id: _id, name: name, area_name: area_name, accessToken: accessToken }, message: "로그인에 성공하였습니다." });
 
 
             }
@@ -225,7 +225,7 @@ module.exports = {
             }
           })
 
-        })
+      })
 
 
   },

@@ -58,7 +58,7 @@ export const modalSlice = createSlice({
         showRegisterModal: (state, action) => {
             state.registerModal = action.payload
         },
-        showChattingModal :(state, action) => {
+        showChattingModal: (state, action) => {
             state.chattingModal = action.payload
         },
         showMyInfoModal: (state, action) => {
@@ -90,7 +90,7 @@ export const {
     inputSocialId,
     inputSocialEmail,
     showRegisterModal,
-    showChattingModal
+    showChattingModal,
     showMyInfoModal,
     showMyPwCheckModal,
     showMyNewPwModal,
