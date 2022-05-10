@@ -9,7 +9,9 @@ export const initialState = {
     signoutModal: false,
     signoutSocialModal: false,
     findPWModal: false,
+    deleteModal:false,
     registerModal: false,
+    reviseRegisterModal:false,
     locationModal: false,
     chattingModal: false,
     notificationModal: false,
@@ -75,6 +77,12 @@ export const modalSlice = createSlice({
         },
         showSignoutSocialModal: (state, action) => {
             state.signoutSocialModal = action.payload;
+        },
+        showReviseRegisterModal : (state, action) =>{  
+            state.reviseRegisterModal = action.payload;
+        },
+        showDeleteModal : (state, action) =>{  
+            state.deleteModal = action.payload;
         }
     }
 })
@@ -96,6 +104,8 @@ export const {
     showMyNewPwModal,
     showSignoutModal,
     showSignoutSocialModal,
+    showReviseRegisterModal,
+    showDeleteModal
 
 } = modalSlice.actions;
 

@@ -107,7 +107,7 @@ export const ModalInformRow = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-around;
   & > span {
     justify-self: end;
     color: black;
@@ -121,6 +121,25 @@ export const ModalInformRow = styled.div`
     line-height: 1.45em;
   }
 
+
+`
+
+export const ModalNameWrap = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  & > span {
+    padding-right : 0.5rem; 
+    justify-self: end;
+    color: black;
+    font-weight: 500;
+    font-size: 1.2rem;
+  }
+
+`
+
+export const ModalAgeWrap = styled.div`
 
 `
 
