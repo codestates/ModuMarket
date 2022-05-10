@@ -113,6 +113,10 @@ function Signup() {
                 dispatch(showSignupModal(false));
                 dispatch(showConfirmModal(true));
 
+            }).catch((err) => {
+                dispatch(inputModalText(err.response.data.message));
+                dispatch(changeModalImg('question'));
+                dispatch(showConfirmModal(true));
             })
         } else {
             setErrorMessage('모든 항목을 빠짐없이 입력해주세요.');
