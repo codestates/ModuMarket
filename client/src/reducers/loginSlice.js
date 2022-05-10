@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { persistor } from '../index';
+import { PURGE } from "redux-persist"
+
 
 const actionName = 'authentication';
 export const initialState = {
@@ -17,10 +18,10 @@ export const loginSlice = createSlice({
         },
         logout: (state) => {
             state.isLogin = false;
-            //state.accessToken = '';
-            // persistor.purge();
-            setTimeout(() => persistor.purge(), 2)
         }
+    },
+    extraReducers: (builder) => {
+        builder.addCase(PURGE, () => initialState);
     }
 })
 
