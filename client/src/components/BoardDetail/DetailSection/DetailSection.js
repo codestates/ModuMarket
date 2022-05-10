@@ -9,7 +9,7 @@ import TimerIcon from '../../../assets/timer.png'
 import Photo from '../../../assets/photo.png'
 import ReviseRegister from '../../Modals/ReviseRegister/ReviseRegister'
 import { useDispatch, useSelector } from 'react-redux';
-import { showChattingModal, showReviseRegisterModal } from '../../../reducers/modalSlice';
+import { showChattingModal, showReviseRegisterModal, showDeleteModal } from '../../../reducers/modalSlice';
 import { REACT_APP_API_URL } from '../../../config'
 import {Section, Wrap, 
         TitleWrap, Title, 
@@ -49,7 +49,7 @@ function DetailSection ({info}){
 
 
         function handleDelete () {
-            
+            dispatch(showDeleteModal(true))
         }
 
         function handleRevise (){
@@ -72,7 +72,7 @@ function DetailSection ({info}){
                                 <button onClick={() => {handleRevise()}}>수정하기</button>
                             </Button>
                             <Button background="white">
-                                <button>삭제하기</button>
+                                <button onClick ={() => {handleDelete()}}>삭제하기</button>
                             </Button>
                         </ButtonWrap> 
                         : null

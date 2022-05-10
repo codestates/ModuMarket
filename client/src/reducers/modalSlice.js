@@ -9,6 +9,7 @@ export const initialState = {
     signoutModal: false,
     signoutSocialModal: false,
     findPWModal: false,
+    deleteModal:false,
     registerModal: false,
     reviseRegisterModal:false,
     locationModal: false,
@@ -79,6 +80,9 @@ export const modalSlice = createSlice({
         },
         showReviseRegisterModal : (state, action) =>{  
             state.reviseRegisterModal = action.payload;
+        },
+        showDeleteModal : (state, action) =>{  
+            state.deleteModal = action.payload;
         }
     }
 })
@@ -101,6 +105,7 @@ export const {
     showSignoutModal,
     showSignoutSocialModal,
     showReviseRegisterModal,
+    showDeleteModal
 
 } = modalSlice.actions;
 

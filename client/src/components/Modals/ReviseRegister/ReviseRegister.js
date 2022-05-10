@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { showConfirmModal, showReviseRegisterModal, inputModalText, changeModalImg } from '../../../reducers/modalSlice'
 import {ko} from 'date-fns/esm/locale';
@@ -22,7 +22,6 @@ const ReviseRegister = () => {
     const accessToken = useSelector((state) => state.login.accessToken);
     const userId = useSelector((state) => state.userInfo.userInfo.id);
     const cardInfo = useSelector((state) => state.board.cardInfo);
-    const [errorMessage, setErrorMessage] = useState('사진을 제외한 모든 항목은 필수입니다.');
     const [address, setAddress] = useState(cardInfo.post_location) 
     const [photo, setPhoto] = useState(false)
     const [endDate, setEndDate] = useState(new Date())
@@ -41,8 +40,6 @@ const ReviseRegister = () => {
         endtime : endDate,
 
     })
-
-   
 
     const handleInputValue = (key) => (e) => { // onChange 가 발생할 경우 값을 넣어주는 함수
         setBoardInfo({ ...boardInfo, [key]: e.target.value });
@@ -66,12 +63,12 @@ const ReviseRegister = () => {
         formData.append("endtime", endDate);
         formData.append("_id", cardInfo._id);
 
-        for (var pair of formData.entries()) {
-            console.log(pair[0]+ ', ' + pair[1]);
-        } 
+        // for (var pair of formData.entries()) {
+        //     console.log(pair[0]+ ', ' + pair[1]);
+        // } 
 
         if(title === "" || address === "" || post_content === "" || member_min === 0){
-            alert(errorMessage)
+            alert('사진을 제외한 모든 항목은 필수입니다.')
         }else{
             const result  = await axios({
                 url : `${ REACT_APP_API_URL }/post/${cardInfo._id}`,
@@ -87,13 +84,12 @@ const ReviseRegister = () => {
                 dispatch(changeModalImg('check_man'));
                 dispatch(showReviseRegisterModal(false))
                 dispatch(showConfirmModal(true));
-                
             })
         }
 
     }
 
-    // 수정 사진 미리보기 파일 읽어오기
+    // 사진 미리보기 파일 읽어오기
     function onLoadFile(e) {
         const reader = new FileReader();
         reader.readAsDataURL(e)
@@ -106,8 +102,6 @@ const ReviseRegister = () => {
             }
         })
     }
-
-    
 
     function get_address() {
         new window.daum.Postcode({
