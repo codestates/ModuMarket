@@ -1,4 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { PURGE } from "redux-persist"
+
 
 const actionName = 'authentication';
 export const initialState = {
@@ -16,8 +18,10 @@ export const loginSlice = createSlice({
         },
         logout: (state) => {
             state.isLogin = false;
-            state.accessToken = '';
         }
+    },
+    extraReducers: (builder) => {
+        builder.addCase(PURGE, () => initialState);
     }
 })
 

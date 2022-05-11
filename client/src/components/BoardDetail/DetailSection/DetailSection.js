@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import FoodIcon from '../../../assets/food_icon.png'
 import BabiesIcon from '../../../assets/babies_icon.png'
 import FashionIcon from '../../../assets/fashion_icon.png'
@@ -17,15 +17,18 @@ import { showChattingModal,
         showCancelParticipateModal,
         showParticipateModal } from '../../../reducers/modalSlice';
 import { REACT_APP_API_URL } from '../../../config'
-import {Section, Wrap, 
-        TitleWrap, Title, 
-        ButtonWrap, Button,
-        SectionWrap, 
-        DetailWrap, Detail, 
-        DetailPhoto,DetailCategory, 
-        DetailMemberAndTimeWrap, 
-        DetailMemberAndTime, 
-        DetailButtonWrap, DetailButton } from './styled';
+import {
+    Section, Wrap,
+    TitleWrap, Title,
+    ButtonWrap, Button,
+    SectionWrap,
+    DetailWrap, Detail,
+    DetailPhoto, DetailCategory,
+    DetailMemberAndTimeWrap,
+    DetailMemberAndTime,
+    DetailButtonWrap, DetailButton
+} from './styled';
+
 
 function DetailSection ({info}){
     
@@ -41,31 +44,35 @@ function DetailSection ({info}){
         let categoryNumber = info.data.category;
         let categoryImg;
 
-        if(category[categoryNumber] === "패션, 뷰티"){
-            categoryImg = FashionIcon;
-        }
-        if(category[categoryNumber] === "식품"){
-            categoryImg = FoodIcon;
-        }
-        if(category[categoryNumber] === "생필품"){
-            categoryImg = NecessityIcon;
-        }
-        if(category[categoryNumber] === "취미, 반려"){
-            categoryImg = HobbiesIcon;
-        }
-        if(category[categoryNumber] === "유아동"){
-            categoryImg = BabiesIcon;
-        }
+    const category = ["패션, 뷰티", "식품", "생필품", "취미, 반려", "유아동"];
+    let categoryNumber = info.category;
+    let categoryImg;
+
+    if (category[categoryNumber] === "패션, 뷰티") {
+        categoryImg = FashionIcon;
+    }
+    if (category[categoryNumber] === "식품") {
+        categoryImg = FoodIcon;
+    }
+    if (category[categoryNumber] === "생필품") {
+        categoryImg = NecessityIcon;
+    }
+    if (category[categoryNumber] === "취미, 반려") {
+        categoryImg = HobbiesIcon;
+    }
+    if (category[categoryNumber] === "유아동") {
+        categoryImg = BabiesIcon;
+    }
 
 
-        function handleDelete () {
-            dispatch(showDeleteModal(true))
-        }
+    function handleDelete() {
+        dispatch(showDeleteModal(true))
+    }
 
-        function handleRevise (){
+    function handleRevise() {
 
-            dispatch(showReviseRegisterModal(true))
-        }
+        dispatch(showReviseRegisterModal(true))
+    }
 
         function handleLogin(){
             dispatch(showLoginConfirmModal(true))
@@ -79,17 +86,17 @@ function DetailSection ({info}){
                         <h2>{info.data.title}</h2>
                     </Title>
                     {
-                        cardUserId === userId 
-                        ? 
-                        <ButtonWrap>
-                            <Button background="#FF6767">
-                                <button onClick={() => {handleRevise()}}>수정하기</button>
-                            </Button>
-                            <Button background="white">
-                                <button onClick ={() => {handleDelete()}}>삭제하기</button>
-                            </Button>
-                        </ButtonWrap> 
-                        : null
+                        cardUserId === userId
+                            ?
+                            <ButtonWrap>
+                                <Button background="#FF6767">
+                                    <button onClick={() => { handleRevise() }}>수정하기</button>
+                                </Button>
+                                <Button background="white">
+                                    <button onClick={() => { handleDelete() }}>삭제하기</button>
+                                </Button>
+                            </ButtonWrap>
+                            : null
                     }
                 </TitleWrap>
             </Wrap>
@@ -100,9 +107,9 @@ function DetailSection ({info}){
                             ? <DetailPhoto image = ""><img src= {Photo} alt="Card Detail"/></DetailPhoto> 
                             : <DetailPhoto><img src = {`${ REACT_APP_API_URL }/post/image/${info.image}/`} alt="Card Detail"/></DetailPhoto> 
                     }
-                        <Detail>
-                            <DetailCategory>
-                            <img src ={categoryImg} alt='category icon'/>
+                    <Detail>
+                        <DetailCategory>
+                            <img src={categoryImg} alt='category icon' />
                             <span>{category[categoryNumber]}</span>
                             </DetailCategory>
                             <DetailMemberAndTimeWrap>

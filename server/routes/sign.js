@@ -15,10 +15,10 @@ router.post('/in', controller.sign.in);
 // 로그아웃
 router.post('/out', controller.sign.out);
 
-// 페이스북 로그인 or 회원가입 추가정보 받기전
+// 깃헙 로그인 or 회원가입 추가정보 받기전
 router.get('/github/callback', controller.sign.github);
 
-// 페이스북 추가정보 받은 후 회원가입 완료
+// 깃헙 추가정보 받은 후 회원가입 완료
 router.get('/in/github', controller.sign.inGithub);
 
 // 카카오 로그인 or 회원가입 추가정보 받기전

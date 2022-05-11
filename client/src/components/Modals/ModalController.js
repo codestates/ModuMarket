@@ -25,7 +25,7 @@ const ModalController = () => {
         signupSocialModal,
         signupModal,
         confirmModal,
-        registerModal, 
+        registerModal,
         chattingModal,
         myInfoModal,
         myPwCheckModal,

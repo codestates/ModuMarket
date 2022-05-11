@@ -15,11 +15,10 @@ import {
     changeModalImg
 } from '../../../reducers/modalSlice';
 import {
-    ModalBackground,ModalNameWrap,
-    ModalContainer,ModalAgeWrap,
+    ModalBackground, ModalNameWrap,
+    ModalContainer, ModalAgeWrap,
     ModalText,
     ModalImg,
-    ModalInform,
     ModalInformRow,
     ModalButton
 } from './styled'
@@ -84,11 +83,11 @@ const MyInfo = () => {
                     </ModalImg>
                     <ModalInformRow>
                         <ModalNameWrap>
-                            <span>이름</span>
-                            <p>{myInfo.name}</p>
+                            <p>이름</p>
+                            <span>{myInfo.name}</span>
                         </ModalNameWrap>
                         <ModalAgeWrap>
-                            <p>나이</p>
+                            <span>나이</span>
                             <p>{myInfo.age}</p>
                         </ModalAgeWrap>
                     </ModalInformRow>
