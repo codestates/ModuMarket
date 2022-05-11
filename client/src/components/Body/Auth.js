@@ -18,7 +18,6 @@ import {
 const Auth = ({ social }) => {
 
     const dispatch = useDispatch();
-
     if (social === 'kakao') {
         const REDIRECT_URI = "https://localhost:3000/sign/kakao/callback";
         const code = new URL(window.location.href).searchParams.get("code");
@@ -53,13 +52,28 @@ const Auth = ({ social }) => {
         }
         kakaoToken();
 
-    } else if (social === 'github') {
+    } else {
         const code = new URL(window.location.href).searchParams.get("code");
+        console.log(code);
         const githubToken = () => {
             axios.get(`${REACT_APP_API_URL}/sign/github/callback`,
                 { params: { code: code } },
-                { withCredentials: true })
-                .then((result) => console.log(result.data)) //엑세스토큰이 들어오면 로그인처리, 안들어오면 추가정보입력 받긔용
+                { withCredentials: true }
+            ).then((result) => {
+                console.log(result)
+                if (result.data.accessToken) {
+                    dispatch(inputModalText(result.data.message));
+                    dispatch(login(result.data.accessToken))
+                    dispatch(changeModalImg('check_man'));
+                    dispatch(showConfirmModal(true));
+                } else {
+                    console.log(result);
+                    dispatch(inputSocialId(result.data.id));
+                    dispatch(inputSocialEmail(result.data.email));
+                    dispatch(showSignupSocialModal(true));
+                }
+            }
+            )
         }
         githubToken();
     }
