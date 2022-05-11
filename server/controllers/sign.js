@@ -95,8 +95,6 @@ module.exports = {
                 })
                 .status(200)
                 .json({ data: { id: _id, name: name, area_name: area_name, accessToken: accessToken }, message: "로그인에 성공하였습니다." });
-
-
             }
 
 
