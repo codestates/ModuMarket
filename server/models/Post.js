@@ -22,7 +22,6 @@ const postSchema = new mongoose.Schema({
 
 const chatroomSchema = new mongoose.Schema({
     id: mongoose.Schema.Types.ObjectId,
-    roomname: {type: String, required: true},
     message: {type: mongoose.Schema.Types.ObjectId, ref: "ChatroomMessage"}
 });
 

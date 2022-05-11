@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { PURGE } from 'redux-persist'
 
 const actionName = 'user';
 
@@ -23,6 +24,9 @@ export const userInfoSlice = createSlice({
         setUserStatus: (state, action) => {
             state.userStatus = action.payload
         }
+    },
+    extraReducers: (builder) => {
+        builder.addCase(PURGE, () => initialState);
     }
 })
 

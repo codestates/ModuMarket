@@ -35,10 +35,12 @@ export const CardPhoto = styled.div`
     height : 11.3rem; */
     overflow: hidden;
     & > img{
-        width : ${(props) => 
-            (props.image === "" ?  '13rem' : '24rem')
-        };
-        height : 11.3rem;  
+        width : ${(props) =>
+        (props.image === "" ? '13rem' : '24rem')
+    };
+        height : 11.3rem;
+        border-top-left-radius: 12px;
+        border-top-right-radius: 12px;
     }
 `
 

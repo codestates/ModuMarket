@@ -1,5 +1,4 @@
-import React ,{useState, useEffect} from 'react';
-import {dummyData} from "../../../assets/dummy"
+import React from 'react';
 import NullPhoto from '../../../assets/null_photo.png'
 import {
     Section,
@@ -8,20 +7,21 @@ import {
     UserWrap,
     UserPhotoWrap,
     UserNameWrap,
-    UserContent} from './styled'
+    UserContent
+} from './styled'
 
-function ContentSection ({info}){
+function ContentSection({ info }) {
     // console.log(info)
-    
-    
+
+
     return (
         <Section>
             <Wrap>
                 <ContentWrap>
                     <UserWrap>
-                        {   info.userId.image === undefined || null
-                            ? <UserPhotoWrap photo = ''><img src = {NullPhoto}/></UserPhotoWrap>
-                            : <UserPhotoWrap photo = ''><img src = {info.userId.image}/></UserPhotoWrap>
+                        {info.userId.image === undefined || null
+                            ? <UserPhotoWrap photo=''><img src={NullPhoto} alt="user img" /></UserPhotoWrap>
+                            : <UserPhotoWrap photo=''><img src={info.userId.image} alt="user img" /></UserPhotoWrap>
                         }
                         <UserNameWrap>
                             <span>{info.userId.name}</span>

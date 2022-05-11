@@ -37,6 +37,7 @@ function Signup() {
     const handleInputValue = (key) => (e) => {
         setUserInputInfo({ ...userInputInfo, [key]: e.target.value });
     }
+
     /* 비밀번호 확인 */
     const handlePWcheck = (key) => (e) => {
         setPasswordCheck({ ...passwordCheck, [key]: e.target.value });
@@ -107,12 +108,15 @@ function Signup() {
                 },
                 { 'Content-Type': 'application/json', withCredentials: true }
             ).then((result) => {
-                //result.id값 어디에 저장할지 고민필요
                 dispatch(inputModalText(result.data.message));
                 dispatch(changeModalImg('check_man'));
                 dispatch(showSignupModal(false));
                 dispatch(showConfirmModal(true));
 
+            }).catch((err) => {
+                dispatch(inputModalText(err.response.data.message));
+                dispatch(changeModalImg('question'));
+                dispatch(showConfirmModal(true));
             })
         } else {
             setErrorMessage('모든 항목을 빠짐없이 입력해주세요.');

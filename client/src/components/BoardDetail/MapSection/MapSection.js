@@ -1,4 +1,4 @@
-import React ,{useState, useEffect} from 'react';
+import React ,{useEffect} from 'react';
 import {Section,
         Wrap,
         MapWrap,
@@ -22,7 +22,7 @@ function MapSection ({info}){
             <Wrap>
                 <MapWrap>
                     <MapPhoto>
-                        <img src ={locationIcon} />                   
+                        <img src ={locationIcon} alt="mapping Icon"/>                   
                     </MapPhoto>
                     <MapTitle>
                         <span>만남 장소</span>

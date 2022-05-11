@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
 const saltRounds = 10;
 const axios = require('axios')
+const { v4 } = require('uuid');
 
 module.exports = {
   up: async (req, res) => {
@@ -93,8 +94,7 @@ module.exports = {
                   httpOnly: true,
                 })
                 .status(200)
-                .json({ data: { id: _id, name:name, area_name:area_name, accessToken: accessToken }, message: "로그인에 성공하였습니다." });
-
+                .json({ data: { id: _id, name: name, area_name: area_name, accessToken: accessToken }, message: "로그인에 성공하였습니다." });
             }
 
 
@@ -182,6 +182,15 @@ module.exports = {
 
   github: async (req, res) => {
     const CODE = req.query.code;
+    let githubAccessToken = '';
+    let id = '';
+    let email = '';
+
+    //uuid로 난수생성
+    const uuid = () => {
+      const tokens = v4().split('-')
+      return tokens[2] + tokens[1] + tokens[0] + tokens[3] + tokens[4];
+    }
 
     axios({
       method: 'post',
@@ -191,17 +200,25 @@ module.exports = {
       },
     })
       .then((data) => {
-        console.log(data.data.access_token)
+        githubAccessToken = data.data.access_token;
+        console.log(githubAccessToken)
         axios.get('https://api.github.com/user', {
           headers: {
-            Authorization: `token ${data.data.access_token}`,
+            Authorization: `token ${githubAccessToken}`,
           },
         })
           .then(async (data) => { //토큰으로 유저정보 받아오기 
-            const id = data.data.id;
-            const email = data.data.email;
-            console.log(data.data.id)
-            console.log(data.data.email)
+            if (!data.data.email) {
+              // ! github유저가 private email로 설정해둘 경우 한번 더 요청보냄 -> 받아올 수 있는 방법?
+              // null 값인 email을 무작위의 uuid 값을 자체 github email로 따로 부여
+              let randomNum = uuid();
+              email = randomNum + '@github.com'
+            } else {
+              email = data.data.email;
+            }
+            id = data.data.id;
+            console.log(id)
+            console.log(email)
 
             const result = await User.findOne({ social_github: id }).exec()
             if (result) { // 가입한 유저이면? 디비에 있는 유저의 동네정보, 아이디, 이메일을 갖고 토큰만들어서주기
@@ -223,7 +240,7 @@ module.exports = {
               return res.status(200).json({ id, email });
             }
           })
-        })
+      })
   },
 
   inGithub: async (req, res) => {

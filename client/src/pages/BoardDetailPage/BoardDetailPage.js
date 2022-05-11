@@ -6,6 +6,7 @@ import {dummyData} from '../../assets/dummy'
 import { useLocation } from 'react-router-dom';
 import { REACT_APP_API_URL } from '../../config'
 import {Wrap} from './styled'
+import {getCardInfo} from '../../reducers/boardSlice'
 import DetailSection from '../../components/BoardDetail/DetailSection/DetailSection'
 import ContentSection from '../../components/BoardDetail/ContentSection/ContentSection'
 import MapSection from '../../components/BoardDetail/MapSection/MapSection'

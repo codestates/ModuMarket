@@ -32,8 +32,8 @@ export default function KakaoMapScript (post_location){
      if (status === kakao.maps.services.Status.OK) {
 
         let coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-		let message = 'latlng: new kakao.maps.LatLng(' + result[0].y + ', ';
-		message += result[0].x + ')';
+		// let message = 'latlng: new kakao.maps.LatLng(' + result[0].y + ', ';
+		// message += result[0].x + ')';
 		
         // 위도와 경도를 가져와 출력해주는 div
 		// let resultDiv = document.getElementById('clickLatlng'); 
