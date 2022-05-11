@@ -48,7 +48,7 @@ router.patch('/:id', controller.post.modifyPost);
 router.patch('/:id/apply', controller.post.applyPost);
 
 // 공고글에 있는 참가 취소 버튼
-router.patch('/:id/cancle', controller.post.cancleApplyPost);
+router.patch('/:id/cancel', controller.post.cancleApplyPost);
 
 // 공고글 삭제
 router.delete('/:id', controller.post.deletePost);
