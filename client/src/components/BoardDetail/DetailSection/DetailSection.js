@@ -9,7 +9,12 @@ import TimerIcon from '../../../assets/timer.png'
 import Photo from '../../../assets/photo.png'
 import ReviseRegister from '../../Modals/ReviseRegister/ReviseRegister'
 import { useDispatch, useSelector } from 'react-redux';
-import { showChattingModal, showReviseRegisterModal, showDeleteModal } from '../../../reducers/modalSlice';
+import { showChattingModal, 
+        showReviseRegisterModal, 
+        showDeleteModal,
+        showLoginConfirmModal,
+        showRecruitmentCompleteModal,
+        showParticipateModal } from '../../../reducers/modalSlice';
 import { REACT_APP_API_URL } from '../../../config'
 import {Section, Wrap, 
         TitleWrap, Title, 
@@ -23,12 +28,16 @@ import {Section, Wrap,
 
 function DetailSection ({info}){
     
-    const cardUserId = info.userId._id
-    const userId = useSelector((state) => state.userInfo.userInfo.id);
     const dispatch = useDispatch();
+    const cardUserId = info.data.userId._id
+    const isValid = info.data.isvalid
+    const isApplied = info.isapplied
+    const userId = useSelector((state) => state.userInfo.userInfo.id);
+    const isLogin = useSelector((state) => state.login.isLogin);
+
     
     const category = ["패션, 뷰티","식품","생필품","취미, 반려","유아동"];
-        let categoryNumber = info.category;
+        let categoryNumber = info.data.category;
         let categoryImg;
 
         if(category[categoryNumber] === "패션, 뷰티"){
@@ -57,12 +66,16 @@ function DetailSection ({info}){
             dispatch(showReviseRegisterModal(true))
         }
 
+        function handleLogin(){
+            dispatch(showLoginConfirmModal(true))
+        }
+
     return (
         <Section>
             <Wrap>
                 <TitleWrap>
                     <Title>
-                        <h2>{info.title}</h2>
+                        <h2>{info.data.title}</h2>
                     </Title>
                     {
                         cardUserId === userId 
@@ -82,7 +95,7 @@ function DetailSection ({info}){
             <SectionWrap>
                 <DetailWrap>
                     {
-                        info.image === ""
+                        info.data.image === undefined
                             ? <DetailPhoto image = ""><img src= {Photo} alt="Card Detail"/></DetailPhoto> 
                             : <DetailPhoto><img src = {`${ REACT_APP_API_URL }/post/image/${info.image}/`} alt="Card Detail"/></DetailPhoto> 
                     }
@@ -96,22 +109,50 @@ function DetailSection ({info}){
                                     <img src = {MemberIcon} alt="Card Member Icon"/>
                                     <span>참가인원</span>
                                 </DetailMemberAndTime>
-                                <span>{info.member_num} / {info.member_min}</span>
+                                <span>{info.data.member_num} / {info.data.member_min}</span>
                             </DetailMemberAndTimeWrap>
                             <DetailMemberAndTimeWrap>
                                 <DetailMemberAndTime>
                                     <img src = {TimerIcon} alt="Card Timer Icon"/>
                                     <span>종료일</span>
                                 </DetailMemberAndTime>
-                                <span>{info.endtime}</span>
+                                <span>{info.data.endtime}</span>
                             </DetailMemberAndTimeWrap>
                             <DetailButtonWrap>
                                 <DetailButton background="#FF6767">
                                     <button onClick ={() => dispatch(showChattingModal(true))} >채팅하기</button>
                                 </DetailButton>
-                                <DetailButton background="white">
-                                    <button>모집 완료하기</button>
-                                </DetailButton>
+                                {
+                                    isValid
+                                    ? 
+                                        isLogin  
+                                        ?
+                                            cardUserId === userId
+                                            ?   
+                                                <DetailButton background="white">
+                                                    <button onClick={() => dispatch(showRecruitmentCompleteModal(true))}>모집 완료하기</button>
+                                                </DetailButton>
+                                            : 
+                                                isApplied
+                                                ?
+                                                    <DetailButton background="white">
+                                                        <button>참가 취소하기</button>
+                                                    </DetailButton>
+                                                :   
+                                                    <DetailButton background="white">
+                                                        <button onClick={() => dispatch(showParticipateModal(true))}>참가하기</button>
+                                                    </DetailButton>
+                                        : 
+                                        <DetailButton background="white">
+                                            <button onClick={() => {handleLogin()}}>공구 참여하기</button>
+                                        </DetailButton>      
+                                    :   
+                                    <DetailButton background="white">
+                                        <button>모집 완료되었습니다</button>
+                                    </DetailButton>
+                                        
+                                }
+                                
                             </DetailButtonWrap>
                         </Detail>
                     </DetailWrap>
