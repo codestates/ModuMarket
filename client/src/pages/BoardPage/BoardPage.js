@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Cards from '../../components/Cards/Cards'
 import axios from 'axios'
 import { useDispatch, useSelector } from 'react-redux';
-import { showRegisterModal } from '../../reducers/modalSlice';
+import { showRegisterModal, showLoginConfirmModal } from '../../reducers/modalSlice';
 import { REACT_APP_API_URL } from '../../config'
 import {
     Section,
@@ -22,6 +22,7 @@ function BoardPage() {
 
     const dispatch = useDispatch();
     const accessToken = useSelector((state) => state.login.accessToken);
+    const isLogin = useSelector((state) => state.login.isLogin);
     const [cardInfo, setCardInfo] = useState()
 
 
@@ -61,9 +62,18 @@ function BoardPage() {
                         <SearchButton>검색</SearchButton>
                     </SearchWrap>
                     {/* 로그인을 했을 경우에 아래의 모달창이 뜰 수 있도록 하고 로그인이 안되어있다면 로그인 페이지로 가게해야한다. */}
-                    <ReservationButtonWrap>
-                        <ReservationButton onClick={() => dispatch(showRegisterModal(true))}>공구글 등록하기</ReservationButton>
-                    </ReservationButtonWrap>
+                    {
+                        isLogin 
+                        ?   
+                            <ReservationButtonWrap>
+                                <ReservationButton onClick={() => dispatch(showRegisterModal(true))}>공구글 등록하기</ReservationButton>
+                            </ReservationButtonWrap>
+                        :
+                            <ReservationButtonWrap>
+                                <ReservationButton onClick={() => dispatch(showLoginConfirmModal(true))}>공구글 등록하기</ReservationButton>
+                            </ReservationButtonWrap>
+                    }
+                    
                     <CardWrap>
                         {
                             cardInfo ? cardInfo.map((info, idx) => <Cards info={info} key={idx} />)

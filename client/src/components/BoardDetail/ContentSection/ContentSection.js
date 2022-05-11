@@ -19,16 +19,17 @@ function ContentSection({ info }) {
             <Wrap>
                 <ContentWrap>
                     <UserWrap>
-                        {info.userId.image === undefined || null
-                            ? <UserPhotoWrap photo=''><img src={NullPhoto} alt="user img" /></UserPhotoWrap>
-                            : <UserPhotoWrap photo=''><img src={info.userId.image} alt="user img" /></UserPhotoWrap>
+                        {   
+                          info.data.userId.image === undefined || null
+                            ? <UserPhotoWrap photo = ''><img src = {NullPhoto} alt="user img"/></UserPhotoWrap>
+                            : <UserPhotoWrap photo = ''><img src = {info.data.userId.image} alt="user img"/></UserPhotoWrap>
                         }
                         <UserNameWrap>
-                            <span>{info.userId.name}</span>
+                            <span>{info.data.userId.name}</span>
                         </UserNameWrap>
                     </UserWrap>
                     <UserContent>
-                        <p>{info.post_content}</p>
+                        <p>{info.data.post_content}</p>
                     </UserContent>
                 </ContentWrap>
             </Wrap>

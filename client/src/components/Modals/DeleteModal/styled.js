@@ -26,6 +26,14 @@ export const ModalContainer = styled.div`
     &::-webkit-scrollbar {
         display: none;
     }
+    & > p{
+        cursor: pointer;
+        font-size: 1.5rem;
+        padding : 1rem 1.5rem 0 0 ; 
+        display: flex;
+        flex-direction: row-reverse;
+        margin: 0;
+    }
 `;
 
 export const ModalImg = styled.div`
@@ -41,17 +49,30 @@ export const ModalImg = styled.div`
 `
 
 export const ModalText = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-  > p { 
+    & > p { 
         margin: 0;
-        padding : 0.8rem 0 1.2rem 0;
+        padding : 0.5rem 0.7rem 0;
         font-weight: 500;
         font-size: 1rem;
         line-height: 1.45em;
         color: #848484;
+    }
+
+    & > span {
+        color: red;
+        font-weight: 500;
+        font-size: 0.9rem;
+        padding : 4rem 0 1rem 0;
+    }
+
+    & > a {
+        cursor: pointer;
+        padding: 1rem 0 0.3rem 0;
+        text-decoration: underline;
     }
 `;
 
@@ -59,6 +80,8 @@ export const ModalButtonWrap = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding-top : 0.5rem;
+    
 `
 
 export const ModalButton = styled.button`
@@ -92,4 +115,28 @@ export const ModalButton = styled.button`
             ? "white" : "#848484"
         };
     }    
+`
+
+export const ModalSkullImg = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    object-fit: cover;
+    padding : 5rem 0 1rem 0  ;
+    img{
+      width: 16rem;
+      height: 13rem;
+    }
+`
+
+export const ModalSkullButton = styled.button`
+    width: 16rem;
+    height: 2.5rem;
+    cursor: pointer;
+    background-color: #FF6767;
+    border-radius: 4px;
+    border : none;
+    color : white;
+    font-size: 1rem;
+    font-weight: 700; 
 `

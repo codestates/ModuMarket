@@ -534,15 +534,9 @@ module.exports = {
     const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET);
     const refTokenData = jwt.verify(req.cookies.refreshToken, process.env.REFRESH_SECRET);
 
-    // const result = await Post.deleteOne({ _id: req.params.id, userId: accTokenData._id })
-    // if (result.deletedCount === 1) {
-    //   res.status(200).json({ data: null, message: "공고글이 삭제되었습니다" });
-    // } else {
-    //   res.status(404).json({ data: null, message: "잘못된 요청입니다" });
-    // }
-
     if (accTokenData && refTokenData) {
       const { _id } = accTokenData
+
       const result = await Post.deleteOne({ _id: req.params.id, userId: accTokenData._id })
       if (result.deletedCount === 1) {
         res.status(200).json({ data: null, message: "공고글이 삭제되었습니다" });
@@ -550,7 +544,7 @@ module.exports = {
         res.status(404).json({ data: null, message: "잘못된 요청입니다" });
       }
     }
-    if (!accTokenData && refTokenData) {
+    else if (!accTokenData && refTokenData) {
       const { _id } = refTokenData
       const result = await User.findOne({ _id: _id }).exec();
       if (refTokenData) {
@@ -565,7 +559,7 @@ module.exports = {
         }
       }
     }
-    if (accTokenData && !refTokenData) {
+    else if (accTokenData && !refTokenData) {
       const { _id } = accTokenData
       const userResult = await User.findOne({ _id: _id }).exec();
       if (accTokenData) {
@@ -585,7 +579,7 @@ module.exports = {
         }
       }
     }
-    if (!accTokenData && !refTokenData) {
+    else if (!accTokenData && !refTokenData) {
       return res.status(401).json({ message: "인증되지 않았습니다. 로그인이 필요합니다" })
     }
   }
