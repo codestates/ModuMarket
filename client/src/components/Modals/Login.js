@@ -51,6 +51,7 @@ function Login() {
                     userInfo: {
 
                         id: result.data.data.id,
+                        name: result.data.data.name,
                         area_name: result.data.data.area_name
                     }
                 }
