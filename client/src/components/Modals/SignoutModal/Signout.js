@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { persistor } from '../../../index'
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../../reducers/loginSlice'
 import {
@@ -21,6 +22,10 @@ const Signout = () => {
     // const userStatus = useSelector((state) => state.userInfo.userStatus);
     const dispatch = useDispatch();
     const accessToken = useSelector((state) => state.login.accessToken);
+
+    const purge = async () => {
+        await persistor.purge();
+    }
 
     const handleSignout = () => {
         axios.delete(`${REACT_APP_API_URL}/user`,
@@ -46,7 +51,10 @@ const Signout = () => {
                     <span onClick={() => dispatch(showSignoutModal(false))}>&times;</span>
                     <p>정말로 탈퇴하시겠습니까?</p>
                 </ModalText>
-                <ModalButton onClick={handleSignout}>
+                <ModalButton onClick={async () => {
+                    await handleSignout();
+                    await purge()
+                }}>
                     확인</ModalButton>
             </ModalContainer>
         </>

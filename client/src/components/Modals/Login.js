@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { login } from '../../reducers/loginSlice';
-import { showLoginModal, showSignupModal } from '../../reducers/modalSlice';
+import {
+    showLoginModal,
+    showSignupModal,
+    showConfirmModal,
+    inputModalText,
+    changeModalImg
+} from '../../reducers/modalSlice';
 import { getUserInfo, setUserStatus } from '../../reducers/userInfoSlice'
 import {
     ModalBackground,
@@ -49,17 +55,21 @@ function Login() {
             ).then((result) => {
                 let data = {
                     userInfo: {
-
                         id: result.data.data.id,
-                        area_name: result.data.data.area_name
+                        area_name: result.data.data.area_name,
+                        name: result.data.data.name
                     }
                 }
-
                 dispatch(getUserInfo(data))
                 dispatch(login(result.data.data.accessToken))
                 dispatch(showLoginModal(false));
             }
-            )
+            ).catch((err) => {
+                console.log(err.response.status)
+                dispatch(inputModalText(err.response.data.message));
+                dispatch(changeModalImg('question'));
+                dispatch(showConfirmModal(true));
+            })
         } else {
             setErrorMessage('이메일과 비밀번호를 모두 입력하세요');
         }

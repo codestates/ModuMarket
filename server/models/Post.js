@@ -12,7 +12,7 @@ const postSchema = new mongoose.Schema({
     isvalid: {type: Boolean, required: true, default: true},
     member_num: {type: Number, default: 1},
     member_min: {type: Number, default: 2},
-    endtime: {type: Date, required: true},
+    endtime: {type: String, required: true},
     chatroom: {type: mongoose.Schema.Types.ObjectId, ref: "Chatroom"}
 },{
   //데이터를 생성, 수정시 자동으로 시간을 기록해줌 
@@ -22,7 +22,6 @@ const postSchema = new mongoose.Schema({
 
 const chatroomSchema = new mongoose.Schema({
     id: mongoose.Schema.Types.ObjectId,
-    roomname: {type: String, required: true},
     message: {type: mongoose.Schema.Types.ObjectId, ref: "ChatroomMessage"}
 });
 

@@ -137,7 +137,7 @@ module.exports = {
     //console.log(refTokenData);
 
     if (refTokenData) {
-      // console.log(req.body)
+      console.log(req.body.endtime)
       // console.log(req.file)
       const newPost = new Post();
       if (req.file) {
@@ -534,15 +534,15 @@ module.exports = {
     const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET);
     const refTokenData = jwt.verify(req.cookies.refreshToken, process.env.REFRESH_SECRET);
 
-    const result = await Post.deleteOne({ _id: req.params.id, userId: accTokenData._id })
-    if (result.deletedCount === 1) {
-      res.status(200).json({ data: null, message: "공고글이 삭제되었습니다" });
-    } else {
-      res.status(404).json({ data: null, message: "잘못된 요청입니다" });
-    }
+    // const result = await Post.deleteOne({ _id: req.params.id, userId: accTokenData._id })
+    // if (result.deletedCount === 1) {
+    //   res.status(200).json({ data: null, message: "공고글이 삭제되었습니다" });
+    // } else {
+    //   res.status(404).json({ data: null, message: "잘못된 요청입니다" });
+    // }
 
     if (accTokenData && refTokenData) {
-      const { _id } = accTokenData 
+      const { _id } = accTokenData
       const result = await Post.deleteOne({ _id: req.params.id, userId: accTokenData._id })
       if (result.deletedCount === 1) {
         res.status(200).json({ data: null, message: "공고글이 삭제되었습니다" });

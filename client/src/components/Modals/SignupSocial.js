@@ -24,6 +24,7 @@ function SignupSocial() {
     const [errorMessage, setErrorMessage] = useState('');
     const userSocialId = useSelector((state) => state.modal.socialInfoId);
     const userSocialEmail = useSelector((state) => state.modal.socialInfoEmail);
+    const userSocial = useSelector((state) => state.userInfo.userStatus)
     const [userInputInfo, setUserInputInfo] = useState({
         id: userSocialId,
         email: userSocialEmail,
@@ -31,7 +32,6 @@ function SignupSocial() {
         age: '',
         area_name: '',
     });
-    const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_KAKAO_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
 
     /* 회원 정보 입력 관리 함수 */
     const handleInputValue = (key) => (e) => {
@@ -77,8 +77,8 @@ function SignupSocial() {
 
     }
 
-    /* 회원가입 요청 */
-    const handleSignup = () => {
+    /* Kakao 회원가입 요청 */
+    const handleKakaoSignup = () => {
         //입력값이 모두 존재할 경우만 요청보냄
         if (
             userInputInfo.id &&
@@ -87,7 +87,6 @@ function SignupSocial() {
             userInputInfo.age &&
             userInputInfo.area_name
         ) {
-            // ! post요청으로 서버 바꿈
             axios.post(
                 `${REACT_APP_API_URL}/sign/in/kakao`,
                 {
@@ -100,6 +99,37 @@ function SignupSocial() {
                 { 'Content-Type': 'application/json', withCredentials: true }
             ).then((result) => {
                 //result.id값 어디에 저장할지 고민필요
+                dispatch(inputModalText(result.data.message));
+                dispatch(changeModalImg('check_man'));
+                dispatch(showSignupSocialModal(false));
+                dispatch(showConfirmModal(true));
+
+            })
+        } else {
+            setErrorMessage('모든 항목을 빠짐없이 입력해주세요.');
+        }
+    }
+    /* Github 회원가입 요청 */
+    const handleGithubSignup = () => {
+        //입력값이 모두 존재할 경우만 요청보냄
+        if (
+            userInputInfo.id &&
+            userInputInfo.email &&
+            userInputInfo.name &&
+            userInputInfo.age &&
+            userInputInfo.area_name
+        ) {
+            axios.post(
+                `${REACT_APP_API_URL}/sign/in/github`,
+                {
+                    id: userInputInfo.id,
+                    email: userInputInfo.email,
+                    name: userInputInfo.name,
+                    age: userInputInfo.age,
+                    area_name: userInputInfo.area_name
+                },
+                { 'Content-Type': 'application/json', withCredentials: true }
+            ).then((result) => {
                 dispatch(inputModalText(result.data.message));
                 dispatch(changeModalImg('check_man'));
                 dispatch(showSignupSocialModal(false));
@@ -128,9 +158,16 @@ function SignupSocial() {
                         <button onClick={getUserLocation}>동네 인증하기</button>
                         {/* 서비스 이용동의 체크란
                         <input type="checkbox"/> */}
-                        <button type='submit' onClick={handleSignup}>
-                            회원가입
-                        </button>
+                        {
+                            userSocial === 'kakao' ?
+                                <button type='submit' onClick={handleKakaoSignup}>
+                                    카카오로 회원가입
+                                </button>
+                                :
+                                <button type='submit' onClick={handleGithubSignup}>
+                                    Github으로 회원가입
+                                </button>
+                        }
                         <div className='alert-box'>{errorMessage}</div>
                     </form>
                 </SignupInput>

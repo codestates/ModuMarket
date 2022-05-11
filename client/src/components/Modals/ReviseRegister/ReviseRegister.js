@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { showRegisterModal, showConfirmModal, inputModalText, changeModalImg } from '../../../reducers/modalSlice';
+import { showConfirmModal, showReviseRegisterModal, inputModalText, changeModalImg } from '../../../reducers/modalSlice'
 import {ko} from 'date-fns/esm/locale';
 import axios from 'axios';
-import moment from "moment";
 import { REACT_APP_API_URL } from '../../../config'
 import {
     ModalBackground, ModalContainer, Wrap,
@@ -14,31 +13,31 @@ import {
     Content, DateWrap, EndDate,
     PostLocationWrap, LocationButtonWrap,
     PostLocation, RegisterButtonWrap
-} from './styled'
+} from '../Register/styled'
 
-function Register() {
+
+const ReviseRegister = () => {
+    
     const dispatch = useDispatch();
     const accessToken = useSelector((state) => state.login.accessToken);
-    const [errorMessage, setErrorMessage] = useState('사진을 제외한 모든 항목은 필수입니다.');
     const userId = useSelector((state) => state.userInfo.userInfo.id);
-    const area_name = useSelector((state) => state.userInfo.userInfo.area_name);
-    const [address, setAddress] = useState("");
-    // const date = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
-    console.log(moment(new Date()).format('YYYY-MM-DD'))
-    const [endDate, setEndDate] = useState(new Date());
-    const [files, setFiles] = useState("") 
+    const cardInfo = useSelector((state) => state.board.cardInfo);
+    const [address, setAddress] = useState(cardInfo.post_location) 
+    const [photo, setPhoto] = useState(false)
+    const [endDate, setEndDate] = useState(new Date())
+    const [files, setFiles] = useState(cardInfo.image) 
     const [boardInfo, setBoardInfo] = useState({
-        title: "",
-        userId: userId, 
-        category: 0,
+        title: cardInfo.title,
+        userId: {_id : userId}, 
+        category: cardInfo.category,
         image: files,
-        post_content: "",
-        area_name : area_name, 
+        post_content: cardInfo.post_content,
+        area_name : cardInfo.area_name, 
         post_location : address,
-        isvalid : true,
-        member_num : 1,
-        member_min : 0,
-        endtime : moment(endDate).format('YYYY-MM-DD'),
+        isvalid : cardInfo.isvalid,
+        member_num : cardInfo.member_num,
+        member_min : cardInfo.member_min,
+        endtime : endDate,
 
     })
 
@@ -46,7 +45,7 @@ function Register() {
         setBoardInfo({ ...boardInfo, [key]: e.target.value });
     };
 
-    async function handleRegister() { // 입력한 값을 서버로 보내는 함수 
+    async function handleReviseRegister() { // 입력한 값을 서버로 보내는 함수 
         
         let photoFile = document.getElementById("photofile");
         const formData = new FormData(); // 폼 태그로 이미지와 데이터를 한번에 보낼 수 있도록 하기 위한 접근
@@ -61,24 +60,19 @@ function Register() {
         formData.append("isvalid", isvalid);
         formData.append("member_num", member_num);
         formData.append("member_min", member_min);
-        formData.append("endtime", moment(endDate).format('YYYY-MM-DD'));
+        formData.append("endtime", endDate);
+        formData.append("_id", cardInfo._id);
 
-        /* 
-        ? formData.values 접근하는 방법
-        ! console.log(formData.values) 이렇게 접근하면 안된다.
-        * for (var pair of formData.entries()) {
-        *       console.log(pair[0]+ ', ' + pair[1]);
-        *   } 
-        */
-        
+        // for (var pair of formData.entries()) {
+        //     console.log(pair[0]+ ', ' + pair[1]);
+        // } 
 
         if(title === "" || address === "" || post_content === "" || member_min === 0){
-            alert(errorMessage)
+            alert('사진을 제외한 모든 항목은 필수입니다.')
         }else{
-            console.log("아무거나")
-            await axios({
-                url : `${ REACT_APP_API_URL }/post`,
-                method : 'POST',
+            const result  = await axios({
+                url : `${ REACT_APP_API_URL }/post/${cardInfo._id}`,
+                method : 'PATCH',
                 data : formData,
                 headers : {
                     'Content-Type': 'multipart/form-data',
@@ -88,9 +82,8 @@ function Register() {
             }).then((result) =>{
                 dispatch(inputModalText(result.data.message));
                 dispatch(changeModalImg('check_man'));
-                dispatch(showRegisterModal(false))
+                dispatch(showReviseRegisterModal(false))
                 dispatch(showConfirmModal(true));
-                
             })
         }
 
@@ -104,12 +97,12 @@ function Register() {
         return new Promise((resolve) => {
             reader.onload = () => {
                 setFiles(reader.result);
+                setPhoto(true)
                 resolve();
             }
         })
     }
 
-    // 주소 검색하기
     function get_address() {
         new window.daum.Postcode({
             oncomplete: function (data) {
@@ -122,21 +115,19 @@ function Register() {
 
     }
 
-
-
     return (
         <form onSubmit={(e) => e.preventDefault()} >
-            <ModalBackground />
+            <ModalBackground onClick={() => dispatch(showReviseRegisterModal(false))} />
             <ModalContainer>
                 <Wrap>
-                    <p onClick={() => dispatch(showRegisterModal(false))}>&times;</p>
+                    <p onClick={() => dispatch(showReviseRegisterModal(false))}>&times;</p>
                 </Wrap>
                 <RegisterWrap>
-                    <h2>공구 등록하기</h2>
+                    <h2>공구 수정하기</h2>
                 </RegisterWrap>
                 <TitleWrap>
                     <p>제목</p>
-                    <input type="text" onChange={handleInputValue("title")} ></input>
+                    <input type="text" onChange={handleInputValue("title")}  value={boardInfo.title}/>
                 </TitleWrap>
                 <PhotoWrap>
                     <p>사진</p>
@@ -149,12 +140,20 @@ function Register() {
                         onChange={(e) => { onLoadFile(e.target.files[0]) }} />
                 </PhotoWrap>
                 <PhotoSearch>
-                    <Photo>
+                    {
+                        photo ? 
+                        <Photo>
                         {files && <img src={files} alt="preview-img" />}
-                    </Photo>
+                        </Photo>  
+                        :
+                        <Photo>
+                        {files && <img src={`${ REACT_APP_API_URL }/post/image/${files}/`} alt="preview-img" />}
+                        </Photo>
+                    }
+                    
                 </PhotoSearch>
                 <CategoryMemberWrap>
-                    <Category onChange={handleInputValue("category")}>
+                    <Category onChange={handleInputValue("category")} value={boardInfo.category}>
                         <option value="0">패션, 뷰티</option>
                         <option value="1">식품</option>
                         <option value="2">생필품</option>
@@ -162,13 +161,13 @@ function Register() {
                         <option value="4">유아동</option>
                     </Category>
                     <AtLeastMember>
-                        <input type="number" placeholder="참가 최소인원을 설정해주세요" onChange={handleInputValue("member_min")}></input>
+                        <input type="number" placeholder="참가 최소인원을 설정해주세요" onChange={handleInputValue("member_min")} value={boardInfo.member_min}/>
                     </AtLeastMember>
                 </CategoryMemberWrap>
                 <ContentWrap>
                     <p>내용</p>
                     <Content >
-                        <textarea onChange={handleInputValue("post_content")}></textarea>
+                        <textarea onChange={handleInputValue("post_content")} value={boardInfo.post_content}></textarea>
                     </Content>
                 </ContentWrap>
                 <DateWrap>
@@ -190,11 +189,12 @@ function Register() {
                     </PostLocation>
                 </PostLocationWrap>
                 <RegisterButtonWrap>
-                    <button onClick={() => handleRegister()}>등록하기</button>
+                    <button onClick={() => handleReviseRegister()}>수정하기</button>
                 </RegisterButtonWrap>
             </ModalContainer>
         </form>
     )
+    
 }
 
-export default Register;
+export default ReviseRegister

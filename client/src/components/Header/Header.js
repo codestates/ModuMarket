@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { persistor } from '../../index';
 import { REACT_APP_API_URL } from '../../config';
 import { Link } from 'react-router-dom';
 import { React, useState } from 'react'
@@ -25,6 +26,10 @@ function Header() {
     const dispatch = useDispatch();
     const isLogin = useSelector((state) => state.login.isLogin);
     const accessToken = useSelector((state) => state.login.accessToken);
+
+    const purge = async () => {
+        await persistor.purge();
+    }
 
     const handleGetUserInfo = () => {
         axios.get(`${REACT_APP_API_URL}/user`,
@@ -74,7 +79,10 @@ function Header() {
                         <NavLink to="/mypage">
                             <NavButton onClick={handleGetUserInfo}>마이페이지</NavButton>
                         </NavLink>
-                        <NavButton onClick={handleLogout}>Logout</NavButton>
+                        <NavButton onClick={async () => {
+                            await handleLogout()
+                            await setTimeout(() => purge(), 200)
+                        }}>Logout</NavButton>
                         {/* <NavButton onClick={() => window.location.href = `${KAKAO_LOGOUT_LEDERECT_URL}`}>Logout</NavButton> */}
                     </NavButtons>
                 </>
