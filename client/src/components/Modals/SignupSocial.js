@@ -16,7 +16,7 @@ import {
     LoginSocial
 } from './styled'
 import axios from 'axios'
-import { REACT_APP_API_URL, REDIRECT_URI } from '../../config';
+import { REACT_APP_API_URL, REACT_APP_HOME_URL } from '../../config';
 
 function SignupSocial() {
 
@@ -98,7 +98,7 @@ function SignupSocial() {
                 },
                 { 'Content-Type': 'application/json', withCredentials: true }
             ).then((result) => {
-                //result.id값 어디에 저장할지 고민필요
+                // 회원가입 완료시
                 dispatch(inputModalText(result.data.message));
                 dispatch(changeModalImg('check_man'));
                 dispatch(showSignupSocialModal(false));
@@ -130,10 +130,12 @@ function SignupSocial() {
                 },
                 { 'Content-Type': 'application/json', withCredentials: true }
             ).then((result) => {
+                //회원가입 완료시
                 dispatch(inputModalText(result.data.message));
                 dispatch(changeModalImg('check_man'));
                 dispatch(showSignupSocialModal(false));
                 dispatch(showConfirmModal(true));
+
 
             })
         } else {
@@ -142,7 +144,6 @@ function SignupSocial() {
     }
     return (
         <>
-            {/* onClick시 모달창 닫히게끔 모달창 띄우는 상태가 리덕스로 관리*/}
             <ModalBackground onClick={() => dispatch(showSignupSocialModal(false))} />
             <ModalContainer>
                 <ModalText>
@@ -156,15 +157,17 @@ function SignupSocial() {
                         <span>나이</span>
                         <input type='number' onChange={handleInputValue('age')} />
                         <button onClick={getUserLocation}>동네 인증하기</button>
-                        {/* 서비스 이용동의 체크란
-                        <input type="checkbox"/> */}
                         {
                             userSocial === 'kakao' ?
                                 <button type='submit' onClick={handleKakaoSignup}>
                                     카카오로 회원가입
                                 </button>
                                 :
-                                <button type='submit' onClick={handleGithubSignup}>
+                                <button type='submit' onClick={() => {
+                                    handleGithubSignup();
+                                    //홈으로 redirect
+                                    // window.location.href = `${REACT_APP_HOME_URL}`
+                                }}>
                                     Github으로 회원가입
                                 </button>
                         }

@@ -13,24 +13,24 @@ const bodyParser = require("body-parser");
 const listen = require('socket.io');
 const moment = require('moment')
 
-const {Post, Chatroom, ChatroomMessage} = require('./models/Post');
+const { Post, Chatroom, ChatroomMessage } = require('./models/Post');
 
-  let arr = [];
+let arr = [];
 
-  Chatroom.find({roomname: "채팅방1"}).populate('message', ['message_content', 'username']).exec((err, data) => {
-    console.log(data)
-    if (data.length === 0) {
-      return;
-    } else if (data[0].message.username && data[0].message.message_content) {
-      data.forEach(el => {
-        arr.push({
-          username: el.message.username, 
-          message_content: el.message.message_content
-        })
+Chatroom.find({ roomname: "채팅방1" }).populate('message', ['message_content', 'username']).exec((err, data) => {
+  console.log(data)
+  if (data.length === 0) {
+    return;
+  } else if (data[0].message.username && data[0].message.message_content) {
+    data.forEach(el => {
+      arr.push({
+        username: el.message.username,
+        message_content: el.message.message_content
       })
-    }
-    console.log(arr);
-  })  
+    })
+  }
+  console.log(arr);
+})
 
 app.use(
   morgan('      :method :url :status :res[content-length] - :response-time ms')
@@ -52,7 +52,7 @@ db();
 
 let server;
 
-if (!fs.existsSync("./key.pem") && !fs.existsSync("./cert.pem")) {
+if (fs.existsSync("./key.pem") && fs.existsSync("./cert.pem")) {
   server = https
     .createServer(
       {
@@ -78,9 +78,9 @@ if (!fs.existsSync("./key.pem") && !fs.existsSync("./cert.pem")) {
       credentials: true,
     }
   });
-  
+
   // 클라이언트에서 접속 요쳥이 오면 connection event 발생
-  io.on('connection', socket=>{
+  io.on('connection', socket => {
     console.log("연결이 완료되었습니다.")
 
     socket.on('type', (room) => {
@@ -89,10 +89,10 @@ if (!fs.existsSync("./key.pem") && !fs.existsSync("./cert.pem")) {
       // socket.emit("EVENT", data) => 이벤트 발생(개별 소켓)
       // socket.io.emit("Broadcast Event", [data]) => 연결된 모든 소켓에 이벤트 발생(io.emit 가능)
       const time = moment(new Date()).format("h:mm A")
-      io.to(room).emit('type', {arr, time, room}) // arr= 채팅내역, 요 채팅방에만 메시지를 보내겠다
+      io.to(room).emit('type', { arr, time, room }) // arr= 채팅내역, 요 채팅방에만 메시지를 보내겠다
     })
-    
-    socket.on('message', async ({name, to, chatname, message, room}) => {
+
+    socket.on('message', async ({ name, to, chatname, message, room }) => {
       const chatroomMessage = new ChatroomMessage({
         message_content: message,
         username: name
@@ -106,13 +106,13 @@ if (!fs.existsSync("./key.pem") && !fs.existsSync("./cert.pem")) {
       });
       chatroom.save((err, data) => {
       });
-        
+
       socket.join(room);
       console.log(room + '에 입장하셨습니다.');
       // socket.emit("EVENT", data) => 이벤트 발생(개별 소켓)
       // socket.io.emit("Broadcast Event", [data]) => 연결된 모든 소켓에 이벤트 발생(io.emit 가능)
       const time = moment(new Date()).format("h:mm A")
-      io.to(room).emit('message',({name, message, time, room}))
+      io.to(room).emit('message', ({ name, message, time, room }))
     });
 
     socket.on('disconnect', () => {
