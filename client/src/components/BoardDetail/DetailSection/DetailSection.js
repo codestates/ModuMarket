@@ -23,7 +23,7 @@ import {Section, Wrap,
 
 function DetailSection ({info}){
     
-    const cardUserId = info.userId._id
+    const cardUserId = info.userId.id
     const userId = useSelector((state) => state.userInfo.userInfo.id);
     const dispatch = useDispatch();
     
@@ -82,7 +82,7 @@ function DetailSection ({info}){
             <SectionWrap>
                 <DetailWrap>
                     {
-                        info.image === ""
+                        info.image === undefined
                             ? <DetailPhoto image = ""><img src= {Photo} alt="Card Detail"/></DetailPhoto> 
                             : <DetailPhoto><img src = {`${ REACT_APP_API_URL }/post/image/${info.image}/`} alt="Card Detail"/></DetailPhoto> 
                     }

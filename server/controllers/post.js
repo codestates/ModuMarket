@@ -74,7 +74,7 @@ module.exports = {
     //console.log(refTokenData);
 
     if (refTokenData) {
-      // console.log(req.body)
+      console.log(req.body.endtime)
       // console.log(req.file)
       const newPost = new Post();
       if (req.file) {
