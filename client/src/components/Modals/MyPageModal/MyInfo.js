@@ -15,12 +15,10 @@ import {
     changeModalImg
 } from '../../../reducers/modalSlice';
 import {
-    ModalBackground,
-    ModalContainer,
+    ModalBackground, ModalNameWrap,
+    ModalContainer, ModalAgeWrap,
     ModalText,
     ModalImg,
-    ModalNameWrap,
-    ModalAgeWrap,
     ModalInformRow,
     ModalButton
 } from './styled'

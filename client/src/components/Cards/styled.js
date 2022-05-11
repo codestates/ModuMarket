@@ -38,7 +38,7 @@ export const CardPhoto = styled.div`
         width : ${(props) =>
         (props.image === "" ? '13rem' : '24rem')
     };
-        height : 11.3rem;  
+        height : 11.3rem;
         border-top-left-radius: 12px;
         border-top-right-radius: 12px;
     }

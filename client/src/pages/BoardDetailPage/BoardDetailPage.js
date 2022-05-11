@@ -1,10 +1,10 @@
 import React ,{useState, useEffect} from 'react';
 import axios from 'axios';
-import {dummyData} from '../../assets/dummy'
 import { useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { REACT_APP_API_URL } from '../../config'
 import {Wrap} from './styled'
+import {getCardInfo} from '../../reducers/boardSlice'
 import DetailSection from '../../components/BoardDetail/DetailSection/DetailSection'
 import ContentSection from '../../components/BoardDetail/ContentSection/ContentSection'
 import MapSection from '../../components/BoardDetail/MapSection/MapSection'
@@ -12,7 +12,7 @@ import MapSection from '../../components/BoardDetail/MapSection/MapSection'
 function BoardDetail(){
     const location = useLocation().state; // useNavigate로 가져오는 카드의 id를 받아옴
     const accessToken = useSelector((state) => state.login.accessToken);
-    
+    const dispatch = useDispatch();
     const [cardInfo, setCardInfo] = useState()
 
     // console.log(location)
@@ -25,9 +25,16 @@ function BoardDetail(){
                 authorization : `Bearer ${accessToken}`,
             },
             withCredentials : true
+        }).then((result) => {
+            let detail = {
+                cardInfo: result.data.data
+            }
+
+            dispatch(getCardInfo(detail))
+            //console.log(result.data)
+            setCardInfo(result.data.data)
         })
-        //console.log(result.data)
-        setCardInfo(result.data.data)
+        
     }
 
     useEffect(()=> {

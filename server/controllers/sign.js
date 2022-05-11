@@ -242,10 +242,7 @@ module.exports = {
               return res.status(200).json({ id, email });
             }
           })
-
       })
-
-
   },
 
   inGithub: async (req, res) => {

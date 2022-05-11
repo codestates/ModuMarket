@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { dummyData } from "../../../assets/dummy"
 import FoodIcon from '../../../assets/food_icon.png'
 import BabiesIcon from '../../../assets/babies_icon.png'
 import FashionIcon from '../../../assets/fashion_icon.png'
@@ -8,9 +7,10 @@ import NecessityIcon from '../../../assets/necessity_icon.png'
 import MemberIcon from '../../../assets/member.png'
 import TimerIcon from '../../../assets/timer.png'
 import Photo from '../../../assets/photo.png'
-import { REACT_APP_API_URL } from '../../../config';
+import ReviseRegister from '../../Modals/ReviseRegister/ReviseRegister'
 import { useDispatch, useSelector } from 'react-redux';
-import { showChattingModal } from '../../../reducers/modalSlice';
+import { showChattingModal, showReviseRegisterModal, showDeleteModal } from '../../../reducers/modalSlice';
+import { REACT_APP_API_URL } from '../../../config'
 import {
     Section, Wrap,
     TitleWrap, Title,
@@ -25,9 +25,10 @@ import {
 
 function DetailSection({ info }) {
 
-    //console.log(info)
+    const cardUserId = info.userId.id
+    const userId = useSelector((state) => state.userInfo.userInfo.id);
     const dispatch = useDispatch();
-    const isLogin = useSelector((state) => state.login.isLogin);
+
     const category = ["패션, 뷰티", "식품", "생필품", "취미, 반려", "유아동"];
     let categoryNumber = info.category;
     let categoryImg;
@@ -50,7 +51,12 @@ function DetailSection({ info }) {
 
 
     function handleDelete() {
+        dispatch(showDeleteModal(true))
+    }
 
+    function handleRevise() {
+
+        dispatch(showReviseRegisterModal(true))
     }
 
     return (
@@ -60,23 +66,27 @@ function DetailSection({ info }) {
                     <Title>
                         <h2>{info.title}</h2>
                     </Title>
-                    <ButtonWrap>
-
-                        <Button background="#FF6767">
-                            <button>수정하기</button>
-                        </Button>
-                        <Button background="white">
-                            <button>삭제하기</button>
-                        </Button>
-                    </ButtonWrap>
+                    {
+                        cardUserId === userId
+                            ?
+                            <ButtonWrap>
+                                <Button background="#FF6767">
+                                    <button onClick={() => { handleRevise() }}>수정하기</button>
+                                </Button>
+                                <Button background="white">
+                                    <button onClick={() => { handleDelete() }}>삭제하기</button>
+                                </Button>
+                            </ButtonWrap>
+                            : null
+                    }
                 </TitleWrap>
             </Wrap>
             <SectionWrap>
                 <DetailWrap>
                     {
-                        info.image === ""
-                            ? <DetailPhoto image=""><img src={Photo} art="Card Detail Photo" /></DetailPhoto>
-                            : <DetailPhoto><img src={`${REACT_APP_API_URL}/post/image/${info.image}/`} art="Card Detail Photo" /></DetailPhoto>
+                        info.image === undefined
+                            ? <DetailPhoto image=""><img src={Photo} alt="Card Detail" /></DetailPhoto>
+                            : <DetailPhoto><img src={`${REACT_APP_API_URL}/post/image/${info.image}/`} alt="Card Detail" /></DetailPhoto>
                     }
                     <Detail>
                         <DetailCategory>
@@ -85,14 +95,14 @@ function DetailSection({ info }) {
                         </DetailCategory>
                         <DetailMemberAndTimeWrap>
                             <DetailMemberAndTime>
-                                <img src={MemberIcon} art="Card Member Icon" />
+                                <img src={MemberIcon} alt="Card Member Icon" />
                                 <span>참가인원</span>
                             </DetailMemberAndTime>
                             <span>{info.member_num} / {info.member_min}</span>
                         </DetailMemberAndTimeWrap>
                         <DetailMemberAndTimeWrap>
                             <DetailMemberAndTime>
-                                <img src={TimerIcon} art="Card Timer Icon" />
+                                <img src={TimerIcon} alt="Card Timer Icon" />
                                 <span>종료일</span>
                             </DetailMemberAndTime>
                             <span>{info.endtime}</span>
