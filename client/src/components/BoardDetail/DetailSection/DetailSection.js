@@ -14,6 +14,7 @@ import { showChattingModal,
         showDeleteModal,
         showLoginConfirmModal,
         showRecruitmentCompleteModal,
+        showCancelParticipateModal,
         showParticipateModal } from '../../../reducers/modalSlice';
 import { REACT_APP_API_URL } from '../../../config'
 import {Section, Wrap, 
@@ -136,7 +137,7 @@ function DetailSection ({info}){
                                                 isApplied
                                                 ?
                                                     <DetailButton background="white">
-                                                        <button>참가 취소하기</button>
+                                                        <button onClick={() => dispatch(showCancelParticipateModal(true))}>참가 취소하기</button>
                                                     </DetailButton>
                                                 :   
                                                     <DetailButton background="white">
@@ -150,9 +151,7 @@ function DetailSection ({info}){
                                     <DetailButton background="white">
                                         <button>모집 완료되었습니다</button>
                                     </DetailButton>
-                                        
                                 }
-                                
                             </DetailButtonWrap>
                         </Detail>
                     </DetailWrap>
