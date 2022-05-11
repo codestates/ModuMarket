@@ -9,7 +9,7 @@ const postSchema = new mongoose.Schema({
     post_content: {type: String, required: true},
     image: { type: String, data: Buffer },
     post_location: {type: String, required: true},
-    isvalid: {type: Boolean, required: false},
+    isvalid: {type: Boolean, required: true, default: true},
     member_num: {type: Number, default: 1},
     member_min: {type: Number, default: 2},
     endtime: {type: Date, required: true},

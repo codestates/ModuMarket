@@ -235,12 +235,12 @@ module.exports = {
     const refTokenData = jwt.verify(req.cookies.refreshToken, process.env.REFRESH_SECRET);
 
     if (accTokenData && refTokenData) {
-      if (req.body.isvalid === true) {
-        await Post.findByIdAndUpdate(_id, { $set: { isvalid: true } })
+      const { _id, category, area_name, title, isvalid, member_min, post_content,
+        image, post_location, endtime } = req.body
+      if (isvalid === false) {
+        await Post.findByIdAndUpdate(_id, { $set: { isvalid: false } })
         res.status(204).json({ message: "모집이 완료되었습니다" });
       } else {
-        const { _id, category, area_name, title, member_min, post_content,
-          image, post_location, endtime } = req.body
         await Post.findByIdAndUpdate(_id, {
           $set: {
             category, area_name, title, member_min, post_content,
@@ -257,12 +257,12 @@ module.exports = {
       const { _id, email, area_name } = result
       const accTokenData = jwt.sign(JSON.parse(JSON.stringify({ _id, email, area_name })), process.env.ACCESS_SECRET, { expiresIn: '2h' });
       if (refTokenData) {
-        if (req.body.isvalid === true) {
-          await Post.findByIdAndUpdate(_id, { $set: { isvalid: true } })
+        const { _id, category, area_name, title, isvalid, member_min, post_content,
+          image, post_location, endtime } = req.body
+        if (isvalid === false) {
+          await Post.findByIdAndUpdate(_id, { $set: { isvalid: false } })
           res.status(200).json({ data: { accTokenData }, message: "모집이 완료되었습니다" });
         } else {
-          const { _id, category, area_name, title, member_min, post_content,
-            image, post_location, endtime } = req.body
           await Post.findByIdAndUpdate(_id, {
             $set: {
               category, area_name, title, member_min, post_content,
@@ -281,8 +281,10 @@ module.exports = {
       const refreshToken = jwt.sign(JSON.parse(JSON.stringify({ _id, email, area_name })), process.env.REFRESH_SECRET, { expiresIn: '14d' });
 
       if (accTokenData) {
-        if (req.body.isvalid === true) {
-          await Post.findByIdAndUpdate(_id, { $set: { isvalid: true } })
+        const { _id, category, area_name, title, isvalid, member_min, post_content,
+          image, post_location, endtime } = req.body
+        if (isvalid === false) {
+          await Post.findByIdAndUpdate(_id, { $set: { isvalid: false } })
           res.status(200)
             .cookie("refreshToken", refreshToken, {
               maxAge: 1000 * 60 * 60 * 24 * 14, // 쿠키 유효시간: 14일
@@ -290,8 +292,6 @@ module.exports = {
             })
             .json({ message: "모집이 완료되었습니다" });
         } else {
-          const { _id, category, area_name, title, member_min, post_content,
-            image, post_location, endtime } = req.body
           await Post.findByIdAndUpdate(_id, {
             $set: {
               category, area_name, title, member_min, post_content,
