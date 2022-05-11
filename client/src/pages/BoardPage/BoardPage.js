@@ -4,6 +4,7 @@ import axios from 'axios'
 import { useDispatch, useSelector } from 'react-redux';
 import { showRegisterModal, showLoginConfirmModal } from '../../reducers/modalSlice';
 import { REACT_APP_API_URL } from '../../config'
+import notYet from '../../assets/no_data_not_yet.gif'
 import {
     Section,
     Wrap,
@@ -14,7 +15,9 @@ import {
     SearchCategory,
     ReservationButtonWrap,
     ReservationButton,
-    CardWrap
+    CardWrap,
+    RegisterNotYet,
+    RegisterNotYetPhoto
 } from "./styled"
 
 
@@ -23,8 +26,16 @@ function BoardPage() {
     const dispatch = useDispatch();
     const accessToken = useSelector((state) => state.login.accessToken);
     const isLogin = useSelector((state) => state.login.isLogin);
+    const areaName = useSelector((state) => state.userInfo.userInfo.area_name);
     const [cardInfo, setCardInfo] = useState()
-
+    const [resultInfo, setResultInfo] = useState()
+    const [searchInfo, setSearchInfo] = useState({
+        title: "", 
+        category: 5,
+    })
+    const handleInputValue = (key) => (e) => { // onChange 가 발생할 경우 값을 넣어주는 함수
+        setSearchInfo({ ...searchInfo, [key]: e.target.value });
+    };
 
     async function handleCardInfo() {
         const result = await axios({
@@ -36,32 +47,65 @@ function BoardPage() {
             },
             withCredentials: true
         })
-        console.log(result)
+        
+        setResultInfo(result.data.data)
         setCardInfo(result.data.data)
-
     }
 
     useEffect(() => {
         handleCardInfo()
-    }, [])
+    },[])
+
+    function handleSearch () {
+        
+        if(searchInfo.title === "" && parseInt(searchInfo.category) === 5){
+            return setCardInfo(resultInfo)
+        }
+        if(searchInfo.title !== "" && parseInt(searchInfo.category) === 5) {
+            let filteringInfo = resultInfo.filter((info) => {
+                return info.title.includes(searchInfo.title)
+            })
+            return setCardInfo(filteringInfo)
+        }
+        if(searchInfo.title === "" && parseInt(searchInfo.category) !== 5){
+            let filteringInfo = resultInfo.filter((info) => {
+                return info.category === parseInt(searchInfo.category)
+            })
+            return setCardInfo(filteringInfo)
+        }
+        else{
+            let filteringInfo = resultInfo.filter((info) => {
+                return info.title.includes(searchInfo.title) && (info.category === parseInt(searchInfo.category))
+            })
+            return setCardInfo(filteringInfo)
+        }
+    }
+
+
 
     return (
         <div>
             <Section>
                 <Wrap>
-                    <TitleWrap> 공구찾기</TitleWrap>
+                    {
+                        isLogin 
+                        ?
+                            <TitleWrap>{`${areaName} 공구찾기`}</TitleWrap>
+                        :
+                            <TitleWrap>전체 공구찾기</TitleWrap>
+                    }
                     <SearchWrap>
-                        <SearchTab type="text"></SearchTab>
-                        <SearchCategory>
-                            <option value="0">패션, 뷰티</option>
-                            <option value="1">식품</option>
-                            <option value="2">생필품</option>
-                            <option value="3">취미, 반려</option>
-                            <option value="4">유아동</option>
+                        <SearchTab type="text" onChange={handleInputValue("title")}></SearchTab>
+                        <SearchCategory onChange={handleInputValue("category")}>
+                            <option value={5} selected>선택</option>
+                            <option value={0}>패션, 뷰티</option>
+                            <option value={1}>식품</option>
+                            <option value={2}>생필품</option>
+                            <option value={3}>취미, 반려</option>
+                            <option value={4}>유아동</option>
                         </SearchCategory>
-                        <SearchButton>검색</SearchButton>
+                        <SearchButton onClick={() => handleSearch()}>검색</SearchButton>
                     </SearchWrap>
-                    {/* 로그인을 했을 경우에 아래의 모달창이 뜰 수 있도록 하고 로그인이 안되어있다면 로그인 페이지로 가게해야한다. */}
                     {
                         isLogin 
                         ?   
@@ -73,11 +117,22 @@ function BoardPage() {
                                 <ReservationButton onClick={() => dispatch(showLoginConfirmModal(true))}>공구글 등록하기</ReservationButton>
                             </ReservationButtonWrap>
                     }
-                    
                     <CardWrap>
                         {
-                            cardInfo ? cardInfo.map((info, idx) => <Cards info={info} key={idx} />)
-                                : <div>Loading</div>
+                            cardInfo 
+                            ? 
+                                cardInfo.length === 0
+                                    ?
+                                        <RegisterNotYet>
+                                            <RegisterNotYetPhoto>
+                                                <img src={notYet} alt="has no data not yet photo"/>
+                                            </RegisterNotYetPhoto>
+                                            <p>아직 우리동네에 등록된 공구가 없어요</p>
+                                        </RegisterNotYet>
+                                    :
+                                        cardInfo.map((info, idx) => <Cards info={info} key={idx} />)
+                            :   
+                                <div>Loading</div>
                         }
                     </CardWrap>
                 </Wrap>

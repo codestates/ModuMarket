@@ -75,7 +75,7 @@ function Register() {
         if(title === "" || address === "" || post_content === "" || member_min === 0){
             alert(errorMessage)
         }else{
-            console.log("아무거나")
+
             await axios({
                 url : `${ REACT_APP_API_URL }/post`,
                 method : 'POST',
@@ -90,7 +90,7 @@ function Register() {
                 dispatch(changeModalImg('check_man'));
                 dispatch(showRegisterModal(false))
                 dispatch(showConfirmModal(true));
-                
+                window.location.replace("/board")
             })
         }
 
@@ -155,11 +155,11 @@ function Register() {
                 </PhotoSearch>
                 <CategoryMemberWrap>
                     <Category onChange={handleInputValue("category")}>
-                        <option value="0">패션, 뷰티</option>
-                        <option value="1">식품</option>
-                        <option value="2">생필품</option>
-                        <option value="3">취미, 반려</option>
-                        <option value="4">유아동</option>
+                        <option value={0}>패션, 뷰티</option>
+                        <option value={1}>식품</option>
+                        <option value={2}>생필품</option>
+                        <option value={3}>취미, 반려</option>
+                        <option value={4}>유아동</option>
                     </Category>
                     <AtLeastMember>
                         <input type="number" placeholder="참가 최소인원을 설정해주세요" onChange={handleInputValue("member_min")}></input>

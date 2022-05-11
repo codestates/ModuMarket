@@ -10,10 +10,11 @@ import {Section,
         RegisterButton,
         ButtonLink
     } from './stlyed';
-
+import { useDispatch } from 'react-redux';
+import {showRegisterModal} from '../../../reducers/modalSlice'
 
 function MainSection() {
-
+    const dispatch = useDispatch();
     return (
         <>
         <Section>
@@ -32,7 +33,7 @@ function MainSection() {
                             <SearchButton>둘러보기</SearchButton>
                         </ButtonLink>
                         <ButtonLink to="/board">
-                            <RegisterButton>공구 등록하기</RegisterButton>
+                            <RegisterButton onClick={() => dispatch(showRegisterModal(true))}>공구 등록하기</RegisterButton>
                         </ButtonLink>
                     </ButtonWrap>
                     </MainText>

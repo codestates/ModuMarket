@@ -30,9 +30,9 @@ function RecruitmentCompleteModal () {
         }).then((result) =>{
             dispatch(inputModalText(result.data.message));
             dispatch(changeModalImg('check_man'));
-            dispatch(showRecruitmentCompleteModal(false))
+            dispatch(showRecruitmentCompleteModal(false));
             dispatch(showConfirmModal(true));
-            
+            window.location.reload();
         })
 
     }

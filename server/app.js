@@ -52,7 +52,7 @@ db();
 
 let server;
 
-if (!fs.existsSync("./key.pem") && !fs.existsSync("./cert.pem")) {
+if (fs.existsSync("./key.pem") && fs.existsSync("./cert.pem")) {
   server = https
     .createServer(
       {
