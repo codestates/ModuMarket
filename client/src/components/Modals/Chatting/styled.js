@@ -12,10 +12,11 @@ export const ModalBackground  = styled.section`
 export const ModalContainer = styled.div`
     display: flex;
     flex-direction: column;
+    /* justify-content:space-between; */
     align-items: center;
-    width: 32.5rem;
-    height: 50rem;
-    padding-bottom: 1rem;
+    width: 40.5rem;
+    height: 46rem;
+    padding: 3rem 0;
     background: #fff;
     overflow: scroll;
     border-radius: 10px;
@@ -24,12 +25,83 @@ export const ModalContainer = styled.div`
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 900;
-`
+    &::-webkit-scrollbar {
+    display: none;
+    }
 
+`
 export const ModalText = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
+  justify-content: flex-start;
+  align-items: flex-start;
+  &.messages {
+      width: 590px;
+      height: 713px;
+      overflow: auto;
+      /* display: flex;
+      flex-direction: column;
+      align-items: flex-end; */
+      &::-webkit-scrollbar {
+        width: 10px;
+        background-color: none;
+        }
+      > .message {
+        /* background: #FF6767; */
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 5px;
+        >.message-name{
+            font-size: 12px;
+            font-weight: 400;
+            padding: 1px ;
+        }
+        > div {
+            display: flex;
+            flex-direction: row;
+            /* flex-direction: row-reverse; */
+            align-items: flex-end;
+            >.message-msg{
+                margin: 0 5px;
+                /* background: rgb(239 240 240) ; */
+                background: rgb(255 214 214) ;
+                padding: 8px;
+                border-radius: 5px;
+                font-size: 15px;
+            }
+            >.message-time{
+                font-size:5px;
+                display: flex;
+                color: rgb(150 150 150);
+                letter-spacing: -0.8px;
+
+            }
+        }
+      }
+    }
+  &.send {
+        background: #ffffff;
+        position: fixed;
+        top: 86.5%;
+        left: 5%;
+        > form > div{
+            width: 530px;
+            > div {
+                height: 35px;
+
+            }
+        }
+        > form > button{
+            margin: 0 2px;
+            width: 52px;
+            height: 35px;
+            background: #FF6767;
+            border: none;
+            border-radius: 5px;
+            color: white;
+        }
+    }
   > span {
     position: absolute;
     padding: 2rem;
@@ -84,5 +156,4 @@ export const ModalButton = styled.button`
         border: 1px solid #FF6767;
         background-color: #fff;
     }
-    
 `

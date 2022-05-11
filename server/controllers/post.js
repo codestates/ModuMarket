@@ -74,7 +74,7 @@ module.exports = {
     //console.log(refTokenData);
 
     if (refTokenData) {
-      // console.log(req.body)
+      console.log(req.body.endtime)
       // console.log(req.file)
       const newPost = new Post();
       if (req.file) {
@@ -178,6 +178,7 @@ module.exports = {
       } else {
         const { _id, category, area_name, title, member_min, post_content,
           image, post_location, endtime } = req.body
+          console.log(_id)
         await Post.findByIdAndUpdate(_id, {
           $set: {
             category, area_name, title, member_min, post_content,

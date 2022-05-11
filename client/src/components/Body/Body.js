@@ -1,6 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useSelector } from 'react-redux';
-import { useState, useEffect } from 'react'
 import Main from '../../pages/MainPage/Main'
 import BoardPage from '../../pages/BoardPage/BoardPage'
 import MyPage from '../../pages/MyPage/MyPage'
@@ -10,7 +9,6 @@ import Auth from './Auth';
 
 const Body = () => {
     const isLogin = useSelector((state) => state.login.isLogin);
-
 
     return (
         <Routes>
