@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { showRegisterModal, showConfirmModal, inputModalText, changeModalImg } from '../../../reducers/modalSlice';
 import {ko} from 'date-fns/esm/locale';
 import axios from 'axios';
+import moment from "moment";
 import { REACT_APP_API_URL } from '../../../config'
 import {
     ModalBackground, ModalContainer, Wrap,
@@ -21,8 +22,10 @@ function Register() {
     const [errorMessage, setErrorMessage] = useState('사진을 제외한 모든 항목은 필수입니다.');
     const userId = useSelector((state) => state.userInfo.userInfo.id);
     const area_name = useSelector((state) => state.userInfo.userInfo.area_name);
-    const [address, setAddress] = useState("") 
-    const [endDate, setEndDate] = useState(new Date())
+    const [address, setAddress] = useState("");
+    // const date = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
+    console.log(moment(new Date()).format('YYYY-MM-DD'))
+    const [endDate, setEndDate] = useState(new Date());
     const [files, setFiles] = useState("") 
     const [boardInfo, setBoardInfo] = useState({
         title: "",
@@ -35,7 +38,7 @@ function Register() {
         isvalid : true,
         member_num : 1,
         member_min : 0,
-        endtime : endDate,
+        endtime : moment(endDate).format('YYYY-MM-DD'),
 
     })
 
@@ -58,7 +61,7 @@ function Register() {
         formData.append("isvalid", isvalid);
         formData.append("member_num", member_num);
         formData.append("member_min", member_min);
-        formData.append("endtime", endtime);
+        formData.append("endtime", moment(endDate).format('YYYY-MM-DD'));
 
         /* 
         ? formData.values 접근하는 방법
@@ -73,7 +76,7 @@ function Register() {
             alert(errorMessage)
         }else{
             console.log("아무거나")
-            const result  = await axios({
+            await axios({
                 url : `${ REACT_APP_API_URL }/post`,
                 method : 'POST',
                 data : formData,
@@ -123,7 +126,7 @@ function Register() {
 
     return (
         <form onSubmit={(e) => e.preventDefault()} >
-            <ModalBackground onClick={() => dispatch(showRegisterModal(false))} />
+            <ModalBackground />
             <ModalContainer>
                 <Wrap>
                     <p onClick={() => dispatch(showRegisterModal(false))}>&times;</p>
