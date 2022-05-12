@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { showConfirmModal, showReviseRegisterModal, inputModalText, changeModalImg } from '../../../reducers/modalSlice'
 import {ko} from 'date-fns/esm/locale';
 import axios from 'axios';
+import moment from "moment";
 import { REACT_APP_API_URL } from '../../../config'
 import {
     ModalBackground, ModalContainer, Wrap,
@@ -22,10 +23,11 @@ const ReviseRegister = () => {
     const accessToken = useSelector((state) => state.login.accessToken);
     const userId = useSelector((state) => state.userInfo.userInfo.id);
     const cardInfo = useSelector((state) => state.board.cardInfo);
+    console.log(cardInfo);
     const [address, setAddress] = useState(cardInfo.post_location) 
     const [photo, setPhoto] = useState(false)
     const [endDate, setEndDate] = useState(new Date())
-    const [files, setFiles] = useState(cardInfo.image) 
+    const [files, setFiles] = useState(cardInfo.image)
     const [boardInfo, setBoardInfo] = useState({
         title: cardInfo.title,
         userId: {_id : userId}, 
@@ -37,7 +39,7 @@ const ReviseRegister = () => {
         isvalid : cardInfo.isvalid,
         member_num : cardInfo.member_num,
         member_min : cardInfo.member_min,
-        endtime : endDate,
+        endtime : moment(endDate).format('YYYY-MM-DD'),
 
     })
 
@@ -52,7 +54,12 @@ const ReviseRegister = () => {
         const {title, userId, category, post_content, area_name,  isvalid, member_num, member_min, endtime} = boardInfo 
         formData.append("title", title);
         formData.append("category", category);
-        formData.append("image", photoFile.files[0]);
+        // console.log(photoFile.files[0])
+        if (photoFile.files[0]) {
+            // 전에 있던 사진의 이름 넣으면 됨.
+            formData.append("formerImage", cardInfo.image)
+            formData.append("newImage", photoFile.files[0]);
+        }
         formData.append("post_content", post_content);
         formData.append("area_name", area_name); 
         formData.append("userId", userId); 
@@ -60,17 +67,18 @@ const ReviseRegister = () => {
         formData.append("isvalid", isvalid);
         formData.append("member_num", member_num);
         formData.append("member_min", member_min);
-        formData.append("endtime", endDate);
+        formData.append("endtime", endtime);
         formData.append("_id", cardInfo._id);
 
         // for (var pair of formData.entries()) {
         //     console.log(pair[0]+ ', ' + pair[1]);
         // } 
+        // console.log(formData)
 
         if(title === "" || address === "" || post_content === "" || member_min === 0){
             alert('사진을 제외한 모든 항목은 필수입니다.')
         }else{
-            const result  = await axios({
+            axios({
                 url : `${ REACT_APP_API_URL }/post/${cardInfo._id}`,
                 method : 'PATCH',
                 data : formData,

@@ -62,7 +62,6 @@ function Register() {
         formData.append("member_num", member_num);
         formData.append("member_min", member_min);
         formData.append("endtime", moment(endDate).format('YYYY-MM-DD'));
-
         /* 
         ? formData.values 접근하는 방법
         ! console.log(formData.values) 이렇게 접근하면 안된다.
@@ -89,8 +88,7 @@ function Register() {
                 dispatch(inputModalText(result.data.message));
                 dispatch(changeModalImg('check_man'));
                 dispatch(showRegisterModal(false))
-                dispatch(showConfirmModal(true));
-                
+                dispatch(showConfirmModal(true));    
             })
         }
 

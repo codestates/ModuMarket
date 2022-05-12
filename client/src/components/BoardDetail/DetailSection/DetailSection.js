@@ -38,10 +38,10 @@ function DetailSection({ info }) {
     const cardUserId = info.data.userId._id
     const isValid = info.data.isvalid
     const isApplied = info.isapplied
+    console.log(isApplied)
     const userId = useSelector((state) => state.userInfo.userInfo.id);
     const isLogin = useSelector((state) => state.login.isLogin);
-
-
+  
     const category = ["패션, 뷰티", "식품", "생필품", "취미, 반려", "유아동"];
     let categoryNumber = info.data.category;
     let categoryImg;

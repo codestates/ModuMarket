@@ -2,7 +2,7 @@ const User = require('../models/User');
 const { Post } = require('../models/Post');
 const Application = require('../models/Application');
 const jwt = require('jsonwebtoken');
-const { uploadFile } = require('../s3');
+const { uploadFile, deleteFile } = require('../s3');
 const { up } = require('./sign');
 const fs = require('fs');
 const util = require('util');
@@ -11,7 +11,8 @@ const unlinkFile = util.promisify(fs.unlink);
 module.exports = {
 
   postList: async (req, res) => {
-
+    // Post.deleteMany({}).exec();
+    console.log(req.body);
     if (req.headers.authorization === 'Bearer') {
       await Post.updateMany({ endtime: { $lt: Date.now() } }, { isvalid: true })
       const result = await Post.find({})
@@ -142,7 +143,7 @@ module.exports = {
       const newPost = new Post();
       if (req.file) {
         await uploadFile(req.file);
-        console.log(await uploadFile(req.file))
+        // console.log(await uploadFile(req.file))
         await unlinkFile(req.file.path)
         newPost.image = req.file.filename;
       }
@@ -230,24 +231,42 @@ module.exports = {
   },
 
   modifyPost: async (req, res) => {
+    console.log(req.body);
+    console.log(req.file);
     const token = req.headers.authorization.split(' ')[1];
     const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET);
     const refTokenData = jwt.verify(req.cookies.refreshToken, process.env.REFRESH_SECRET);
 
     if (accTokenData && refTokenData) {
       const { _id, category, area_name, title, isvalid, member_min, post_content,
-        image, post_location, endtime } = req.body
+        formerImage, post_location, endtime } = req.body
       if (isvalid === false) {
         await Post.findByIdAndUpdate(_id, { $set: { isvalid: false } })
         res.status(204).json({ message: "모집이 완료되었습니다" });
       } else {
-        await Post.findByIdAndUpdate(_id, {
-          $set: {
-            category, area_name, title, member_min, post_content,
-            image, post_location, endtime
-          }
-        },
-          { new: true }).exec()
+        if (req.file) {
+          await uploadFile(req.file);
+          await deleteFile(formerImage);
+          // console.log(await uploadFile(req.file))
+          await unlinkFile(req.file.path);
+          await Post.findByIdAndUpdate(_id, {
+            $set: {
+              category, area_name, title, member_min, post_content,
+              image: req.file.filename, post_location, endtime
+            }
+          },
+            { new: true }).exec()   
+        } else {
+          await Post.findByIdAndUpdate(_id, {
+            $set: {
+              category, area_name, title, member_min, post_content,
+              post_location, endtime
+            }
+          },
+            { new: true }).exec()
+        }
+  
+        
         res.status(200).json({ message: "게시글이 수정되었습니다" });
       }
     }
@@ -315,6 +334,7 @@ module.exports = {
   },
 
   applyPost: async (req, res) => {
+    console.log(req.body)
     const token = req.headers.authorization.split(' ')[1];
     const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET);
     const refTokenData = jwt.verify(req.cookies.refreshToken, process.env.REFRESH_SECRET);
@@ -323,9 +343,33 @@ module.exports = {
     // req.params.id는 포스트컬렉션의 id
     // application 컬렉션에서 포스트_id, ueser_id 일치하는 도큐먼트를 찾았을때
     // isapplied가 false 이거나 값이 생성되지않은 상태일때에만 member_num이 추가되어야한다. 
+    
     if (accTokenData && refTokenData) {
       const { _id } = accTokenData
-      const applicationCollection = await Application.findOne({ post_id: req.params.id, user_id: _id }).exec()
+      // const result = await Application.findOne({
+      //   post_id: req.params.id,
+      //   user_id : _id,
+      //   isapplied: false
+      // }).exec();
+      // console.log(result);
+      // if (result === null) {
+      //   const newApplication = new Application();
+      //   newApplication.isapplied = false;
+      //   newApplication.save();
+      // } else {
+      //   console.log('b')
+      // }
+
+
+      // await Application.findOneAndUpdate({
+      //   isapplied:false
+      // }, {
+      //   post_id: req.params.id,
+      //   user_id : _id
+      // })
+      
+      const applicationCollection = await Application.findOne({ post_id: req.params.id, user_id: _id }).exec();
+      // console.log(applicationCollection);
       if (applicationCollection.isapplied === true) { //이미 참여이므로 참여하기 눌러도 소용없게 . 
         res.status(404).json({ data: null, message: "이미 참여중입니다" });
       }
@@ -343,9 +387,6 @@ module.exports = {
         await Post.findByIdAndUpdate(req.params.id, { $inc: { member_num: 1 } },
           { new: true }).exec()
 
-        const newApplication = new Application();
-        newApplication.post_id = req.params.id
-        newApplication.user_id = _id
         res.status(200).json({ data: null, message: "참여 신청이 완료되었습니다" });
       }
     }
