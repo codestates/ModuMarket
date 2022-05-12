@@ -56,8 +56,8 @@ function Login() {
                 let data = {
                     userInfo: {
                         id: result.data.data.id,
-                        area_name: result.data.data.area_name,
-                        name: result.data.data.name
+                        name: result.data.data.name,
+                        area_name: result.data.data.area_name
                     }
                 }
                 dispatch(getUserInfo(data))
