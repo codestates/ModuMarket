@@ -92,6 +92,7 @@ const ReviseRegister = () => {
                 dispatch(changeModalImg('check_man'));
                 dispatch(showReviseRegisterModal(false))
                 dispatch(showConfirmModal(true));
+                window.location.reload()
             })
         }
 
@@ -162,11 +163,11 @@ const ReviseRegister = () => {
                 </PhotoSearch>
                 <CategoryMemberWrap>
                     <Category onChange={handleInputValue("category")} value={boardInfo.category}>
-                        <option value="0">패션, 뷰티</option>
-                        <option value="1">식품</option>
-                        <option value="2">생필품</option>
-                        <option value="3">취미, 반려</option>
-                        <option value="4">유아동</option>
+                        <option value={0}>패션, 뷰티</option>
+                        <option value={1}>식품</option>
+                        <option value={2}>생필품</option>
+                        <option value={3}>취미, 반려</option>
+                        <option value={4}>유아동</option>
                     </Category>
                     <AtLeastMember>
                         <input type="number" placeholder="참가 최소인원을 설정해주세요" onChange={handleInputValue("member_min")} value={boardInfo.member_min}/>

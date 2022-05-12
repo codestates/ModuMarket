@@ -41,10 +41,10 @@ function DetailSection({ info }) {
     console.log(isApplied)
     const userId = useSelector((state) => state.userInfo.userInfo.id);
     const isLogin = useSelector((state) => state.login.isLogin);
-  
-    const category = ["패션, 뷰티", "식품", "생필품", "취미, 반려", "유아동"];
-    let categoryNumber = info.data.category;
-    let categoryImg;
+    
+    const category = ["패션, 뷰티","식품","생필품","취미, 반려","유아동"];
+        let categoryNumber = info.data.category;
+        let categoryImg;
 
     if (category[categoryNumber] === "패션, 뷰티") {
         categoryImg = FashionIcon;
@@ -72,7 +72,9 @@ function DetailSection({ info }) {
         dispatch(showReviseRegisterModal(true))
     }
 
+
     function handleLogin() {
+
         dispatch(showLoginConfirmModal(true))
     }
 
@@ -102,8 +104,8 @@ function DetailSection({ info }) {
                 <DetailWrap>
                     {
                         info.data.image === undefined
-                            ? <DetailPhoto image=""><img src={Photo} alt="Card Detail" /></DetailPhoto>
-                            : <DetailPhoto><img src={`${REACT_APP_API_URL}/post/image/${info.data.image}/`} alt="Card Detail" /></DetailPhoto>
+                            ? <DetailPhoto image = ""><img src= {Photo} alt="Card Detail"/></DetailPhoto> 
+                            : <DetailPhoto><img src = {`${ REACT_APP_API_URL }/post/image/${info.data.image}/`} alt="Card Detail"/></DetailPhoto> 
                     }
                     <Detail>
                         <DetailCategory>
