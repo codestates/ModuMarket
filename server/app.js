@@ -13,24 +13,8 @@ const bodyParser = require("body-parser");
 const listen = require('socket.io');
 const moment = require('moment')
 
-const {Post, Chatroom, ChatroomMessage} = require('./models/Post');
+const { Post, Chatroom, ChatroomMessage } = require('./models/Post');
 
-
-
-  // Chatroom.find({roomname: "채팅방1"}).populate('message', ['message_content', 'username']).exec((err, data) => {
-  //   console.log(data)
-  //   if (data.length === 0) {
-  //     return;
-  //   } else if (data[0].message.username && data[0].message.message_content) {
-  //     data.forEach(el => {
-  //       arr.push({
-  //         username: el.message.username, 
-  //         message_content: el.message.message_content
-  //       })
-  //     })
-  //   }
-  //   console.log(arr);
-  // })  
 
 app.use(
   morgan('      :method :url :status :res[content-length] - :response-time ms')
@@ -78,7 +62,7 @@ if (fs.existsSync("./key.pem") && fs.existsSync("./cert.pem")) {
       credentials: true,
     }
   });
-  
+
   io.on('connection', socket=>{
     console.log("connection 서버 연결이 완료되었습니다."+socket.id)
 
@@ -122,6 +106,7 @@ if (fs.existsSync("./key.pem") && fs.existsSync("./cert.pem")) {
 
       chatroomMessage.save();
       io.to(room).emit('message',({name, message, time, room}))
+
     });
 
     socket.on('leave', (room) => {

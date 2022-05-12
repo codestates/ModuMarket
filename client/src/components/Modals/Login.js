@@ -113,12 +113,14 @@ function Login() {
                 </LoginInput>
                 <ModalButton onClick={() => {
                     window.location.href = `${KAKAO_AUTH_URL}`
+                    dispatch(showLoginModal(false));
                     dispatch(setUserStatus('kakao'))
                 }}>
                     카카오로 로그인하기
                 </ModalButton>
                 <ModalButton onClick={() => {
                     window.location.href = `${GITHUB_AUTH_URL}`
+                    dispatch(showLoginModal(false));
                     dispatch(setUserStatus('github'));
                 }}>
                     Github으로 로그인하기

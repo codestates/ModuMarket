@@ -152,7 +152,8 @@ module.exports = {
               httpOnly: true,
             })
             .status(201)
-            .json({ id: _id, name:name , area_name:area_name, accessToken: accessToken, message: "로그인에 성공하였습니다." });
+            .json({ id: _id, name: name, area_name: area_name, accessToken: accessToken, message: "로그인에 성공하였습니다." });
+
         } else { //가입안한 유저이면 추가정보 받는 경로로 아이디, 이메일 보내주기 .. 
           return res.status(200).json({ id, email });
         }
@@ -181,8 +182,8 @@ module.exports = {
   },
 
   github: async (req, res) => {
-    const CODE = req.query.code;
     let githubAccessToken = '';
+    const CODE = req.query.code;
     let id = '';
     let email = '';
 
@@ -209,7 +210,7 @@ module.exports = {
         })
           .then(async (data) => { //토큰으로 유저정보 받아오기 
             if (!data.data.email) {
-              // ! github유저가 private email로 설정해둘 경우 한번 더 요청보냄 -> 받아올 수 있는 방법?
+              // github유저가 private email로 설정해둘 경우 
               // null 값인 email을 무작위의 uuid 값을 자체 github email로 따로 부여
               let randomNum = uuid();
               email = randomNum + '@github.com'
@@ -219,8 +220,8 @@ module.exports = {
             id = data.data.id;
             console.log(id)
             console.log(email)
-
-            const result = await User.findOne({ social_github: id }).exec()
+            // ! social_github : id 가 들어가도록 해야함
+            const result = await User.findOne({ social_kakao: id }).exec()
             if (result) { // 가입한 유저이면? 디비에 있는 유저의 동네정보, 아이디, 이메일을 갖고 토큰만들어서주기
 
               const { _id, email, name, area_name } = result;
@@ -235,7 +236,8 @@ module.exports = {
                   httpOnly: true,
                 })
                 .status(201)
-                .json({ id: _id, name:name , area_name:area_name, accessToken: accessToken, message: "로그인에 성공하였습니다." });
+                .json({ id: _id, name: name, area_name: area_name, accessToken: accessToken, message: "로그인에 성공하였습니다." });
+
             } else { //가입안한 유저이면 추가정보 받는 경로로 아이디, 이메일 보내주기 .. 
               return res.status(200).json({ id, email });
             }
@@ -263,5 +265,6 @@ module.exports = {
       })
 
   }
+
 
 }

@@ -126,9 +126,6 @@ const Chatting = () => {
                         {/* <ModalButton onClick={() => dispatch(showChattingModal(false))}>확인</ModalButton> */}
             </ModalContainer>
         </>
-
-
-    )
+)
 }
-
 export default Chatting
