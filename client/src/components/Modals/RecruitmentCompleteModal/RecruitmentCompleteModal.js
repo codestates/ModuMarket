@@ -12,11 +12,10 @@ function RecruitmentCompleteModal () {
     const dispatch = useDispatch();
     const cardInfo = useSelector((state) => state.board.cardInfo);
     const accessToken = useSelector((state) => state.login.accessToken);
-    console.log(cardInfo.title)
     async function handleComplete (){
 
-        const result  = await axios({
-            url : `${ REACT_APP_API_URL }/post`,
+        await axios({
+            url : `${ REACT_APP_API_URL }/post/${cardInfo._id}/apply`,
             method : 'PATCH',
             data : {
                 isvalid: false,
@@ -34,7 +33,6 @@ function RecruitmentCompleteModal () {
             dispatch(showConfirmModal(true));
             window.location.reload();
         })
-
     }
 
     return (

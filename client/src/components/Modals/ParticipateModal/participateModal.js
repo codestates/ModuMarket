@@ -16,8 +16,8 @@ function ParticipateModal (){
     const cardInfo = useSelector((state) => state.board.cardInfo);
 
     async function handleJoin () {
-        const result  = await axios({
-            url : `${ REACT_APP_API_URL }/post/apply`,
+        await axios({
+            url : `${ REACT_APP_API_URL }/post/${cardInfo._id}/apply`,
             method : 'PATCH',
             data : {
                 _id : cardInfo._id
@@ -28,10 +28,16 @@ function ParticipateModal (){
             },
             withCredentials : true
         }).then((result) =>{
+            console.log(result);
+           
             dispatch(inputModalText(result.data.message));
+            
             dispatch(changeModalImg('check_man'));
+            
             dispatch(showParticipateModal(false));
+            
             dispatch(showConfirmModal(true));
+
             window.location.reload();
         })
     }

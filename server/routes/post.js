@@ -25,7 +25,7 @@ const upload = multer({storage: storage, limits: { fileSize: 5 * 1024 * 1024 }, 
 router.get('/', controller.post.postList);
 
 // 특정 공고글 보기
-router.get('/:id', controller.post.postOne);
+router.post('/:id', controller.post.postOne);
 
 // 공고글 AWS s3에서 가져오기
 router.get('/image/:key', (req, res) => {
@@ -42,13 +42,13 @@ router.get('/image/:key', (req, res) => {
 router.post('/', upload.single('image'), controller.post.registerPost);
 
 // 공고글 수정
-router.patch('/', upload.single('newImage'), controller.post.modifyPost);
+router.patch('/:id', upload.single('newImage'), controller.post.modifyPost);
 
 // 공고글에 있는 참가 신청 버튼
-router.patch('/apply', controller.post.applyPost);
+router.patch('/:id/apply', controller.post.applyPost);
 
 // 공고글에 있는 참가 취소 버튼
-router.patch('/cancel', controller.post.cancleApplyPost);
+router.patch('/:id/cancel', controller.post.cancleApplyPost);
 
 // 공고글 삭제
 router.delete('/:id', controller.post.deletePost);
