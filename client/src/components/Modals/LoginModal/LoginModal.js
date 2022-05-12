@@ -115,8 +115,7 @@ function LoginModal() {
                                 type='password'
                                 onChange={handleInputValue('password')}/>
                         </LoginWrap>
-
-                        <div className='alert-box'>{errorMessage}</div>
+                        <span className='alert-box'>{errorMessage}</span>
                     </form>
                 </LoginInput>
                 <ButtonWrap>

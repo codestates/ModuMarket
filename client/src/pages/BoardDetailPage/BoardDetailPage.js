@@ -15,32 +15,54 @@ function BoardDetail(){
     const dispatch = useDispatch();
     const [cardInfo, setCardInfo] = useState();
     const userInfo = useSelector((state) => state.userInfo.userInfo.id);
-    console.log(userInfo)
 
     async function handleCardDetail (){
-        await axios({
-            url : `${REACT_APP_API_URL}/post/${location.cardId}`,
-            method: 'POST',
-            data: {
-                _id: userInfo
-            },
-            headers : {
-                "Content-Type": "application/json",
-                authorization : `Bearer ${accessToken}`,
-            },
-            withCredentials : true
-        }).then((result) => {
-            let detail = {
-                cardInfo: result.data.data
-            }
-
-            let isApplied = {
-                isApplied: result.data.isapplied
-            }
-            dispatch(getCardInfo(detail))
-            dispatch(isAppliedInfo(isApplied))
-            setCardInfo(result.data)
-        })  
+        if (userInfo === '') {
+            await axios({
+                url : `${REACT_APP_API_URL}/post/${location.cardId}`,
+                method: 'GET',
+                headers : {
+                    "Content-Type": "application/json",
+                    authorization : `Bearer ${accessToken}`,
+                },
+                withCredentials : true
+            }).then((result) => {
+                let detail = {
+                    cardInfo: result.data.data
+                }
+    
+                let isApplied = {
+                    isApplied: result.data.isapplied
+                }
+                dispatch(getCardInfo(detail))
+                dispatch(isAppliedInfo(isApplied))
+                setCardInfo(result.data)
+            }) 
+        } else {
+            await axios({
+                url : `${REACT_APP_API_URL}/post/${location.cardId}`,
+                method: 'POST',
+                data: {
+                    _id: userInfo
+                },
+                headers : {
+                    "Content-Type": "application/json",
+                    authorization : `Bearer ${accessToken}`,
+                },
+                withCredentials : true
+            }).then((result) => {
+                let detail = {
+                    cardInfo: result.data.data
+                }
+    
+                let isApplied = {
+                    isApplied: result.data.isapplied
+                }
+                dispatch(getCardInfo(detail))
+                dispatch(isAppliedInfo(isApplied))
+                setCardInfo(result.data)
+            }) 
+        } 
     }
 
     useEffect(()=> {

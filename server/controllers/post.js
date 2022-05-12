@@ -60,42 +60,95 @@ module.exports = {
 
   },
 
-  postOne: async (req, res) => {
-    //어플리케이션 컬렉션에서 포스트아이디, 유저아이디 찾는데 없는 경우, 있는데 취소한 경우 
-    // 있는데 참가한 경우 true 인 경우 => 취소하기 버튼 주게
+  postPostOne: async (req, res) => {
+   
     const {_id} = req.body;
     console.log(req.body);
     let a = await Application.findOne({user_id: _id, post_id: req.params.id}).exec();
     console.log(a);
     
-    if (a === null) {
+    if (a === null&& _id ==="") {
       let newApplication = new Application();
       newApplication.post_id = req.params.id
       newApplication.user_id = _id
       newApplication.isapplied = false
       newApplication.save();
     }
-    // const result = await Application.findOne({
-    //   post_id: req.params.id,
-    //   user_id : _id,
-    //   isapplied: false
-    // }).exec();
-    // console.log(result);
-    // if (result === null) {
-    //   const newApplication = new Application();
-    //   newApplication.isapplied = false;
-    //   newApplication.save();
-    // } else {
-    //   console.log('b')
-    // }
+    
 
+    if (req.headers.authorization === 'Bearer') {
+      const result = await Post.findOne({ _id: req.params.id }).populate('userId', 'name').exec()
+      res.status(200).json({ data: result ,  isapplied: false});
+    }else if (req.headers.authorization && req.cookies.refreshToken) {
+      const token = req.headers.authorization.split(' ')[1];
+      const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET);
+      const refTokenData = jwt.verify(req.cookies.refreshToken, process.env.REFRESH_SECRET);
+      if (accTokenData && refTokenData) {
+        const { _id } = accTokenData;
+        const applied = await Application.find({post_id: req.params.id, user_id:_id}).select('isapplied')
+        console.log(applied);
+        if (applied.length !== 0) {
+          if(applied[0].isapplied === false){ // 참가이력이 없거나, 참가했다가 취소한 경우 
+            const result = await Post.findOne({ _id: req.params.id }).populate('userId', 'name').exec()
+            res.status(200).json({ data: result ,  isapplied: false});
+          } else { //참가이력이 있는 경우 
+            const result = await Post.findOne({ _id: req.params.id }).populate('userId', 'name').exec()
+            res.status(200).json({ data: result ,  isapplied: true});
+          }
+        } else {
+            const result = await Post.findOne({ _id: req.params.id }).populate('userId', 'name').exec()
+            res.status(200).json({ data: result});
+        }
+      }
+      if (!accTokenData && refTokenData) {
+        const { _id } = refTokenData;
+        const userResult = await User.findOne({ _id }).exec();
+        if(refTokenData){
+          const { _id, email, area_name } = userResult
+            const accessToken = jwt.sign(JSON.parse(JSON.stringify({ _id, email, area_name })), process.env.ACCESS_SECRET, { expiresIn: '2h' });
+            const applied = await Application.findOne({post_id: req.params.id, user_id:_id}).select('isapplied')
+            if(!applied.isapplied){ // 참가이력이 없거나, 참가했다가 취소한 경우 
+              const result = await Post.findOne({ _id: req.params.id }).populate('userId', 'name').exec()
+              res.status(200).json({ data: result ,  isapplied: false, accessToken});
+            } else { //참가이력이 있는 경우 
+              const result = await Post.findOne({ _id: req.params.id }).populate('userId', 'name').exec()
+              res.status(200).json({ data: result ,  isapplied: true, accessToken});
+            }
+        }
+        
+      }
+      if (accTokenData && !refTokenData) {
+        const { _id } = accTokenData;
+        const userResult = await User.findOne({ _id }).exec();
+        if(accTokenData){
+          const { _id, email, area_name } = userResult
+          const refreshToken = jwt.sign(JSON.parse(JSON.stringify({ _id, email, area_name })), process.env.REFRESH_SECRET, { expiresIn: '14d' });
+          const applied = await Application.find({post_id: req.params.id, user_id:_id}).select('isapplied')
+          if(!applied.isapplied){ // 참가이력이 없거나, 참가했다가 취소한 경우 
+            const result = await Post.findOne({ _id: req.params.id }).populate('userId', 'name').exec()
+            res.status(200)
+            .cookie("refreshToken", refreshToken, {
+              maxAge: 1000 * 60 * 60 * 24 * 14, // 쿠키 유효시간: 14일
+              httpOnly: true,
+            })
+            .json({ data: result ,  isapplied: false});
+          } else { //참가이력이 있는 경우 
+            const result = await Post.findOne({ _id: req.params.id }).populate('userId', 'name').exec()
+            res.status(200)
+            .cookie("refreshToken", refreshToken, {
+              maxAge: 1000 * 60 * 60 * 24 * 14, // 쿠키 유효시간: 14일
+              httpOnly: true,
+            })
+            .json({ data: result ,  isapplied: true});
+          }
+        }
+      }
+    }
 
-    // await Application.findOneAndUpdate({
-    //   isapplied:false
-    // }, {
-    //   post_id: req.params.id,
-    //   user_id : _id
-    // })
+  },
+
+  getPostOne: async (req, res) => {
+   
 
     if (req.headers.authorization === 'Bearer') {
       const result = await Post.findOne({ _id: req.params.id }).populate('userId', 'name').exec()

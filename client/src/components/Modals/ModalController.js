@@ -46,6 +46,7 @@ const ModalController = () => {
 
     return (
         <>
+            
             {loginModal && <Login />}
             {signupGateModal && <SignupGate />}
             {signupModal && <SignupModal />}
@@ -57,7 +58,6 @@ const ModalController = () => {
             {myNewPwModal && <PwInput />}
             {signoutModal && <Signout />}
             {signoutSocialModal && <Signout />}
-            {confirmModal && <Confirm />}
             {reviseRegisterModal && <ReviseRegister />}
             {deleteModal && <DeleteModal />}
             {loginConfirmModal && <LoginConfirmModal />}
@@ -66,6 +66,8 @@ const ModalController = () => {
             {cancelParticipateModal && <CancelParticipateModal />}
             {confirmModalToBoard && <ConfirmModalToBoard />}
             {alertModal && <AlertModal />}
+            {confirmModal && <Confirm />}
+            
         </>
     )
 }

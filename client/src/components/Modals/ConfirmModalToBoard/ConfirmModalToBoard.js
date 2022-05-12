@@ -16,7 +16,8 @@ const ConfirmModalToBoard = () => {
     const dispatch = useDispatch();
 
     return (
-        <ModalBackground>
+        <>
+        <ModalBackground/>
             <ModalContainer>
                 <ModalImg>
                     <img src={confirmImg[`${img}`]} alt={`${img}`} />
@@ -30,7 +31,7 @@ const ConfirmModalToBoard = () => {
                     </ModalButtonWrap>
                 </ModalImg>
             </ModalContainer>
-        </ModalBackground>
+        </>
     )
 }
 

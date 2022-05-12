@@ -28,7 +28,6 @@ function ParticipateModal (){
             },
             withCredentials : true
         }).then((result) =>{
-            console.log(result);
            
             dispatch(inputModalText(result.data.message));
             
@@ -38,7 +37,7 @@ function ParticipateModal (){
             
             dispatch(showConfirmModal(true));
 
-            window.location.reload();
+           
         })
     }
     

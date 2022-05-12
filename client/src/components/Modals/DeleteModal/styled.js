@@ -21,7 +21,7 @@ export const ModalContainer = styled.div`
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 990;
+    z-index: 999;
     &::-webkit-scrollbar {
         display: none;
     }
