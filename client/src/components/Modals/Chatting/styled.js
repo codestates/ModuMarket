@@ -12,11 +12,10 @@ export const ModalBackground  = styled.section`
 export const ModalContainer = styled.div`
     display: flex;
     flex-direction: column;
-    /* justify-content:space-between; */
     align-items: center;
     width: 40.5rem;
     height: 46rem;
-    padding: 3rem 0;
+    padding: 2rem 0 4rem;
     background: #fff;
     overflow: scroll;
     border-radius: 10px;
@@ -28,26 +27,84 @@ export const ModalContainer = styled.div`
     &::-webkit-scrollbar {
     display: none;
     }
+    > div {
+      overflow: auto;
+      &::-webkit-scrollbar {
+      display: none;
+      }
+      padding-left:0;
+      display:flex;
+      flex-direction: column-reverse;
+      overflow-y:auto;
+    }
 
 `
 export const ModalText = styled.div`
+  /* width: 100%; */
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  /* justify-content: flex-start; */
   align-items: flex-start;
-  &.messages {
+
+  >  .messages-me {
       width: 590px;
-      height: 713px;
+      /* height: 713px; */
       overflow: auto;
-      /* display: flex;
+      display: flex;
       flex-direction: column;
-      align-items: flex-end; */
+      justify-content: flex-end; 
+      align-items: flex-end; 
       &::-webkit-scrollbar {
         width: 10px;
         background-color: none;
         }
-      > .message {
-        /* background: #FF6767; */
+      > .message-me {
+        /* width: 590px; */
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 5px;
+        >.message-name{
+            font-size: 12px;
+            font-weight: 400;
+            padding: 1px ;
+        }
+        > div {
+            display: flex;
+            /* flex-direction: row; */
+            flex-direction: row-reverse;
+            align-items: flex-end;
+            >.message-msg{
+                margin: 0 5px;
+                /* background: rgb(239 240 240) ; */
+                background: rgb(255 214 214) ;
+                padding: 8px;
+                border-radius: 5px;
+                font-size: 15px;
+            }
+            >.message-time{
+                font-size:5px;
+                display: flex;
+                color: rgb(150 150 150);
+                letter-spacing: -0.8px;
+            }
+        }
+      }
+    }
+    >  .messages-you {
+      width: 590px;
+      /* height: 713px; */
+      overflow: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start; 
+      align-items: flex-start; 
+      &::-webkit-scrollbar {
+        width: 10px;
+        background-color: none;
+        }
+      > .message-you {
+        /* width: 590px; */
         display: flex;
         flex-direction: column;
         align-items: flex-start;
@@ -64,8 +121,8 @@ export const ModalText = styled.div`
             align-items: flex-end;
             >.message-msg{
                 margin: 0 5px;
-                /* background: rgb(239 240 240) ; */
-                background: rgb(255 214 214) ;
+                background: rgb(239 240 240) ;
+                /* background: rgb(255 214 214) ; */
                 padding: 8px;
                 border-radius: 5px;
                 font-size: 15px;
@@ -82,8 +139,8 @@ export const ModalText = styled.div`
     }
   &.send {
         background: #ffffff;
-        position: fixed;
-        top: 86.5%;
+        position: absolute;
+        bottom: 20px;
         left: 5%;
         > form > div{
             width: 530px;
@@ -104,9 +161,9 @@ export const ModalText = styled.div`
     }
   > span {
     position: absolute;
-    padding: 2rem;
-    top: 0;
-    right: 0;
+    /* padding: 1rem; */
+    top: 5px;
+    right: 15px;
     font-size: 2rem;
     cursor: pointer;
   }

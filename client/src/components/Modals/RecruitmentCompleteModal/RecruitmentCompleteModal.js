@@ -16,7 +16,7 @@ function RecruitmentCompleteModal () {
     async function handleComplete (){
 
         const result  = await axios({
-            url : `${ REACT_APP_API_URL }/post/${cardInfo._id}`,
+            url : `${ REACT_APP_API_URL }/post/${cardInfo._id}/apply`,
             method : 'PATCH',
             data : {
                 isvalid: false,

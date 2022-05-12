@@ -61,16 +61,7 @@ function Register() {
         formData.append("isvalid", isvalid);
         formData.append("member_num", member_num);
         formData.append("member_min", member_min);
-        formData.append("endtime", moment(endDate).format('YYYY-MM-DD'));
-
-        /* 
-        ? formData.values 접근하는 방법
-        ! console.log(formData.values) 이렇게 접근하면 안된다.
-        * for (var pair of formData.entries()) {
-        *       console.log(pair[0]+ ', ' + pair[1]);
-        *   } 
-        */
-        
+        formData.append("endtime", moment(endDate).format('YYYY-MM-DD'));   
 
         if(title === "" || address === "" || post_content === "" || member_min === 0){
             alert(errorMessage)
@@ -90,7 +81,8 @@ function Register() {
                 dispatch(changeModalImg('check_man'));
                 dispatch(showRegisterModal(false))
                 dispatch(showConfirmModal(true));
-                window.location.replace("/board")
+                window.location.reload()
+
             })
         }
 

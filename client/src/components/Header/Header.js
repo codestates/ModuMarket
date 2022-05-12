@@ -26,6 +26,7 @@ function Header() {
     const dispatch = useDispatch();
     const isLogin = useSelector((state) => state.login.isLogin);
     const accessToken = useSelector((state) => state.login.accessToken);
+    const userSocial = useSelector((state) => state.userInfo.userStatus);
 
     const purge = async () => {
         await persistor.purge();
@@ -59,7 +60,16 @@ function Header() {
                 dispatch(logout());
             })
     }
-    const KAKAO_LOGOUT_LEDERECT_URL = `https://kauth.kakao.com/oauth/logout?client_id=${process.env.REACT_APP_KAKAO_API_KEY}&logout_redirect_uri=${process.env.REACT_APP_KAKAO_LOGOUT_REDIRECT_URL}`
+    const KAKAO_LOGOUT_URL = `https://kauth.kakao.com/oauth/logout?client_id=${process.env.REACT_APP_KAKAO_API_KEY}&logout_redirect_uri=${process.env.REACT_APP_KAKAO_LOGOUT_REDIRECT_URL}`
+
+    const handleKakaoLogout = () => {
+        // setTimeout(() => purge(), 100)
+        window.location.href = `${KAKAO_LOGOUT_URL}`
+        purge();
+    }
+    const handleGithubLogout = () => {
+        setTimeout(() => purge(), 100)
+    }
 
     return (
         <NavContainer>
@@ -79,11 +89,37 @@ function Header() {
                         <NavLink to="/mypage">
                             <NavButton onClick={handleGetUserInfo}>마이페이지</NavButton>
                         </NavLink>
-                        <NavButton onClick={async () => {
-                            await handleLogout()
-                            await setTimeout(() => purge(), 200)
-                        }}>Logout</NavButton>
-                        {/* <NavButton onClick={() => window.location.href = `${KAKAO_LOGOUT_LEDERECT_URL}`}>Logout</NavButton> */}
+                        {userSocial === 'own' ?
+                            //일반 로그아웃
+                            <NavButton onClick={async () => {
+                                await handleLogout()
+                                await setTimeout(() => purge(), 200)
+                            }}>Logout</NavButton>
+                            :
+                            userSocial === 'kakao' ?
+                                //카카오 로그아웃
+                                <NavButton onClick={() => {
+                                    handleKakaoLogout().then(() => {
+                                        dispatch(inputModalText('로그아웃이 완료되었습니다.'));
+                                        dispatch(changeModalImg('check_man'));
+                                        dispatch(showConfirmModal(true));
+                                        dispatch(logout());
+                                    })
+
+                                }
+                                }
+                                >Logout</NavButton>
+                                :
+                                // github 로그아웃
+                                <NavButton onClick={() => {
+                                    dispatch(logout());
+                                    handleGithubLogout()
+                                    dispatch(inputModalText('로그아웃이 완료되었습니다.'));
+                                    dispatch(changeModalImg('check_man'));
+                                    dispatch(showConfirmModal(true));
+
+                                }}>Logout</NavButton>
+                        }
                     </NavButtons>
                 </>
             ) : (
