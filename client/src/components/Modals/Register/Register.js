@@ -23,8 +23,6 @@ function Register() {
     const userId = useSelector((state) => state.userInfo.userInfo.id);
     const area_name = useSelector((state) => state.userInfo.userInfo.area_name);
     const [address, setAddress] = useState("");
-    // const date = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
-    console.log(moment(new Date()).format('YYYY-MM-DD'))
     const [endDate, setEndDate] = useState(new Date());
     const [files, setFiles] = useState("") 
     const [boardInfo, setBoardInfo] = useState({
@@ -68,7 +66,6 @@ function Register() {
             dispatch(showAlertModal(true));
 
         }else{
-
             await axios({
                 url : `${ REACT_APP_API_URL }/post`,
                 method : 'POST',
@@ -85,7 +82,6 @@ function Register() {
                 dispatch(showConfirmModalToBoard(true));
             })
         }
-
     }
 
     // 사진 미리보기 파일 읽어오기
