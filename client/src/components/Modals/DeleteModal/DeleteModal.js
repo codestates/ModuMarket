@@ -5,7 +5,7 @@ import { REACT_APP_API_URL } from '../../../config';
 import question from '../../../assets/question.png';
 import skull from '../../../assets/skull_icon.png';
 import { 
-        showConfirmModal, showDeleteModal, 
+        showConfirmModalToBoard, showDeleteModal, 
         inputModalText, changeModalImg } from '../../../reducers/modalSlice';
 import {ModalBackground, ModalContainer,
         ModalImg,ModalText, ModalButton,
@@ -31,10 +31,11 @@ function DeleteModal () {
         }).then((result) => {
             dispatch(inputModalText(result.data.message));
             dispatch(changeModalImg('check_man'));
-            dispatch(showDeleteModal(false))
-            dispatch(showConfirmModal(true));
-            window.location.replace('/board');
-        });
+            dispatch(showDeleteModal(false));
+            dispatch(showConfirmModalToBoard(true));
+           
+        })
+
     }
 
     return (

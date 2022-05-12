@@ -1,47 +1,30 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
-
-export const ModalBackground = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  background-color: rgba(0, 0, 0, 0.4);
-`;
+export const ModalBackground  = styled.section`
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+`
 
 export const ModalContainer = styled.div`
-  width: 100%;
-  max-width: 485px;
-  background: #fff;
-  max-height: 90%;
-  overflow-y: scroll;
-  border-radius: 10px;
-  padding: 6rem 8rem;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 900;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-  @media all and (max-width: 600px) {
-    width: 100%;
-    /* height: 100%; */
-    max-height: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 32.5rem;
+    height: 50rem;
+    padding-bottom: 1rem;
+    background: #fff;
+    overflow: scroll;
     border-radius: 10px;
-    padding: 6rem 1rem;
-    &::-webkit-scrollbar {
-      display: block;
-    }
-  }
-  @media all and (max-height: 600px) {
-    &::-webkit-scrollbar {
-      display: block;
-    }
-  }
-`;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 900;
+`
 
 export const ModalText = styled.div`
   display: flex;
@@ -81,46 +64,7 @@ export const ModalText = styled.div`
     }
   }
 `;
-export const LoginInput = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    > span {
-      position: absolute;
-      padding: 2rem;
-      top: 0;
-      right: 0;
-      font-size: 2rem;
-      cursor: pointer;
-    }
-`;
 
-
-export const SignupInput = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    > span {
-      position: absolute;
-      padding: 2rem;
-      top: 0;
-      right: 0;
-      font-size: 2rem;
-      cursor: pointer;
-    }
-`
-export const ModalImg = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    max-width: 485px;
-    object-fit: cover;
-    img{
-      width: 20rem;
-      height: 20rem;
-    }
-`
 export const ModalButton = styled.button`
     display: flex;
     flex-direction: column;

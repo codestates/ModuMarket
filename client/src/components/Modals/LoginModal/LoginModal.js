@@ -1,27 +1,30 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { login } from '../../reducers/loginSlice';
+import { login } from '../../../reducers/loginSlice';
 import {
     showLoginModal,
     showSignupModal,
     showConfirmModal,
     inputModalText,
     changeModalImg
-} from '../../reducers/modalSlice';
-import { getUserInfo, setUserStatus } from '../../reducers/userInfoSlice'
+} from '../../../reducers/modalSlice';
+import { getUserInfo, setUserStatus } from '../../../reducers/userInfoSlice'
 import {
-    ModalBackground,
-    ModalContainer,
-    ModalText,
-    LoginInput,
-    ModalButton,
+    ModalBackground,ModalTextWrap,
+    ModalContainer,ModalTitleWrap, 
+    ModalText,ModalTitleText,
+    LoginInput,LoginWrap,
+    ModalButton,ButtonWrap,
+    Wrap,XWrap
 } from './styled';
 import axios from 'axios';
-import { REACT_APP_API_URL, REDIRECT_URI } from '../../config';
+import { REACT_APP_API_URL, REDIRECT_URI } from '../../../config';
+import gitIcon from '../../../assets/github_icon_dark.png'
+import kakaoIcon from '../../../assets/kakao.png'
 
 
 
-function Login() {
+function LoginModal() {
 
 
     const GITHUB_APP_KEY = process.env.REACT_APP_GITHUB_APP_KEY;
@@ -82,52 +85,68 @@ function Login() {
             {/* onClick시 모달창 닫히게끔 모달창 띄우는 상태가 리덕스로 관리*/}
             <ModalBackground onClick={() => dispatch(showLoginModal(false))} />
             <ModalContainer>
-                <ModalText>
+                <XWrap>
                     <span onClick={() => dispatch(showLoginModal(false))}>&times;</span>
-                    <h2>로그인</h2>
-                    <p>회원이 아니신가요?
-                        {/* signup 모달창으로 변경하도록 해당 상태 관리*/}
-                        <button onClick={() => {
-                            dispatch(showLoginModal(false));
-                            dispatch(showSignupModal(true));
-                        }}>회원가입하기</button>
-                    </p>
-                </ModalText>
+                </XWrap>
+                <Wrap>
+                <ModalTextWrap>    
+                    <ModalTitleWrap>
+                        <h2>로그인</h2>
+                        <ModalTitleText>
+                            <p>회원이 아니신가요? </p>
+                            <a onClick={() => {
+                                dispatch(showLoginModal(false));
+                                dispatch(showSignupModal(true));
+                            }}>회원가입하기</a>
+                        </ModalTitleText>
+                    </ModalTitleWrap>
+                </ModalTextWrap>
                 <LoginInput>
                     <form onSubmit={(e) => e.preventDefault()}>
-                        <span>이메일</span>
-                        <input type='email' onChange={handleInputValue('email')} placeholder="E-mail을 입력해주세요" />
-                        <span>비밀번호</span>
-                        <input
-                            type='password'
-                            onChange={handleInputValue('password')}
-                            placeholder="비밀번호를 입력해주세요" />
-                        <ModalButton type='submit'
-                            onClick={() => {
-                                handleLogin();
-                                dispatch(setUserStatus('own'));
-                            }}>
-                            로그인
-                        </ModalButton>
+                        <LoginWrap>
+                            <span>이메일</span>
+                            <input 
+                                type='email' 
+                                onChange={handleInputValue('email')} />
+                        </LoginWrap>
+                        <LoginWrap>
+                            <span>비밀번호</span>
+                            <input
+                                type='password'
+                                onChange={handleInputValue('password')}/>
+                        </LoginWrap>
+
                         <div className='alert-box'>{errorMessage}</div>
                     </form>
                 </LoginInput>
-                <ModalButton onClick={() => {
-                    window.location.href = `${KAKAO_AUTH_URL}`
-                    dispatch(showLoginModal(false));
-                    dispatch(setUserStatus('kakao'))
-                }}>
-                    카카오로 로그인하기
-                </ModalButton>
-                <ModalButton onClick={() => {
-                    window.location.href = `${GITHUB_AUTH_URL}`
-                    dispatch(showLoginModal(false));
-                    dispatch(setUserStatus('github'));
-                }}>
-                    Github으로 로그인하기
-                </ModalButton>
+                <ButtonWrap>
+                    <ModalButton background="#FF6767" type='submit'
+                                onClick={() => {
+                                    handleLogin();
+                                    dispatch(setUserStatus('own'));
+                                }}>
+                                로그인
+                    </ModalButton>
+                    <ModalButton background="white" onClick={() => {
+                        window.location.href = `${GITHUB_AUTH_URL}`
+                        dispatch(showLoginModal(false));
+                        dispatch(setUserStatus('github'));
+                    }}>
+                        <img src={gitIcon}/>
+                        Git Hub 로그인
+                    </ModalButton>
+                    <ModalButton background="#F7E600" onClick={() => {
+                        window.location.href = `${KAKAO_AUTH_URL}`
+                        dispatch(showLoginModal(false));
+                        dispatch(setUserStatus('kakao'))
+                    }}>
+                        <img src={kakaoIcon}/>
+                        카카오 로그인
+                    </ModalButton>
+                </ButtonWrap>
+                </Wrap>
             </ModalContainer>
         </>
     )
 }
-export default Login;
+export default LoginModal;

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { showRegisterModal, showConfirmModal, inputModalText, changeModalImg } from '../../../reducers/modalSlice';
+import { showRegisterModal, showConfirmModalToBoard, inputModalText, changeModalImg, showAlertModal } from '../../../reducers/modalSlice';
 import {ko} from 'date-fns/esm/locale';
 import axios from 'axios';
 import moment from "moment";
@@ -62,7 +62,9 @@ function Register() {
         formData.append("endtime", moment(endDate).format('YYYY-MM-DD'));   
 
         if(title === "" || address === "" || post_content === "" || member_min === 0){
-            alert(errorMessage)
+            
+            dispatch(showAlertModal(true));
+
         }else{
             await axios({
                 url : `${ REACT_APP_API_URL }/post`,
@@ -75,11 +77,9 @@ function Register() {
                 withCredentials : true
             }).then((result) =>{
                 dispatch(inputModalText(result.data.message));
-                dispatch(changeModalImg('check_man'));
+                dispatch(changeModalImg('check_woman1'));
                 dispatch(showRegisterModal(false))
-                dispatch(showConfirmModal(true));
-                window.location.reload()
-
+                dispatch(showConfirmModalToBoard(true));
             })
         }
     }

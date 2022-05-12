@@ -4,10 +4,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { REACT_APP_API_URL } from '../../config'
 import {Wrap} from './styled'
-import {getCardInfo, isAppliedInfo} from '../../reducers/boardSlice'
-import DetailSection from '../../components/BoardDetail/DetailSection/DetailSection'
-import ContentSection from '../../components/BoardDetail/ContentSection/ContentSection'
-import MapSection from '../../components/BoardDetail/MapSection/MapSection'
+import {getCardInfo, isAppliedInfo} from '../../reducers/boardSlice';
+import DetailSection from '../../components/BoardDetail/DetailSection/DetailSection';
+import ContentSection from '../../components/BoardDetail/ContentSection/ContentSection';
+import MapSection from '../../components/BoardDetail/MapSection/MapSection';
 
 function BoardDetail(){
     const location = useLocation().state; // useNavigate로 가져오는 카드의 id를 받아옴
@@ -37,7 +37,6 @@ function BoardDetail(){
             let isApplied = {
                 isApplied: result.data.isapplied
             }
-            console.log(result)
             dispatch(getCardInfo(detail))
             dispatch(isAppliedInfo(isApplied))
             setCardInfo(result.data)
