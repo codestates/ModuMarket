@@ -483,7 +483,7 @@ module.exports = {
     }
   },
 
-  cancleApplyPost: async (req, res) => {
+  cancelApplyPost: async (req, res) => {
     const token = req.headers.authorization.split(' ')[1];
     const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET);
     const refTokenData = jwt.verify(req.cookies.refreshToken, process.env.REFRESH_SECRET);

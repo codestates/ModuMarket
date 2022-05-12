@@ -97,7 +97,7 @@ function BoardPage() {
                     <SearchWrap>
                         <SearchTab type="text" onChange={handleInputValue("title")}></SearchTab>
                         <SearchCategory onChange={handleInputValue("category")}>
-                            <option value={5} selected>선택</option>
+                            <option value={5}>전체</option>
                             <option value={0}>패션, 뷰티</option>
                             <option value={1}>식품</option>
                             <option value={2}>생필품</option>

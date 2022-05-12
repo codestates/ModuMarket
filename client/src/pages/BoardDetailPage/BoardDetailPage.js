@@ -1,8 +1,6 @@
 import React ,{useState, useEffect} from 'react';
 import axios from 'axios';
-import {getCardInfo} from '../../reducers/boardSlice'
 import { useSelector, useDispatch } from 'react-redux';
-import {dummyData} from '../../assets/dummy'
 import { useLocation } from 'react-router-dom';
 import { REACT_APP_API_URL } from '../../config'
 import {Wrap} from './styled'

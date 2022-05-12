@@ -166,7 +166,7 @@ function SignupSocial() {
                                 <button type='submit' onClick={() => {
                                     handleGithubSignup();
                                     //홈으로 redirect
-                                    // window.location.href = `${REACT_APP_HOME_URL}`
+                                     window.location.href = `${REACT_APP_HOME_URL}`
                                 }}>
                                     Github으로 회원가입
                                 </button>
