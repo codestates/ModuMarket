@@ -33,13 +33,13 @@ function BoardDetail(){
             let isApplied = {
                 isApplied: result.data.isapplied
             }
-
+            console.log(result)
             dispatch(getCardInfo(detail))
             dispatch(isAppliedInfo(isApplied))
             setCardInfo(result.data)
 
         })
-    
+        
         
     }
 
@@ -47,7 +47,6 @@ function BoardDetail(){
         handleCardDetail()
     },[])
 
-    
     return (
         <Wrap>
             { cardInfo ? <DetailSection info = {cardInfo}/> : <div>Loading</div>}
