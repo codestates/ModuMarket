@@ -63,6 +63,40 @@ module.exports = {
   postOne: async (req, res) => {
     //어플리케이션 컬렉션에서 포스트아이디, 유저아이디 찾는데 없는 경우, 있는데 취소한 경우 
     // 있는데 참가한 경우 true 인 경우 => 취소하기 버튼 주게
+    const {_id} = req.body;
+    console.log(req.body);
+    let a = await Application.findOne({user_id: _id, post_id: req.params.id}).exec();
+    console.log(a);
+    
+    if (a === null) {
+      let newApplication = new Application();
+      newApplication.post_id = req.params.id
+      newApplication.user_id = _id
+      newApplication.isapplied = false
+      newApplication.save();
+    }
+    // const result = await Application.findOne({
+    //   post_id: req.params.id,
+    //   user_id : _id,
+    //   isapplied: false
+    // }).exec();
+    // console.log(result);
+    // if (result === null) {
+    //   const newApplication = new Application();
+    //   newApplication.isapplied = false;
+    //   newApplication.save();
+    // } else {
+    //   console.log('b')
+    // }
+
+
+    // await Application.findOneAndUpdate({
+    //   isapplied:false
+    // }, {
+    //   post_id: req.params.id,
+    //   user_id : _id
+    // })
+
     if (req.headers.authorization === 'Bearer') {
       const result = await Post.findOne({ _id: req.params.id }).populate('userId', 'name').exec()
       res.status(200).json({ data: result ,  isapplied: false});
@@ -73,12 +107,18 @@ module.exports = {
       if (accTokenData && refTokenData) {
         const { _id } = accTokenData;
         const applied = await Application.find({post_id: req.params.id, user_id:_id}).select('isapplied')
-        if(!applied.isapplied){ // 참가이력이 없거나, 참가했다가 취소한 경우 
-          const result = await Post.findOne({ _id: req.params.id }).populate('userId', 'name').exec()
-          res.status(200).json({ data: result ,  isapplied: false});
-        } else { //참가이력이 있는 경우 
-          const result = await Post.findOne({ _id: req.params.id }).populate('userId', 'name').exec()
-          res.status(200).json({ data: result ,  isapplied: true});
+        console.log(applied);
+        if (applied.length !== 0) {
+          if(applied[0].isapplied === false){ // 참가이력이 없거나, 참가했다가 취소한 경우 
+            const result = await Post.findOne({ _id: req.params.id }).populate('userId', 'name').exec()
+            res.status(200).json({ data: result ,  isapplied: false});
+          } else { //참가이력이 있는 경우 
+            const result = await Post.findOne({ _id: req.params.id }).populate('userId', 'name').exec()
+            res.status(200).json({ data: result ,  isapplied: true});
+          }
+        } else {
+            const result = await Post.findOne({ _id: req.params.id }).populate('userId', 'name').exec()
+            res.status(200).json({ data: result});
         }
       }
       if (!accTokenData && refTokenData) {
@@ -87,7 +127,7 @@ module.exports = {
         if(refTokenData){
           const { _id, email, area_name } = userResult
             const accessToken = jwt.sign(JSON.parse(JSON.stringify({ _id, email, area_name })), process.env.ACCESS_SECRET, { expiresIn: '2h' });
-            const applied = await Application.find({post_id: req.params.id, user_id:_id}).select('isapplied')
+            const applied = await Application.findOne({post_id: req.params.id, user_id:_id}).select('isapplied')
             if(!applied.isapplied){ // 참가이력이 없거나, 참가했다가 취소한 경우 
               const result = await Post.findOne({ _id: req.params.id }).populate('userId', 'name').exec()
               res.status(200).json({ data: result ,  isapplied: false, accessToken});
@@ -334,7 +374,6 @@ module.exports = {
   },
 
   applyPost: async (req, res) => {
-    console.log(req.body)
     const token = req.headers.authorization.split(' ')[1];
     const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET);
     const refTokenData = jwt.verify(req.cookies.refreshToken, process.env.REFRESH_SECRET);
@@ -345,49 +384,30 @@ module.exports = {
     // isapplied가 false 이거나 값이 생성되지않은 상태일때에만 member_num이 추가되어야한다. 
     
     if (accTokenData && refTokenData) {
+      console.log(req.params)
       const { _id } = accTokenData
-      // const result = await Application.findOne({
-      //   post_id: req.params.id,
-      //   user_id : _id,
-      //   isapplied: false
-      // }).exec();
-      // console.log(result);
-      // if (result === null) {
-      //   const newApplication = new Application();
-      //   newApplication.isapplied = false;
-      //   newApplication.save();
-      // } else {
-      //   console.log('b')
-      // }
 
-
-      // await Application.findOneAndUpdate({
-      //   isapplied:false
-      // }, {
-      //   post_id: req.params.id,
-      //   user_id : _id
-      // })
-      
       const applicationCollection = await Application.findOne({ post_id: req.params.id, user_id: _id }).exec();
       // console.log(applicationCollection);
-      if (applicationCollection.isapplied === true) { //이미 참여이므로 참여하기 눌러도 소용없게 . 
-        res.status(404).json({ data: null, message: "이미 참여중입니다" });
-      }
-      else if (applicationCollection.isapplied === false) { //참여취소한상태이므로 다시 참여하기상태로 변경
-        await Post.findByIdAndUpdate(req.params.id, { $inc: { member_num: 1 } },
-          { new: true }).exec()
-
-        await Application.findOneAndUpdate({
-          post_id: req.params.id,
-          user_id: _id
-        }, { isapplied: true })
-        res.status(200).json({ data: null, message: "참여 신청이 완료되었습니다" });
-      }
-      else { // 참여한적이 없는 상태로 Application 도큐먼트를 생성
+      if (!applicationCollection) { // 참여한적이 없는 상태로 Application 도큐먼트를 생성
         await Post.findByIdAndUpdate(req.params.id, { $inc: { member_num: 1 } },
           { new: true }).exec()
 
         res.status(200).json({ data: null, message: "참여 신청이 완료되었습니다" });
+      } else {
+        if (applicationCollection.isapplied === true) { //이미 참여이므로 참여하기 눌러도 소용없게 . 
+          res.status(200).json({ data: null, message: "이미 참여중입니다" });
+        }
+        else if (applicationCollection.isapplied === false) { //참여취소한상태이므로 다시 참여하기상태로 변경
+          await Post.findByIdAndUpdate(req.params.id, { $inc: { member_num: 1 } },
+            { new: true }).exec()
+  
+          await Application.findOneAndUpdate({
+            post_id: req.params.id,
+            user_id: _id
+          }, { isapplied: true })
+          res.status(200).json({ data: null, message: "참여 신청이 완료되었습니다" });
+        }
       }
     }
     if (!accTokenData && refTokenData) {
@@ -483,7 +503,7 @@ module.exports = {
     }
   },
 
-  cancleApplyPost: async (req, res) => {
+  cancelApplyPost: async (req, res) => {
     const token = req.headers.authorization.split(' ')[1];
     const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET);
     const refTokenData = jwt.verify(req.cookies.refreshToken, process.env.REFRESH_SECRET);

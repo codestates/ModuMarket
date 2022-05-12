@@ -1,8 +1,6 @@
 import React ,{useState, useEffect} from 'react';
 import axios from 'axios';
-import {getCardInfo} from '../../reducers/boardSlice'
 import { useSelector, useDispatch } from 'react-redux';
-import {dummyData} from '../../assets/dummy'
 import { useLocation } from 'react-router-dom';
 import { REACT_APP_API_URL } from '../../config'
 import {Wrap} from './styled'
@@ -15,13 +13,17 @@ function BoardDetail(){
     const location = useLocation().state; // useNavigate로 가져오는 카드의 id를 받아옴
     const accessToken = useSelector((state) => state.login.accessToken);
     const dispatch = useDispatch();
-    const [cardInfo, setCardInfo] = useState()
+    const [cardInfo, setCardInfo] = useState();
+    const userInfo = useSelector((state) => state.userInfo.userInfo.id);
+    console.log(userInfo)
 
-    // console.log(location)
     async function handleCardDetail (){
-        const result = await axios({
+        await axios({
             url : `${REACT_APP_API_URL}/post/${location.cardId}`,
-            method: 'GET',
+            method: 'POST',
+            data: {
+                _id: userInfo
+            },
             headers : {
                 "Content-Type": "application/json",
                 authorization : `Bearer ${accessToken}`,
@@ -39,15 +41,12 @@ function BoardDetail(){
             dispatch(getCardInfo(detail))
             dispatch(isAppliedInfo(isApplied))
             setCardInfo(result.data)
-
-        })
-        
-        
+        })  
     }
 
     useEffect(()=> {
         handleCardDetail()
-    },[])
+    }, [])
 
     return (
         <Wrap>
