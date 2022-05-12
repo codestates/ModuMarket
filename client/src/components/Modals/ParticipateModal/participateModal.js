@@ -37,8 +37,6 @@ function ParticipateModal (){
             dispatch(showParticipateModal(false));
             
             dispatch(showConfirmModal(true));
-
-            window.location.reload();
         })
     }
     

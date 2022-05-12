@@ -33,7 +33,6 @@ function DeleteModal () {
             dispatch(changeModalImg('check_man'));
             dispatch(showDeleteModal(false));
             dispatch(showConfirmModalToBoard(true));
-           
         })
 
     }
