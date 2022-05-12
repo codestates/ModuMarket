@@ -12,6 +12,10 @@ import PwInput from './MyPageModal/PwCheck';
 import Signout from './SignoutModal/Signout';
 import ReviseRegister from './ReviseRegister/ReviseRegister'
 import DeleteModal from './DeleteModal/DeleteModal'
+import LoginConfirmModal from './LoginConfirmModal/LoginConfirmModal'
+import RecruitmentCompleteModal from './RecruitmentCompleteModal/RecruitmentCompleteModal'
+import ParticipateModal from './ParticipateModal/participateModal'
+import CancelParticipateModal from './CancelParticipateModal/CancelParticipateModal' 
 
 
 const ModalController = () => {
@@ -29,7 +33,11 @@ const ModalController = () => {
         signoutModal,
         signoutSocialModal,
         reviseRegisterModal,
-        deleteModal
+        deleteModal,
+        loginConfirmModal,
+        recruitmentCompleteModal,
+        participateModal,
+        cancelParticipateModal
 
     } = useSelector((state) => state.modal);
 
@@ -49,6 +57,10 @@ const ModalController = () => {
             {confirmModal && <Confirm />}
             {reviseRegisterModal && <ReviseRegister />}
             {deleteModal && <DeleteModal />}
+            {loginConfirmModal && <LoginConfirmModal />}
+            {recruitmentCompleteModal && <RecruitmentCompleteModal/>}
+            {participateModal && <ParticipateModal />}
+            {cancelParticipateModal && <CancelParticipateModal />}
         </>
     )
 }

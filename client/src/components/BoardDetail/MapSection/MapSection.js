@@ -9,7 +9,7 @@ import locationIcon from '../../../assets/location_icon.png';
 import KakaoMap from './Map';
 
 function MapSection ({info}){
-    let post_location = info.post_location
+    let post_location = info.data.post_location
 
     useEffect(() => {
         KakaoMap(post_location);

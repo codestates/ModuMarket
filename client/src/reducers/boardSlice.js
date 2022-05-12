@@ -19,7 +19,8 @@ export const initialState = {
         member_num : 1,
         member_min : 0,
         endtime : "",
-    }
+    },
+    isApplied: false
 };
 
 export const boardSlice = createSlice({
@@ -29,8 +30,11 @@ export const boardSlice = createSlice({
         getCardInfo: (state, action) => {
             state.cardInfo = action.payload.cardInfo
         },
+        isAppliedInfo : (state, action) => {
+            state.isApplied = action.payload.isApplied
+        },
     }
 })
 
-export const { getCardInfo } = boardSlice.actions;
+export const { getCardInfo, isAppliedInfo } = boardSlice.actions;
 export default boardSlice.reducer;
