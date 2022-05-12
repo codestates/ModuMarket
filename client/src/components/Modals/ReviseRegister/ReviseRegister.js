@@ -79,7 +79,7 @@ const ReviseRegister = () => {
             alert('사진을 제외한 모든 항목은 필수입니다.')
         }else{
             axios({
-                url : `${ REACT_APP_API_URL }/post/${cardInfo._id}`,
+                url : `${ REACT_APP_API_URL }/post`,
                 method : 'PATCH',
                 data : formData,
                 headers : {
