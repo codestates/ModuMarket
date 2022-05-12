@@ -159,8 +159,6 @@ function Signup() {
                         <span>나이</span>
                         <input type='number' onChange={handleInputValue('age')} />
                         <button onClick={getUserLocation}>동네 인증하기</button>
-                        {/* 서비스 이용동의 체크란
-                        <input type="checkbox"/> */}
                         <ModalButton type='submit' onClick={handleSignup}>
                             회원가입
                         </ModalButton>

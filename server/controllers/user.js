@@ -1,5 +1,5 @@
 const User = require('../models/User');
-const Post = require('../models/Post');
+const { Post } = require('../models/Post');
 const Application = require('../models/Application');
 const jwt = require('jsonwebtoken');
 const { uploadFile } = require('../s3');

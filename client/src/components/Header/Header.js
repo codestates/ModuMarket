@@ -6,6 +6,7 @@ import { React, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../reducers/loginSlice';
 import { getUserInfo } from '../../reducers/userInfoSlice'
+import { getWritePost, getParticipatePost, checkWriteNull, checkPartyNull } from '../../reducers/myPostSlice'
 import {
     showLoginModal,
     showSignupGateModal,
@@ -48,6 +49,48 @@ function Header() {
 
     }
 
+    function handleWritePost() {
+        axios.get(`${REACT_APP_API_URL}/user/writepost`,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${accessToken}`,
+                },
+                withCredentials: true
+            }
+
+        ).then((result) => {
+            if (result.status === 200) {
+                dispatch(checkWriteNull(false));
+                dispatch(getWritePost(result.data.data));
+            } else {
+                dispatch(checkWriteNull(true));
+            }
+        })
+    }
+
+    function handleParticipatePost() {
+        axios.get(`${REACT_APP_API_URL}/user/participatepost`,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${accessToken}`,
+                },
+                withCredentials: true
+            }
+
+        ).then((result) => {
+            if (result.status === 200) {
+                dispatch(checkPartyNull(false));
+                dispatch(getParticipatePost(result.data.data));
+            } else {
+                dispatch(checkPartyNull(true));
+            }
+        })
+    }
+
+
+
     const handleLogout = async () => {
         axios.post(`${REACT_APP_API_URL}/sign/out`,
             {
@@ -71,6 +114,7 @@ function Header() {
         setTimeout(() => purge(), 100)
     }
 
+
     return (
         <NavContainer>
             <NavLink to="/board">
@@ -86,8 +130,12 @@ function Header() {
             {isLogin ? (
                 <>
                     <NavButtons>
-                        <NavLink to="/mypage">
-                            <NavButton onClick={handleGetUserInfo}>마이페이지</NavButton>
+                        <NavLink to="/mypage" >
+                            <NavButton onClick={async () => {
+                                handleGetUserInfo();
+                                handleWritePost();
+                                handleParticipatePost();
+                            }}>마이페이지</NavButton>
                         </NavLink>
                         {userSocial === 'own' ?
                             //일반 로그아웃

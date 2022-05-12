@@ -4,35 +4,39 @@ import axios from 'axios';
 import { REACT_APP_API_URL } from '../../../config';
 import question from '../../../assets/question.png';
 import skull from '../../../assets/skull_icon.png';
-import { 
-        showConfirmModal, showDeleteModal, 
-        inputModalText, changeModalImg } from '../../../reducers/modalSlice';
-import {ModalBackground, ModalContainer,
-        ModalImg,ModalText, ModalButton,
-        ModalButtonWrap, ModalSkullButton,
-        ModalSkullImg, } from './styled'
+import {
+    showConfirmModal, showDeleteModal,
+    inputModalText, changeModalImg
+} from '../../../reducers/modalSlice';
+import {
+    ModalBackground, ModalContainer,
+    ModalImg, ModalText, ModalButton,
+    ModalButtonWrap, ModalSkullButton,
+    ModalSkullImg,
+} from './styled'
 
-function DeleteModal () {
+function DeleteModal() {
     const dispatch = useDispatch();
     const cardInfo = useSelector((state) => state.board.cardInfo);
     const accessToken = useSelector((state) => state.login.accessToken);
 
 
 
-    async function handleDelete(){
+    async function handleDelete() {
         const result = await axios({
-            url : `${ REACT_APP_API_URL }/post/${cardInfo._id}`,
-            method : "DELETE",
-            headers : {
+            url: `${REACT_APP_API_URL}/post/${cardInfo._id}`,
+            method: "DELETE",
+            headers: {
                 'Content-Type': "application/json",
-                authorization : `Bearer ${accessToken}` 
+                authorization: `Bearer ${accessToken}`
             },
-            withCredentials : true
+            withCredentials: true
         }).then((result) => {
             dispatch(inputModalText(result.data.message));
             dispatch(changeModalImg('check_man'));
             dispatch(showDeleteModal(false))
             dispatch(showConfirmModal(true));
+            window.location.replace('/board')
         })
 
     }
@@ -41,35 +45,35 @@ function DeleteModal () {
         <ModalBackground>
             <ModalContainer>
                 {
-                    cardInfo.member_num/cardInfo.member_min >= 1
-                    ? (
-                        <>
-                            <ModalSkullImg>
-                                <img src = {skull} alt="unable delete photo"/>
-                                <ModalText>
-                                <span>참가 최소 인원이 달성되어 삭제가 불가합니다.</span>
-                                </ModalText>
-                                <ModalSkullButton onClick={() => dispatch(showDeleteModal(false))}>확인</ModalSkullButton>
-                            </ModalSkullImg>
-                        </>
-                    )
+                    cardInfo.member_num / cardInfo.member_min >= 1
+                        ? (
+                            <>
+                                <ModalSkullImg>
+                                    <img src={skull} alt="unable delete photo" />
+                                    <ModalText>
+                                        <span>참가 최소 인원이 달성되어 삭제가 불가합니다.</span>
+                                    </ModalText>
+                                    <ModalSkullButton onClick={() => dispatch(showDeleteModal(false))}>확인</ModalSkullButton>
+                                </ModalSkullImg>
+                            </>
+                        )
 
-                    :(
-                        <>
-                            <ModalImg>
-                                <img src = {question} alt="confirm photo"/>
-                            </ModalImg>
-                            <ModalText>
-                                <p>현재 공고글을 삭제할까요?</p>
-                            </ModalText>
-                            <ModalButtonWrap>
-                                <ModalButton background="#FF6767" onClick={() => handleDelete()} >삭제</ModalButton>  
-                                <ModalButton onClick={() => dispatch(showDeleteModal(false))}>아니오</ModalButton>   
-                            </ModalButtonWrap>
-                        </>
-                    )
+                        : (
+                            <>
+                                <ModalImg>
+                                    <img src={question} alt="confirm photo" />
+                                </ModalImg>
+                                <ModalText>
+                                    <p>현재 공고글을 삭제할까요?</p>
+                                </ModalText>
+                                <ModalButtonWrap>
+                                    <ModalButton background="#FF6767" onClick={() => handleDelete()} >삭제</ModalButton>
+                                    <ModalButton onClick={() => dispatch(showDeleteModal(false))}>아니오</ModalButton>
+                                </ModalButtonWrap>
+                            </>
+                        )
                 }
-                
+
             </ModalContainer>
         </ModalBackground>
     )

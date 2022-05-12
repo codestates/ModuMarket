@@ -135,6 +135,8 @@ function SignupSocial() {
                 dispatch(changeModalImg('check_man'));
                 dispatch(showSignupSocialModal(false));
                 dispatch(showConfirmModal(true));
+                //홈으로 redirect
+                window.location.replace('/')
 
 
             })
@@ -165,8 +167,7 @@ function SignupSocial() {
                                 :
                                 <button type='submit' onClick={() => {
                                     handleGithubSignup();
-                                    //홈으로 redirect
-                                    // window.location.href = `${REACT_APP_HOME_URL}`
+
                                 }}>
                                     Github으로 회원가입
                                 </button>

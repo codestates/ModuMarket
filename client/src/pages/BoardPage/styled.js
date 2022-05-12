@@ -1,4 +1,4 @@
-import styled from "styled-components"
+import styled, { keyframes } from "styled-components"
 import Arrow from "../../assets/arrow.png"
 
 export const Section = styled.section`
@@ -127,4 +127,45 @@ export const RegisterNotYetPhoto = styled.div`
     display : flex;
     align-items : center;
     justify-content:center;
+`
+const floatingAnimation = keyframes`
+ 0% {
+        transform: translateY(0);    
+    }
+    50% {
+        transform: translateY(-15px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+`
+
+
+export const Loading = styled.div`
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    & > h1{
+        font-size : 3.75rem;
+        font-weight: 900;
+        margin: 0;
+        
+    }
+    & > h2{
+        font-size : 1.8rem;
+        font-weight: 500;
+        margin-bottom: 1.2rem;
+        margin-top : 0.8rem;
+    }
+
+    img{
+        width: 20rem;
+        height: 20rem;
+        animation: ${floatingAnimation} 2s infinite;
+
+    }
+  
 `

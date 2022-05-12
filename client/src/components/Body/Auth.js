@@ -70,7 +70,6 @@ const Auth = ({ social }) => {
                 { params: { code: code } },
                 { withCredentials: true }
             ).then((result) => {
-                console.log(result)
                 if (result.data.accessToken) {
                     let data = {
                         userInfo: {
