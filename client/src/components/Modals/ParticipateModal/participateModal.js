@@ -17,7 +17,7 @@ function ParticipateModal (){
 
     async function handleJoin () {
         const result  = await axios({
-            url : `${ REACT_APP_API_URL }/post/${cardInfo._id}/apply`,
+            url : `${ REACT_APP_API_URL }/post/apply`,
             method : 'PATCH',
             data : {
                 _id : cardInfo._id

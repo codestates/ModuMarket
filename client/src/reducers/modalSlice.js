@@ -16,6 +16,7 @@ export const initialState = {
     chattingModal: false,
     notificationModal: false,
     confirmModal: false,
+    confirmModalToBoard: false,
     myInfoModal: false,
     myPwCheckModal: false,
     myNewPwModal: false,
@@ -23,6 +24,7 @@ export const initialState = {
     recruitmentCompleteModal : false,
     participateModal:false,
     cancelParticipateModal : false,
+    alertModal : false,
     modalInformText: "",
     modalImg: "",
     socialInfoId: '',
@@ -100,6 +102,12 @@ export const modalSlice = createSlice({
         showCancelParticipateModal : (state, action) =>{  
             state.cancelParticipateModal = action.payload;
         },
+        showConfirmModalToBoard : (state, action) =>{  
+            state.confirmModalToBoard = action.payload;
+        },
+        showAlertModal : (state, action) =>{  
+            state.alertModal = action.payload;
+        },
     }
 })
 
@@ -125,7 +133,9 @@ export const {
     showLoginConfirmModal,
     showRecruitmentCompleteModal,
     showParticipateModal,
-    showCancelParticipateModal
+    showCancelParticipateModal,
+    showConfirmModalToBoard,
+    showAlertModal
 
 } = modalSlice.actions;
 

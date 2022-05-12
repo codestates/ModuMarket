@@ -17,7 +17,7 @@ function CancelParticipateModal (){
 
     async function handleJoin () {
         const result  = await axios({
-            url : `${ REACT_APP_API_URL }/post/${cardInfo._id}/cancel`,
+            url : `${ REACT_APP_API_URL }/post/cancel`,
             method : 'PATCH',
             data : {
                 _id : cardInfo._id
