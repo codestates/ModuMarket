@@ -31,9 +31,7 @@ import {
     DetailButtonWrap, DetailButton
 } from './styled';
 
-
 function DetailSection({ info }) {
-
     const dispatch = useDispatch();
     const cardUserId = info.data.userId._id
     const isValid = info.data.isvalid
@@ -68,13 +66,11 @@ function DetailSection({ info }) {
     }
 
     function handleRevise() {
-
         dispatch(showReviseRegisterModal(true))
     }
 
 
     function handleLogin() {
-
         dispatch(showLoginConfirmModal(true))
     }
 

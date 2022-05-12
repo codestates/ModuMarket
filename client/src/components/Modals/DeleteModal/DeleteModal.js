@@ -20,7 +20,7 @@ function DeleteModal () {
 
 
     async function handleDelete(){
-        const result = await axios({
+        await axios({
             url : `${ REACT_APP_API_URL }/post/${cardInfo._id}`,
             method : "DELETE",
             headers : {
@@ -33,8 +33,8 @@ function DeleteModal () {
             dispatch(changeModalImg('check_man'));
             dispatch(showDeleteModal(false))
             dispatch(showConfirmModal(true));
-        })
-
+            window.location.replace('/board');
+        });
     }
 
     return (

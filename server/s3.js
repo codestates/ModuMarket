@@ -15,7 +15,6 @@ const s3 = new S3({
 
 // uploads a file to s3
 function uploadFile(file) {
-    // console.log(file)
 
     if (file) {
         const fileStream = fs.createReadStream(file.path);
@@ -25,8 +24,6 @@ function uploadFile(file) {
             Key: file.filename
         }
     
-        // console.log(uploadParams);
-    
         return s3.upload(uploadParams).promise();
     }
 }
@@ -34,7 +31,6 @@ exports.uploadFile = uploadFile;
 
 // downloads a file from s3
 function getFileStream(fileKey) {
-    console.log(fileKey)
     const downloadParams = {
         Key: fileKey,
         Bucket: bucketName
@@ -46,7 +42,6 @@ exports.getFileStream = getFileStream;
 
 // deletes a file from s3
 function deleteFile(fileKey) {
-    console.log(fileKey)
     const deleteParams = {
         Key: fileKey,
         Bucket: bucketName

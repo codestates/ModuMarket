@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router';
 import {
-    showLoginModal,
     showSignupSocialModal,
     showConfirmModal,
     inputModalText,
@@ -13,7 +11,6 @@ import {
     ModalContainer,
     ModalText,
     SignupInput,
-    LoginSocial
 } from './styled'
 import axios from 'axios'
 import { REACT_APP_API_URL, REACT_APP_HOME_URL } from '../../config';
@@ -166,7 +163,7 @@ function SignupSocial() {
                                 <button type='submit' onClick={() => {
                                     handleGithubSignup();
                                     //홈으로 redirect
-                                    // window.location.href = `${REACT_APP_HOME_URL}`
+                                    window.location.href = `${REACT_APP_HOME_URL}`
                                 }}>
                                     Github으로 회원가입
                                 </button>
