@@ -25,8 +25,7 @@ const store = configureStore({
                     ignoredActions: [PERSIST, PURGE],
                 },
             }
-        ).concat(logger)
-
+        )
 })
 
 export default store;

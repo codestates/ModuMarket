@@ -66,7 +66,6 @@ function LoginModal() {
                 dispatch(getUserInfo(data))
                 dispatch(login(result.data.data.accessToken))
                 dispatch(showLoginModal(false));
-                window.location.reload();
             }
             ).catch((err) => {
                 console.log(err.response.status)

@@ -15,7 +15,6 @@ const moment = require('moment')
 
 const { Post, Chatroom, ChatroomMessage } = require('./models/Post');
 
-
 app.use(
   morgan('      :method :url :status :res[content-length] - :response-time ms')
 );
@@ -48,11 +47,11 @@ if (fs.existsSync("./key.pem") && fs.existsSync("./cert.pem")) {
     .listen(PORT, () => {
       console.log(`Express https server is listening on port ${PORT}`)
     });
-// } else {
+} else {
 //   // express가 http를 통해 실행될 수 있도록 만들기
-//   server = http.createServer(app).listen(PORT, () => {
-//     console.log(`Express http server is listening on port ${PORT}`)
-//   })
+  server = http.createServer(app).listen(PORT, () => {
+    console.log(`Express http server is listening on port ${PORT}`)
+  })
 
   // 위에서 만들어둔 listen이란 변수에 서버를 담고 CORS 처리하기.
   // io 객체를 통해 메시지를 전달하고 받음.
@@ -64,7 +63,7 @@ if (fs.existsSync("./key.pem") && fs.existsSync("./cert.pem")) {
   });
 
   io.on('connection', socket=>{
-    console.log("connection 서버 연결이 완료되었습니다."+socket.id)
+    console.log("connection 서버 연결이 완료되었습니다.")
 
     socket.on('type', (room) => {
       socket.join(room, () => {
@@ -118,8 +117,5 @@ if (fs.existsSync("./key.pem") && fs.existsSync("./cert.pem")) {
     socket.on('disconnect', () => {
       console.log('user disconnected');
     })
-
   })
-  
-
 }

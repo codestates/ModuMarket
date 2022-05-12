@@ -46,11 +46,10 @@ export const NavButtons = styled.div`
 `;
 
 export const NavButton = styled.button`
-    display: flex;
+    height: 2.5rem;
+    width: 7rem;
     flex-shrink: 0;
-    align-items: center;
     justify-content: center;
-    padding: 0.8rem;
     /* padding: 0.8rem 2rem; */
     margin-left: 0.5rem;
     margin-right: 0.5rem;
@@ -62,8 +61,6 @@ export const NavButton = styled.button`
     background: #fff;
     border-radius: 4px;
     border: 1px solid #ADADAD;
-    max-width:100px;
-    max-height:40px;
     transition: all 0.3s;
     &:hover {
         color: #fff;

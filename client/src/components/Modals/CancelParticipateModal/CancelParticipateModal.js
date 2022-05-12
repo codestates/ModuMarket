@@ -16,8 +16,8 @@ function CancelParticipateModal (){
     const cardInfo = useSelector((state) => state.board.cardInfo);
 
     async function handleJoin () {
-        const result  = await axios({
-            url : `${ REACT_APP_API_URL }/post/cancel`,
+        await axios({
+            url : `${ REACT_APP_API_URL }/post/${cardInfo._id}/cancel`,
             method : 'PATCH',
             data : {
                 _id : cardInfo._id
@@ -32,7 +32,6 @@ function CancelParticipateModal (){
             dispatch(changeModalImg('check_man'));
             dispatch(showCancelParticipateModal(false));
             dispatch(showConfirmModal(true));
-            window.location.reload();
         })
     }
     
