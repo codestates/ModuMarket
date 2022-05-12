@@ -140,7 +140,7 @@ module.exports = {
         const result = await User.findOne({ social_kakao: id }).exec()
         if (result) { // 가입한 유저이면? 디비에 있는 유저의 동네정보, 아이디, 이메일을 갖고 토큰만들어서주기
           console.log(result);
-          const { _id, email, area_name } = result;
+          const { _id, email, name, area_name } = result;
           const accessToken = jwt.sign(JSON.parse(JSON.stringify({ _id, email, area_name })),
             process.env.ACCESS_SECRET, { expiresIn: '2h' });
           // refreshToken 생성 14d 유효
@@ -152,7 +152,7 @@ module.exports = {
               httpOnly: true,
             })
             .status(201)
-            .json({ id: _id, accessToken: accessToken, message: "로그인에 성공하였습니다." });
+            .json({ id: _id, name:name , area_name:area_name, accessToken: accessToken, message: "로그인에 성공하였습니다." });
         } else { //가입안한 유저이면 추가정보 받는 경로로 아이디, 이메일 보내주기 .. 
           return res.status(200).json({ id, email });
         }
@@ -223,7 +223,7 @@ module.exports = {
             const result = await User.findOne({ social_github: id }).exec()
             if (result) { // 가입한 유저이면? 디비에 있는 유저의 동네정보, 아이디, 이메일을 갖고 토큰만들어서주기
 
-              const { _id, email, area_name } = result;
+              const { _id, email, name, area_name } = result;
               const accessToken = jwt.sign(JSON.parse(JSON.stringify({ _id, email, area_name })),
                 process.env.ACCESS_SECRET, { expiresIn: '2h' });
               // refreshToken 생성 14d 유효
@@ -235,7 +235,7 @@ module.exports = {
                   httpOnly: true,
                 })
                 .status(201)
-                .json({ id: _id, accessToken: accessToken, message: "로그인에 성공하였습니다." });
+                .json({ id: _id, name:name , area_name:area_name, accessToken: accessToken, message: "로그인에 성공하였습니다." });
             } else { //가입안한 유저이면 추가정보 받는 경로로 아이디, 이메일 보내주기 .. 
               return res.status(200).json({ id, email });
             }

@@ -5,8 +5,10 @@ import { REACT_APP_API_URL } from '../../config';
 import { AuthContainer } from './styled';
 import { confirmImg } from '../../assets/images';
 import { login } from '../../reducers/loginSlice';
+import { getUserInfo } from '../../reducers/userInfoSlice'
 import {
     showSignupSocialModal,
+    showLoginModal,
     inputSocialId,
     inputSocialEmail,
     showConfirmModal,
@@ -35,6 +37,15 @@ const Auth = ({ social }) => {
                             if (result.data.accessToken) {
                                 // ! 소셜 로그인 시 id값 서버에서 받아와야함
                                 console.log(result);
+                                let data = {
+                                    userInfo: {
+                                        id: result.data.id,
+                                        area_name: result.data.area_name,
+                                        name: result.data.name
+                                    }
+                                }
+                                dispatch(showLoginModal(false));
+                                dispatch(getUserInfo(data));
                                 dispatch(inputModalText(result.data.message));
                                 dispatch(login(result.data.accessToken))
                                 dispatch(changeModalImg('check_man'));
