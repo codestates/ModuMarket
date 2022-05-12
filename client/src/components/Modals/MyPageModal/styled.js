@@ -183,3 +183,22 @@ export const ModalButton = styled.button`
     }
     
 `
+export const InputPW = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    > span {
+      position: absolute;
+      padding: 2rem;
+      top: 0;
+      right: 0;
+      font-size: 2rem;
+      cursor: pointer;
+    }
+`;
+
+export const InputErrorMessage = styled.div`
+    font-size : 1rem;
+    font-weight: 700;
+    color: #FF6767;
+`
