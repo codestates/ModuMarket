@@ -26,7 +26,7 @@ function LoginConfirmModal (){
                         <a onClick={()=>{dispatch(showSignupModal(true)); dispatch(showLoginConfirmModal(false));}}>회원가입하기</a>
                     </ModalText>
                     <ModalButtonWrap>
-                        <ModalButton background="#FF6767" onClick={() => {dispatch(showLoginModal(true)); dispatch(showLoginConfirmModal(false));}}>확인</ModalButton>
+                        <ModalButton background="#FF6767" onClick={() => {dispatch(showLoginModal(true)); dispatch(showLoginConfirmModal(false));}}>로그인하러 가기</ModalButton>
                     </ModalButtonWrap>
                 </ModalImg>
             </ModalContainer>

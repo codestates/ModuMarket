@@ -109,3 +109,22 @@ export const CardWrap = styled.div`
     justify-content: space-evenly;
     align-items : center;
 `
+
+export const RegisterNotYet = styled.div`
+    display : flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items : center;
+    & > p{
+        font-size : 1.3rem;
+        font-weight: 700;
+        padding-bottom: 2rem;
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+        font-family: 'Open Sans', sans-serif;
+    }
+`
+export const RegisterNotYetPhoto = styled.div`
+    display : flex;
+    align-items : center;
+    justify-content:center;
+`

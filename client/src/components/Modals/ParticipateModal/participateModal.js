@@ -30,9 +30,9 @@ function ParticipateModal (){
         }).then((result) =>{
             dispatch(inputModalText(result.data.message));
             dispatch(changeModalImg('check_man'));
-            dispatch(showParticipateModal(false))
+            dispatch(showParticipateModal(false));
             dispatch(showConfirmModal(true));
-            
+            window.location.reload();
         })
     }
     

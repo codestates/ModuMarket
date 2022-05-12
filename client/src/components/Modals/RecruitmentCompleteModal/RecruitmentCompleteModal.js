@@ -16,7 +16,7 @@ function RecruitmentCompleteModal () {
     async function handleComplete (){
 
         const result  = await axios({
-            url : `${ REACT_APP_API_URL }/post/${cardInfo._id}`,
+            url : `${ REACT_APP_API_URL }/post/${cardInfo._id}/apply`,
             method : 'PATCH',
             data : {
                 isvalid: false,
@@ -30,9 +30,9 @@ function RecruitmentCompleteModal () {
         }).then((result) =>{
             dispatch(inputModalText(result.data.message));
             dispatch(changeModalImg('check_man'));
-            dispatch(showRecruitmentCompleteModal(false))
+            dispatch(showRecruitmentCompleteModal(false));
             dispatch(showConfirmModal(true));
-            
+            window.location.reload();
         })
 
     }
