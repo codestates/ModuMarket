@@ -13,24 +13,8 @@ const bodyParser = require("body-parser");
 const listen = require('socket.io');
 const moment = require('moment')
 
-const {Post, Chatroom, ChatroomMessage} = require('./models/Post');
+const { Post, Chatroom, ChatroomMessage } = require('./models/Post');
 
-  let arr = [];
-
-  Chatroom.find({roomname: "채팅방1"}).populate('message', ['message_content', 'username']).exec((err, data) => {
-    console.log(data)
-    if (data.length === 0) {
-      return;
-    } else if (data[0].message.username && data[0].message.message_content) {
-      data.forEach(el => {
-        arr.push({
-          username: el.message.username, 
-          message_content: el.message.message_content
-        })
-      })
-    }
-    console.log(arr);
-  })  
 
 app.use(
   morgan('      :method :url :status :res[content-length] - :response-time ms')
@@ -52,7 +36,7 @@ db();
 
 let server;
 
-if (!fs.existsSync("./key.pem") && !fs.existsSync("./cert.pem")) {
+if (fs.existsSync("./key.pem") && fs.existsSync("./cert.pem")) {
   server = https
     .createServer(
       {
@@ -64,11 +48,11 @@ if (!fs.existsSync("./key.pem") && !fs.existsSync("./cert.pem")) {
     .listen(PORT, () => {
       console.log(`Express https server is listening on port ${PORT}`)
     });
-} else {
-  // express가 http를 통해 실행될 수 있도록 만들기
-  server = http.createServer(app).listen(PORT, () => {
-    console.log(`Express http server is listening on port ${PORT}`)
-  })
+// } else {
+//   // express가 http를 통해 실행될 수 있도록 만들기
+//   server = http.createServer(app).listen(PORT, () => {
+//     console.log(`Express http server is listening on port ${PORT}`)
+//   })
 
   // 위에서 만들어둔 listen이란 변수에 서버를 담고 CORS 처리하기.
   // io 객체를 통해 메시지를 전달하고 받음.
@@ -78,45 +62,64 @@ if (!fs.existsSync("./key.pem") && !fs.existsSync("./cert.pem")) {
       credentials: true,
     }
   });
-  
-  // 클라이언트에서 접속 요쳥이 오면 connection event 발생
+
   io.on('connection', socket=>{
-    console.log("연결이 완료되었습니다.")
+    console.log("connection 서버 연결이 완료되었습니다."+socket.id)
 
     socket.on('type', (room) => {
-      socket.join(room); // 채팅방 생성 
-      console.log(room + '에 입장하셨습니다.');
-      // socket.emit("EVENT", data) => 이벤트 발생(개별 소켓)
-      // socket.io.emit("Broadcast Event", [data]) => 연결된 모든 소켓에 이벤트 발생(io.emit 가능)
-      const time = moment(new Date()).format("h:mm A")
-      io.to(room).emit('type', {arr, time, room}) // arr= 채팅내역, 요 채팅방에만 메시지를 보내겠다
+      socket.join(room, () => {
+        console.log(room + `에 입장하셨습니다다.`);
+      }); 
+      
+      //let arr = []; //메시지들 출력하는거 
+      ChatroomMessage.find({roomId:room})
+      // .populate('chatroom')
+      .exec((err, data) => {
+        //console.log(data);
+        if (data.length === 0) {
+          return;
+        } else {
+          console.log(data)
+          const result = data.map(el => {
+            return {
+              username: el.username, 
+              message_content: el.message_content,
+              time: el.time
+            }
+          })
+          console.log(result)
+          //const time = moment(new Date()).format("h:mm A") //?
+          io.to(room).emit('type', {result, room}) // arr= 채팅내역, 요 채팅방에만 메시지를 보내겠다
+        }
+      });
     })
     
-    socket.on('message', async ({name, to, chatname, message, room}) => {
-      const chatroomMessage = new ChatroomMessage({
-        message_content: message,
-        username: name
-      });
-      chatroomMessage.save((err, data) => {
-        // console.log(data)
-      });
-      const chatroom = new Chatroom({
-        roomname: room,
-        message: chatroomMessage._id
-      });
-      chatroom.save((err, data) => {
-      });
-        
-      socket.join(room);
-      console.log(room + '에 입장하셨습니다.');
-      // socket.emit("EVENT", data) => 이벤트 발생(개별 소켓)
-      // socket.io.emit("Broadcast Event", [data]) => 연결된 모든 소켓에 이벤트 발생(io.emit 가능)
+    socket.on('message', async ({name, message, room}) => {
+      console.log(name, message, room)
       const time = moment(new Date()).format("h:mm A")
+      
+      const chatroomMessage = new ChatroomMessage();
+      chatroomMessage.roomId = room
+      chatroomMessage.message_content = message
+      chatroomMessage.username = name
+      chatroomMessage.time = time
+
+      chatroomMessage.save();
       io.to(room).emit('message',({name, message, time, room}))
+
+    });
+
+    socket.on('leave', (room) => {
+      socket.leave(room, ()=>{
+        console.log('왜안되냐 ... ')
+      });
     });
 
     socket.on('disconnect', () => {
       console.log('user disconnected');
     })
+
   })
+  
+
 }

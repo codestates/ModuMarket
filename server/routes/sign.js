@@ -19,7 +19,7 @@ router.post('/out', controller.sign.out);
 router.get('/github/callback', controller.sign.github);
 
 // 깃헙 추가정보 받은 후 회원가입 완료
-router.get('/in/github', controller.sign.inGithub);
+router.post('/in/github', controller.sign.inGithub);
 
 // 카카오 로그인 or 회원가입 추가정보 받기전
 router.get('/kakao/callback', controller.sign.kakao);
