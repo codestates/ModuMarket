@@ -1,8 +1,8 @@
 import axios from 'axios'
-import { REACT_APP_API_URL, REDIRECT_URI } from '../../../config';
+import { REACT_APP_API_URL } from '../../../config';
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getUserInfo } from '../../../reducers/userInfoSlice';
+import { changeUserArea } from '../../../reducers/userInfoSlice';
 import {
     showMyInfoModal,
     showMyPwCheckModal,
@@ -29,9 +29,8 @@ const MyInfo = () => {
     const dispatch = useDispatch();
     const myInfo = useSelector((state) => state.userInfo.userInfo);
     const myStatus = useSelector((state) => state.userInfo.userStatus);
-    const [changeInfo, setChangeInfo] = useState({
-
-    });
+    const accessToken = useSelector((state) => state.login.accessToken);
+    const [newArea, setNewArea] = useState('');
 
     /* 카카오지도 API로 현재 유저 좌표를 동단위로 변환 */
     const alterAddress = (position) => {
@@ -46,11 +45,10 @@ const MyInfo = () => {
                         "Content-Type": "application/json"
                     }
                 }
-            ).then((result) => {
+            ).then(async (result) => {
                 let location = result.data.documents[0].region_3depth_name;
-                dispatch(inputModalText(`${location} 동네 인증에 성공했습니다.`));
-                dispatch(changeModalImg('check_man'));
-                dispatch(showConfirmModal(true));
+                dispatch(changeUserArea(`${location}`));
+                setNewArea(`${location}`);
             })
         }
     }
@@ -61,15 +59,49 @@ const MyInfo = () => {
         dispatch(showConfirmModal(true));
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition((position) => {
+                //동단위로 주소 변환
                 alterAddress(position);
+
             });
         } else {
-            // console.log('위치 인증 실패');
-            //loc.innerHTML = "이 문장은 사용자의 웹 브라우저가 Geolocation API를 지원하지 않을 때 나타납니다!";
+            dispatch(inputModalText('위치 인증 실패'));
+            dispatch(changeModalImg('question'));
+            dispatch(showConfirmModal(true));
 
         }
 
     }
+    const handleInfoChange = (newArea) => {
+        //주소 수정하기 요청
+        axios.patch(
+            `${REACT_APP_API_URL}/user`,
+            {
+                area_name: newArea
+            },
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${accessToken}`,
+                },
+                withCredentials: true
+            }
+        ).then(() => {
+            dispatch(inputModalText(`${newArea} 동네로 변경되었습니다`));
+            dispatch(changeModalImg('check_woman1'));
+            dispatch(showConfirmModal(true));
+            dispatch(showMyInfoModal(false));
+        }).catch((err) => {
+            dispatch(inputModalText(err.response.data.message));
+            dispatch(changeModalImg('question'));
+            dispatch(showConfirmModal(true));
+        })
+    }
+
+    useEffect(() => {
+        if (newArea) {
+            handleInfoChange(newArea);
+        }
+    }, [newArea])
 
     return (
         <>
@@ -105,12 +137,18 @@ const MyInfo = () => {
                 </ModalButton>
                 {/* 사용자의 로그인 상태(소셜로그인인지, 일반인지)에 따라 버튼 보여주기 */}
                 {myStatus === 'own' ?
-
-                    <ModalButton onClick={() => {
-                        dispatch(showMyPwCheckModal(true))
-                    }}>
-                        비밀번호 변경하기
-                    </ModalButton>
+                    <>
+                        <ModalButton onClick={() => {
+                            dispatch(showMyPwCheckModal(true))
+                        }}>
+                            비밀번호 변경하기
+                        </ModalButton>
+                        <ModalButton onClick={() => {
+                            dispatch(showMyNewPwModal(true))
+                        }}>
+                            비밀번호 입력하기
+                        </ModalButton>
+                    </>
                     :
                     <></>
 

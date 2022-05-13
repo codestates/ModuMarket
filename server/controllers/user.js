@@ -78,6 +78,8 @@ module.exports = {
       const { email } = accTokenData
       try {
         const result = await User.findOne({ email: email }).exec();
+        console.log(result.password);
+        console.log(req.body.password);
         if (result.password === req.body.password) {
           res.status(200).json({ data: null, message: '인증이 완료되었습니다' });
         } else {
@@ -148,11 +150,12 @@ module.exports = {
         } else {
           res.status(500).json({ data: null, message: 'server error' });
         }
+      } else {
+        res.status(404).json({ data: null, message: '회원정보 수정란을 입력해주세요' });
       }
-      res.status(404).json({ data: null, message: '회원정보 수정란을 입력해주세요' });
     }
 
-    if (!accTokenData && refTokenData) {
+    else if (!accTokenData && refTokenData) {
       const { _id } = refTokenData;
       const result = await User.findOne({ _id }).exec();
       if (refTokenData) {
@@ -171,7 +174,7 @@ module.exports = {
       }
     }
 
-    if (accTokenData && !refTokenData) {
+    else if (accTokenData && !refTokenData) {
       const { _id } = accTokenData;
       const result = await User.findOne({ _id }).exec();
       if (accTokenData) {
@@ -202,7 +205,7 @@ module.exports = {
       }
     }
 
-    if (!accTokenData && !refTokenData) {
+    else if (!accTokenData && !refTokenData) {
       res.status(404).json({ data: null, message: "access and refresh token has been tempered" })
     }
   },

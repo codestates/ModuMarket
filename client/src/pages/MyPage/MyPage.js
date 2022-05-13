@@ -31,9 +31,7 @@ function MyPage() {
     const [participateBackgroundColor, setParticipateBackgroundColor] = useState("#D9D9D9")
     const [isWrite, setIsWrite] = useState(true);
 
-    function handleMyInfoChange() {
 
-    }
     function handleParticipateBoard() {
         setIsWrite(false);
         axios.get(`${REACT_APP_API_URL}/user/participatepost`,
