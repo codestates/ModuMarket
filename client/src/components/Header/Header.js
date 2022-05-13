@@ -67,7 +67,13 @@ function Header() {
         window.location.href = `${KAKAO_LOGOUT_URL}`
         purge();
     }
-    const handleGithubLogout = () => {
+    const handleGithubLogout = async() => {
+        await axios.post(`${REACT_APP_API_URL}/sign/out/github`,{},{
+            headers: {
+                "Content-Type": "application/json",
+            },
+            withCredentials: true
+        })
         setTimeout(() => purge(), 100)
     }
 

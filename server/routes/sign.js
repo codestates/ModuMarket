@@ -21,6 +21,9 @@ router.get('/github/callback', controller.sign.github);
 // 깃헙 추가정보 받은 후 회원가입 완료
 router.post('/in/github', controller.sign.inGithub);
 
+// 깃헙 로그아웃
+router.post('/out/github', controller.sign.outGithub);
+
 // 카카오 로그인 or 회원가입 추가정보 받기전
 router.get('/kakao/callback', controller.sign.kakao);
 

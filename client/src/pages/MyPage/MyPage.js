@@ -14,15 +14,17 @@ import {
     ButtonWrap, Button,
     CardWrap
 } from './styled'
+import axios from 'axios'
+import { REACT_APP_API_URL } from '../../config';
 
 function MyPage() {
 
     const dispatch = useDispatch();
     const userInfo = useSelector((state) => state.userInfo.userInfo);
+    const accessToken = useSelector((state) => state.login.accessToken);
     const [mypageInfo, setMyPageInfo] = useState(myPageDummyData.cardInfo);
     const [writeBackgroundColor, setWriteBackgroundColor] = useState("#FF6767")
     const [participateBackgroundColor, setParticipateBackgroundColor] = useState("#D9D9D9")
-
     function handleMyInfoChange() {
 
     }
@@ -37,6 +39,17 @@ function MyPage() {
         setMyPageInfo(myPageDummyData.cardInfo)
         setWriteBackgroundColor("#FF6767")
         setParticipateBackgroundColor("#D9D9D9")
+
+        axios.get(`${REACT_APP_API_URL}/user/writepost`,
+        {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accessToken}`,
+            },
+            withCredentials: true
+        }
+
+        )
     }
 
 
