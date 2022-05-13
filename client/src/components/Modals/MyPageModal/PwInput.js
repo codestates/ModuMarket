@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-    showMyPwCheckModal,
+    showMyInfoModal,
     showMyNewPwModal,
     showConfirmModal,
     inputModalText,
@@ -56,14 +56,11 @@ const PwInput = () => {
                     withCredentials: true
                 }
             ).then((result) => {
-                if (result.status === 204) {
-                    setErrorMessage(result.data.message);
-                } else {
-                    dispatch(inputModalText(result.data.message));
-                    dispatch(changeModalImg('check_man'));
-                    dispatch(showMyNewPwModal(false));
-                    dispatch(showConfirmModal(true));
-                }
+                dispatch(inputModalText(result.data.message));
+                dispatch(changeModalImg('check_woman1'));
+                dispatch(showMyNewPwModal(false));
+                dispatch(showConfirmModal(true));
+                dispatch(showMyInfoModal(false));
             }).catch((err) => {
                 setErrorMessage(err.response.data.message);
             })
@@ -95,9 +92,7 @@ const PwInput = () => {
                         {errorMessage}
                     </InputErrorMessage>
                 </ModalTextPW>
-                <ModalButton onClick={() => {
-                    handlePasswordChange();
-                }}>
+                <ModalButton onClick={handlePasswordChange}>
                     확인</ModalButton>
             </ModalContainerPWCheck>
         </>
