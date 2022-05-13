@@ -23,6 +23,9 @@ export const userInfoSlice = createSlice({
         },
         setUserStatus: (state, action) => {
             state.userStatus = action.payload
+        },
+        changeUserArea: (state, action) => {
+            state.userInfo.area_name = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -30,5 +33,5 @@ export const userInfoSlice = createSlice({
     }
 })
 
-export const { getUserInfo, setUserStatus } = userInfoSlice.actions;
+export const { getUserInfo, setUserStatus, changeUserArea } = userInfoSlice.actions;
 export default userInfoSlice.reducer;
