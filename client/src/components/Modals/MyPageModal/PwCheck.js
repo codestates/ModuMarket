@@ -48,10 +48,10 @@ const PwCheck = () => {
                     setErrorMessage(result.data.message);
                 } else {
                     dispatch(inputModalText(result.data.message));
-                    dispatch(changeModalImg('check_man'));
+                    dispatch(changeModalImg('check_woman1'));
                     dispatch(showMyPwCheckModal(false));
                     dispatch(showConfirmModal(true));
-                    // dispatch(showMyNewPwModal(true));
+                    dispatch(showMyNewPwModal(true));
                 }
             }).catch((err) => {
                 setErrorMessage(err.response.data.message);
