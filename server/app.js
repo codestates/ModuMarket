@@ -47,11 +47,11 @@ if (fs.existsSync("./key.pem") && fs.existsSync("./cert.pem")) {
     .listen(PORT, () => {
       console.log(`Express https server is listening on port ${PORT}`)
     });
-} else {
-//   // express가 http를 통해 실행될 수 있도록 만들기
-  server = http.createServer(app).listen(PORT, () => {
-    console.log(`Express http server is listening on port ${PORT}`)
-  })
+  // } else {
+  // //   // express가 http를 통해 실행될 수 있도록 만들기
+  //   server = http.createServer(app).listen(PORT, () => {
+  //     console.log(`Express http server is listening on port ${PORT}`)
+  //   })
 
   // 위에서 만들어둔 listen이란 변수에 서버를 담고 CORS 처리하기.
   // io 객체를 통해 메시지를 전달하고 받음.
@@ -62,41 +62,41 @@ if (fs.existsSync("./key.pem") && fs.existsSync("./cert.pem")) {
     }
   });
 
-  io.on('connection', socket=>{
+  io.on('connection', socket => {
     console.log("connection 서버 연결이 완료되었습니다.")
 
     socket.on('type', (room) => {
       socket.join(room, () => {
         console.log(room + `에 입장하셨습니다다.`);
-      }); 
-      
-      //let arr = []; //메시지들 출력하는거 
-      ChatroomMessage.find({roomId:room})
-      // .populate('chatroom')
-      .exec((err, data) => {
-        //console.log(data);
-        if (data.length === 0) {
-          return;
-        } else {
-          console.log(data)
-          const result = data.map(el => {
-            return {
-              username: el.username, 
-              message_content: el.message_content,
-              time: el.time
-            }
-          })
-          console.log(result)
-          //const time = moment(new Date()).format("h:mm A") //?
-          io.to(room).emit('type', {result, room}) // arr= 채팅내역, 요 채팅방에만 메시지를 보내겠다
-        }
       });
+
+      //let arr = []; //메시지들 출력하는거 
+      ChatroomMessage.find({ roomId: room })
+        // .populate('chatroom')
+        .exec((err, data) => {
+          //console.log(data);
+          if (data.length === 0) {
+            return;
+          } else {
+            console.log(data)
+            const result = data.map(el => {
+              return {
+                username: el.username,
+                message_content: el.message_content,
+                time: el.time
+              }
+            })
+            console.log(result)
+            //const time = moment(new Date()).format("h:mm A") //?
+            io.to(room).emit('type', { result, room }) // arr= 채팅내역, 요 채팅방에만 메시지를 보내겠다
+          }
+        });
     })
-    
-    socket.on('message', async ({name, message, room}) => {
+
+    socket.on('message', async ({ name, message, room }) => {
       console.log(name, message, room)
       const time = moment(new Date()).format("h:mm A")
-      
+
       const chatroomMessage = new ChatroomMessage();
       chatroomMessage.roomId = room
       chatroomMessage.message_content = message
@@ -104,12 +104,12 @@ if (fs.existsSync("./key.pem") && fs.existsSync("./cert.pem")) {
       chatroomMessage.time = time
 
       chatroomMessage.save();
-      io.to(room).emit('message',({name, message, time, room}))
+      io.to(room).emit('message', ({ name, message, time, room }))
 
     });
 
     socket.on('leave', (room) => {
-      socket.leave(room, ()=>{
+      socket.leave(room, () => {
         console.log('왜안되냐 ... ')
       });
     });
