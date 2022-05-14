@@ -25,6 +25,7 @@ import {
 import axios from 'axios'
 
 
+
 function MyPage() {
 
     const dispatch = useDispatch();
@@ -87,13 +88,13 @@ function MyPage() {
         setParticipateBackgroundColor("#D9D9D9")
 
         axios.get(`${REACT_APP_API_URL}/user/writepost`,
-        {
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${accessToken}`,
-            },
-            withCredentials: true
-        }
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${accessToken}`,
+                },
+                withCredentials: true
+            }
 
         )
     }
