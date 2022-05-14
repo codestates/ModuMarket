@@ -12,7 +12,7 @@ export const ModalBackground = styled.div`
 
 export const ModalContainer = styled.div`
   width: 30rem;
-  height: 42rem;
+  height: 40rem;
   background: #fff;
   border-radius: 10px;
   position: fixed;
@@ -109,16 +109,17 @@ export const ContentWrap = styled.div`
     }
 
     & > p {
-        padding-bottom: 0.3rem;
-        font-size : 0.7rem;
-        color : red;
-        font-weight: 700;
+      padding-top : 0.5rem;
+      padding-bottom: 0.5rem;
+      font-size : 0.7rem;
+      color : red;
+      font-weight: 700;
     }
 `
 export const NameAgeWrap = styled.div`
-    display: flex;
-    justify-content: space-between;
-    width : 100%;
+  display: flex;
+  justify-content: space-between;
+  width : 100%;
 `
 export const Name = styled.div`
     width : 100%;
@@ -128,37 +129,38 @@ export const Name = styled.div`
     padding-right : 0.3rem;
     
     & > span{
-        padding-bottom: 0.3rem;
-        font-size : 0.9rem;
-        font-weight: 700;
-    }
+      padding-bottom: 0.3rem;
+      font-size : 0.9rem;
+      font-weight: 700;
+  }
 
     & > input {
-        width : 95%;
-        padding-top: 0.5rem;
-        border: 1px solid #DFDFDF;
-        height : 1.5rem;
-        border-radius: 4px;
+      width : 95%;
+      padding-top: 0.5rem;
+      border: 1px solid #DFDFDF;
+      height : 1.5rem;
+      border-radius: 4px;
     }
 `
 export const Age = styled.div`
-    width : 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content:center;
-    
-    & > span{
-        padding-bottom: 0.3rem;
-        font-size : 0.9rem;
-        font-weight: 700;
-    }
+  width : 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content:center;
+  
+  & > span{
+      padding-bottom: 0.3rem;
+      font-size : 0.9rem;
+      font-weight: 700;
+  }
 
-    & > input {
-        width : 96.5%;
-        padding-top: 0.5rem;
-        border: 1px solid #DFDFDF;
-        height : 1.5rem;
-        border-radius: 4px;
+  & > input {
+      width : 96.5%;
+      padding-top: 0.5rem;
+      border: 1px solid #DFDFDF;
+      height : 1.5rem;
+      border-radius: 4px;   
+
     }
 `
 

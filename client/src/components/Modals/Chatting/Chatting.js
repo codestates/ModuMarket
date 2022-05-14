@@ -24,11 +24,11 @@ const Chatting = () => {
         socket.emit('type', room); // 채널명 개념 
   
         socket.on('type', (data)=>{
-            console.log(data)
+            
           const {result, room} = data;
-          // console.log(data);
-          console.log(room + '에 입장하셨습니다!!!!!')
-          console.log(userName)
+          
+        //   console.log(room + '에 입장하셨습니다!!!!!')
+        //   console.log(userName)
           // setChat([...chat,{name, message, time}]);
           let temp = [];
           result.forEach(el => {
@@ -50,7 +50,7 @@ const Chatting = () => {
         // data(parameter)는 서버에서 등록한 data 어떤 식으로 data를 보내주는지
         socket.on('message', ({name, message, time, room}) => {
           // console.log(data);
-          console.log(room + '에 입장하셨습니당.')
+          // console.log(room + '에 입장하셨습니당.')
           setChat([...chat,{name, message, time}]);
         })
     },[chat]);

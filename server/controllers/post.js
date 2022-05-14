@@ -67,7 +67,7 @@ module.exports = {
     let a = await Application.findOne({user_id: _id, post_id: req.params.id}).exec();
     console.log(a);
     
-    if (a === null&& _id ==="") {
+    if (a === null) {
       let newApplication = new Application();
       newApplication.post_id = req.params.id
       newApplication.user_id = _id
@@ -97,7 +97,7 @@ module.exports = {
           }
         } else {
             const result = await Post.findOne({ _id: req.params.id }).populate('userId', 'name').exec()
-            res.status(200).json({ data: result});
+            res.status(200).json({ data: result  , message : "안녕"});
         }
       }
       if (!accTokenData && refTokenData) {

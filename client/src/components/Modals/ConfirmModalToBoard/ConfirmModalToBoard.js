@@ -27,7 +27,7 @@ const ConfirmModalToBoard = () => {
                         </ModalForm> 
                     </ModalText>
                     <ModalButtonWrap>
-                        <ModalButton background="#FF6767" onClick={() => {dispatch(showConfirmModalToBoard(false)); window.location.replace("/board")}}>확인</ModalButton>
+                        <ModalButton background="#FF6767" onClick={() => {dispatch(showConfirmModalToBoard(false)); setTimeout (() => {window.location.replace("/board")}, 50)}}>확인</ModalButton>
                     </ModalButtonWrap>
                 </ModalImg>
             </ModalContainer>
