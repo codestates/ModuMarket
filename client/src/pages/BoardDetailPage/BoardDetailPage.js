@@ -17,22 +17,6 @@ function BoardDetail() {
     const [cardInfo, setCardInfo] = useState();
     const userInfo = useSelector((state) => state.userInfo.userInfo.id);
 
-<<<<<<< HEAD
-    // console.log(location)
-    async function handleCardDetail() {
-        const result = await axios({
-            url: `${REACT_APP_API_URL}/post/${location.cardId}`,
-            method: 'GET',
-            headers: {
-                "Content-Type": "application/json",
-                authorization: `Bearer ${accessToken}`,
-            },
-            withCredentials: true
-        }).then((result) => {
-            let detail = {
-                cardInfo: result.data.data
-            }
-=======
     async function handleCardDetail() {
         if (userInfo === '') {
             await axios({
@@ -47,62 +31,61 @@ function BoardDetail() {
                 let detail = {
                     cardInfo: result.data.data
                 }
->>>>>>> merge-dev
 
-            let isApplied = {
-                isApplied: result.data.isapplied
-            }
+                let isApplied = {
+                    isApplied: result.data.isapplied
+                }
 
-            dispatch(getCardInfo(detail))
-            dispatch(isAppliedInfo(isApplied))
-            setCardInfo(result.data)
-        })
-    } else {
-        await axios({
-            url: `${REACT_APP_API_URL}/post/${location.cardId}`,
-            method: 'POST',
-            data: {
-                _id: userInfo
-            },
-            headers: {
-                "Content-Type": "application/json",
-                authorization: `Bearer ${accessToken}`,
-            },
-            withCredentials: true
-        }).then((result) => {
-            let detail = {
-                cardInfo: result.data.data
-            }
+                dispatch(getCardInfo(detail))
+                dispatch(isAppliedInfo(isApplied))
+                setCardInfo(result.data)
+            })
+        } else {
+            await axios({
+                url: `${REACT_APP_API_URL}/post/${location.cardId}`,
+                method: 'POST',
+                data: {
+                    _id: userInfo
+                },
+                headers: {
+                    "Content-Type": "application/json",
+                    authorization: `Bearer ${accessToken}`,
+                },
+                withCredentials: true
+            }).then((result) => {
+                let detail = {
+                    cardInfo: result.data.data
+                }
 
-            let isApplied = {
-                isApplied: result.data.isapplied
-            }
+                let isApplied = {
+                    isApplied: result.data.isapplied
+                }
 
-            dispatch(getCardInfo(detail))
-            dispatch(isAppliedInfo(isApplied))
-            setCardInfo(result.data)
-        })
+                dispatch(getCardInfo(detail))
+                dispatch(isAppliedInfo(isApplied))
+                setCardInfo(result.data)
+            })
+
+        }
 
     }
 
-}
+    useEffect(() => {
+        handleCardDetail()
+    }, [])
 
-useEffect(() => {
-    handleCardDetail()
-}, [])
-
-return (
-    <Wrap>
-        {cardInfo ? <DetailSection info={cardInfo} /> :
-            <Loading>
-                <img src={confirmImg.loading} alt='loading' />
-                <h1>Loading</h1>
-            </Loading>}
-        {cardInfo ? <ContentSection info={cardInfo} /> : <Loading></Loading>
-        }
-        {cardInfo ? <MapSection info={cardInfo} /> : <Loading></Loading>}
-    </Wrap>
-)
+    return (
+        <Wrap>
+            {cardInfo ? <DetailSection info={cardInfo} /> :
+                <Loading>
+                    <img src={confirmImg.loading} alt='loading' />
+                    <h1>Loading</h1>
+                </Loading>}
+            {cardInfo ? <ContentSection info={cardInfo} /> : <Loading></Loading>
+            }
+            {cardInfo ? <MapSection info={cardInfo} /> : <Loading></Loading>}
+        </Wrap>
+    )
 }
 
 export default BoardDetail;
