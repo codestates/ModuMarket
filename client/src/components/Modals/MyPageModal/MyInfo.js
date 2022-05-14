@@ -1,8 +1,8 @@
 import axios from 'axios'
 import { REACT_APP_API_URL } from '../../../config';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { changeUserArea } from '../../../reducers/userInfoSlice';
+import { changeUserArea, getUserImg } from '../../../reducers/userInfoSlice';
 import {
     showMyInfoModal,
     showMyPwCheckModal,
@@ -14,10 +14,14 @@ import {
     changeModalImg
 } from '../../../reducers/modalSlice';
 import {
-    ModalBackground, ModalNameWrap,
-    ModalContainer, ModalAgeWrap,
+    ModalBackground,
+    ModalNameWrap,
+    ModalContainer,
+    ModalAgeWrap,
     ModalText,
     ModalImg,
+    ProfileImg,
+    ModalImgText,
     ModalInformRow,
     ModalButton
 } from './styled'
@@ -28,9 +32,13 @@ const MyInfo = () => {
 
     const dispatch = useDispatch();
     const myInfo = useSelector((state) => state.userInfo.userInfo);
+    const myImg = useSelector((state) => state.userInfo.userImg)
     const myStatus = useSelector((state) => state.userInfo.userStatus);
     const accessToken = useSelector((state) => state.login.accessToken);
     const [newArea, setNewArea] = useState('');
+    const [file, setFile] = useState('');
+
+
 
     /* 카카오지도 API로 현재 유저 좌표를 동단위로 변환 */
     const alterAddress = (position) => {
@@ -97,11 +105,69 @@ const MyInfo = () => {
         })
     }
 
+    /* 프로필 사진 이미지 불러오기 */
+    const uploadedImg = useRef(null);
+    const imageUploader = useRef(null);
+    const handleImgUpload = e => {
+        const [file] = e.target.files;
+        if (file) {
+            const reader = new FileReader();
+            const { current } = uploadedImg;
+            current.file = file;
+            reader.onload = e => {
+                current.src = e.target.result;
+                setFile(reader.result);
+            }
+            reader.readAsDataURL(file)
+            /* 서버로 이미지 등록 요청 */
+
+            axios.post(`${REACT_APP_API_URL}/user/image`,
+                file
+                ,
+                {
+                    headers: {
+                        "Content-Type": file.type,
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                    withCredentials: true
+                }
+            ).then((result) => {
+                //서버로부터 이미지 경로를 받아와야함
+                //응답 성공시 s3에 있는 이미지 경로를 받아와서 리덕스 userInfo.userImg에 저장
+                dispatch(getUserImg(result.data));
+            }).catch((err) => {
+                //default profile img
+                console.log(err.response.message);
+                // dispatch(getUserImg(profileImg));
+                //임시방편으로 404일때 모달에서 등록한 img를 리덕스 스토어에 저장해 MyPage에서도 띄움
+                dispatch(getUserImg(reader.result));
+            })
+
+        }
+    }
+
+    // function onLoadFile(e) {
+    //     const reader = new FileReader();
+    //     reader.readAsDataURL(e)
+
+    //     return new Promise((resolve) => {
+    //         reader.onload = () => {
+    //             setFile(reader.result);
+    //             resolve();
+    //         }
+    //     })
+    // }
+
+
     useEffect(() => {
         if (newArea) {
             handleInfoChange(newArea);
         }
     }, [newArea])
+
+    useEffect(() => {
+        setFile(file)
+    }, [file])
 
     return (
         <>
@@ -112,7 +178,20 @@ const MyInfo = () => {
                     <h2>마이 페이지</h2>
                 </ModalText>
                 <ModalImg>
-                    <img src={profileImg[1]} alt='profileImg' />
+                    <input
+                        id="photofile"
+                        type="file"
+                        accept="image/jpg, image/png, image/jpeg"
+                        multiple={false}
+                        onChange={handleImgUpload}
+                        ref={imageUploader}
+                        style={{
+                            display: "none"
+                        }} />
+                    <img ref={uploadedImg} src={myImg} alt='profileImg' onClick={() => imageUploader.current.click()} />
+                    <ModalImgText>
+                        이미지 업로드
+                    </ModalImgText>
                 </ModalImg>
                 <ModalInformRow>
                     <ModalNameWrap>
