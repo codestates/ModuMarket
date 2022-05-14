@@ -23,7 +23,6 @@ const ReviseRegister = () => {
     const accessToken = useSelector((state) => state.login.accessToken);
     const userId = useSelector((state) => state.userInfo.userInfo.id);
     const cardInfo = useSelector((state) => state.board.cardInfo);
-    console.log(cardInfo);
     const [address, setAddress] = useState(cardInfo.post_location) 
     const [photo, setPhoto] = useState(false)
     const [endDate, setEndDate] = useState(new Date())
@@ -79,7 +78,7 @@ const ReviseRegister = () => {
             alert('사진을 제외한 모든 항목은 필수입니다.')
         }else{
             axios({
-                url : `${ REACT_APP_API_URL }/post/${cardInfo._id}`,
+                url : `${ REACT_APP_API_URL }/post`,
                 method : 'PATCH',
                 data : formData,
                 headers : {
@@ -92,7 +91,6 @@ const ReviseRegister = () => {
                 dispatch(changeModalImg('check_man'));
                 dispatch(showReviseRegisterModal(false))
                 dispatch(showConfirmModal(true));
-                window.location.reload()
             })
         }
 

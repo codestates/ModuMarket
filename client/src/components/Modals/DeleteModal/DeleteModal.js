@@ -5,7 +5,7 @@ import { REACT_APP_API_URL } from '../../../config';
 import question from '../../../assets/question.png';
 import skull from '../../../assets/skull_icon.png';
 import {
-    showConfirmModal, showDeleteModal,
+    showConfirmModalToBoard, showDeleteModal,
     inputModalText, changeModalImg
 } from '../../../reducers/modalSlice';
 import {
@@ -23,7 +23,7 @@ function DeleteModal() {
 
 
     async function handleDelete() {
-        const result = await axios({
+        await axios({
             url: `${REACT_APP_API_URL}/post/${cardInfo._id}`,
             method: "DELETE",
             headers: {
@@ -34,9 +34,8 @@ function DeleteModal() {
         }).then((result) => {
             dispatch(inputModalText(result.data.message));
             dispatch(changeModalImg('check_man'));
-            dispatch(showDeleteModal(false))
-            dispatch(showConfirmModal(true));
-            window.location.replace('/board')
+            dispatch(showDeleteModal(false));
+            dispatch(showConfirmModalToBoard(true));
         })
 
     }
@@ -49,7 +48,7 @@ function DeleteModal() {
                         ? (
                             <>
                                 <ModalSkullImg>
-                                    <img src={skull} alt="unable delete photo" />
+                                    <img src={skull} alt="unable delete" />
                                     <ModalText>
                                         <span>참가 최소 인원이 달성되어 삭제가 불가합니다.</span>
                                     </ModalText>
@@ -61,7 +60,7 @@ function DeleteModal() {
                         : (
                             <>
                                 <ModalImg>
-                                    <img src={question} alt="confirm photo" />
+                                    <img src={question} alt="confirm" />
                                 </ModalImg>
                                 <ModalText>
                                     <p>현재 공고글을 삭제할까요?</p>

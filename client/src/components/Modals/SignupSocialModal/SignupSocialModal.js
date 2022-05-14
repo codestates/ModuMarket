@@ -1,24 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router';
 import {
-    showLoginModal,
     showSignupSocialModal,
     showConfirmModal,
     inputModalText,
     changeModalImg
-} from '../../reducers/modalSlice';
+} from '../../../reducers/modalSlice';
 import {
-    ModalBackground,
-    ModalContainer,
-    ModalText,
-    SignupInput,
-    LoginSocial
+    ModalBackground, ModalTextWrap,
+    ModalContainer, ModalTitleWrap, FormWrap,
+    ButtonWrap, Wrap, XWrap, SignupInput,
+    NameAgeWrap, Name, Age, LocationButton, ModalButton
 } from './styled'
 import axios from 'axios'
-import { REACT_APP_API_URL, REACT_APP_HOME_URL } from '../../config';
+import { REACT_APP_API_URL, REACT_APP_HOME_URL } from '../../../config';
+import gitIcon from '../../../assets/github_icon_dark.png'
+import kakaoIcon from '../../../assets/kakao.png'
 
-function SignupSocial() {
+function SignupSocialModal() {
 
     const dispatch = useDispatch();
     const [errorMessage, setErrorMessage] = useState('');
@@ -148,36 +147,51 @@ function SignupSocial() {
         <>
             <ModalBackground onClick={() => dispatch(showSignupSocialModal(false))} />
             <ModalContainer>
-                <ModalText>
+                <XWrap>
                     <span onClick={() => dispatch(showSignupSocialModal(false))}>&times;</span>
-                    <h2>소셜 회원가입</h2>
-                </ModalText>
-                <SignupInput>
-                    <form onSubmit={(e) => e.preventDefault()}>
-                        <span>이름</span>
-                        <input type='text' onChange={handleInputValue('name')} />
-                        <span>나이</span>
-                        <input type='number' onChange={handleInputValue('age')} />
-                        <button onClick={getUserLocation}>동네 인증하기</button>
+                </XWrap>
+                <Wrap>
+                    <ModalTextWrap>
+                        <ModalTitleWrap>
+                            <h2>소셜 회원가입</h2>
+                        </ModalTitleWrap>
+                    </ModalTextWrap>
+                </Wrap>
+                <FormWrap onSubmit={(e) => e.preventDefault()}>
+                    <SignupInput>
+                        <NameAgeWrap>
+                            <Name>
+                                <span>이름</span>
+                                <input type='text' onChange={handleInputValue('name')} />
+                            </Name>
+                            <Age>
+                                <span>나이</span>
+                                <input type='number' onChange={handleInputValue('age')} />
+                            </Age>
+                        </NameAgeWrap>
+                    </SignupInput>
+                    <ButtonWrap>
+                        <LocationButton onClick={getUserLocation}>동네 인증하기</LocationButton>
                         {
                             userSocial === 'kakao' ?
-                                <button type='submit' onClick={handleKakaoSignup}>
+                                <ModalButton background="#F7E600" type='submit' onClick={handleKakaoSignup}>
+                                    <img src={kakaoIcon} alt="kakaoIcon" />
                                     카카오로 회원가입
-                                </button>
+                                </ModalButton>
                                 :
-                                <button type='submit' onClick={() => {
+                                <ModalButton background="white" type='submit' onClick={() => {
                                     handleGithubSignup();
-
+                                    // window.location.href = `${REACT_APP_HOME_URL}`
                                 }}>
+                                    <img src={gitIcon} alt="gitIcon" />
                                     Github으로 회원가입
-                                </button>
+                                </ModalButton>
                         }
                         <div className='alert-box'>{errorMessage}</div>
-                    </form>
-                </SignupInput>
+                    </ButtonWrap>
+                </FormWrap>
             </ModalContainer>
-
         </>
     )
 }
-export default SignupSocial;
+export default SignupSocialModal;

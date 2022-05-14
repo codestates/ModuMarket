@@ -69,5 +69,5 @@ export const ContentText = styled.div`
     @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
     font-family: 'Open Sans', sans-serif;
     text-align: center;
-
+    line-height: 1.3rem;
 `

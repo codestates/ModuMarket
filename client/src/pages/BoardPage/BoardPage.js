@@ -127,7 +127,7 @@ function BoardPage() {
                                     ?
                                     <RegisterNotYet>
                                         <RegisterNotYetPhoto>
-                                            <img src={notYet} alt="has no data not yet photo" />
+                                            <img src={notYet} alt="has no data not yet" />
                                         </RegisterNotYetPhoto>
                                         <p>아직 우리동네에 등록된 공구가 없어요</p>
                                     </RegisterNotYet>

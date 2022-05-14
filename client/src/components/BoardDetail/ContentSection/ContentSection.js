@@ -11,9 +11,6 @@ import {
 } from './styled'
 
 function ContentSection({ info }) {
-    // console.log(info)
-
-
     return (
         <Section>
             <Wrap>

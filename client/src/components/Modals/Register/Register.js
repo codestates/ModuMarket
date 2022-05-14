@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+<<<<<<< HEAD
 import { showRegisterModal, showConfirmModal, inputModalText, changeModalImg } from '../../../reducers/modalSlice';
+=======
+import { showRegisterModal, showConfirmModalToBoard, inputModalText, changeModalImg, showAlertModal } from '../../../reducers/modalSlice';
+>>>>>>> merge-dev
 import { ko } from 'date-fns/esm/locale';
 import axios from 'axios';
 import moment from "moment";
@@ -23,8 +27,6 @@ function Register() {
     const userId = useSelector((state) => state.userInfo.userInfo.id);
     const area_name = useSelector((state) => state.userInfo.userInfo.area_name);
     const [address, setAddress] = useState("");
-    // const date = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
-    console.log(moment(new Date()).format('YYYY-MM-DD'))
     const [endDate, setEndDate] = useState(new Date());
     const [files, setFiles] = useState("")
     const [boardInfo, setBoardInfo] = useState({
@@ -64,9 +66,15 @@ function Register() {
         formData.append("endtime", moment(endDate).format('YYYY-MM-DD'));
 
         if (title === "" || address === "" || post_content === "" || member_min === 0) {
+<<<<<<< HEAD
             alert(errorMessage)
         } else {
+=======
+>>>>>>> merge-dev
 
+            dispatch(showAlertModal(true));
+
+        } else {
             await axios({
                 url: `${REACT_APP_API_URL}/post`,
                 method: 'POST',
@@ -78,14 +86,11 @@ function Register() {
                 withCredentials: true
             }).then((result) => {
                 dispatch(inputModalText(result.data.message));
-                dispatch(changeModalImg('check_man'));
+                dispatch(changeModalImg('check_woman1'));
                 dispatch(showRegisterModal(false))
-                dispatch(showConfirmModal(true));
-                window.location.reload()
-
+                dispatch(showConfirmModalToBoard(true));
             })
         }
-
     }
 
     // 사진 미리보기 파일 읽어오기

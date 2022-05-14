@@ -1,5 +1,9 @@
 import styled from "styled-components";
 
+export const ModalForm = styled.div`
+    padding : 1rem 0 ;
+`
+
 export const ModalBackground = styled.div`
     position: fixed;
     top: 0;
@@ -12,10 +16,14 @@ export const ModalBackground = styled.div`
 export const ModalContainer = styled.div`
     display : flex;
     flex-direction : column;
-    width: 25rem;
+    width: 20rem;
     background: #fff;
-    height: 30rem;
+    height: ${(props) => 
+        (props.img === 'loading'
+            ? '23rem'
+            : '27rem'  )};
     overflow-y: scroll;
+    border : 1px solid #F1F2F2;
     border-radius: 10px;
     position: fixed;
     top: 50%;
