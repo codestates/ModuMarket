@@ -22,7 +22,9 @@ import {
     CardWrap,
     NullBody
 } from './styled'
-import axios from 'axios';
+import axios from 'axios'
+
+
 
 function MyPage() {
 
