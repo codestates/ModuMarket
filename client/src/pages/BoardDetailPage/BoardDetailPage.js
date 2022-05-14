@@ -51,6 +51,7 @@ function BoardDetail(){
                 },
                 withCredentials : true
             }).then((result) => {
+                console.log(result)
                 let detail = {
                     cardInfo: result.data.data
                 }

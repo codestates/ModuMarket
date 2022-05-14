@@ -1,5 +1,6 @@
 const config = {
     REACT_APP_HOME_URL: 'http://localhost:3000',
+    // REACT_APP_API_URL: 'http://server.modumarket.tk',
     REACT_APP_API_URL: 'http://localhost:4000',
     REDIRECT_URI: "http://localhost:3000/sign/kakao/callback",
 };

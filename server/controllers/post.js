@@ -82,7 +82,8 @@ module.exports = {
       const refTokenData = jwt.verify(req.cookies.refreshToken, process.env.REFRESH_SECRET);
       if (accTokenData && refTokenData) {
         const { _id } = accTokenData;
-        const applied = await Application.find({post_id: req.params.id, user_id:_id}).select('isapplied')
+        const applied = await Application.find({post_id: req.params.id, user_id:_id}).select('isapplied');
+        console.log(applied);
         if (applied.length !== 0) {
           if(applied[0].isapplied === false){ // 참가이력이 없거나, 참가했다가 취소한 경우 
             const result = await Post.findOne({ _id: req.params.id }).populate('userId', 'name').exec()
