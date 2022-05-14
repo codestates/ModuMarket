@@ -34,6 +34,7 @@ function BoardDetail(){
                 let isApplied = {
                     isApplied: result.data.isapplied
                 }
+
                 dispatch(getCardInfo(detail))
                 dispatch(isAppliedInfo(isApplied))
                 setCardInfo(result.data)
@@ -51,6 +52,7 @@ function BoardDetail(){
                 },
                 withCredentials : true
             }).then((result) => {
+
                 let detail = {
                     cardInfo: result.data.data
                 }
@@ -58,12 +60,14 @@ function BoardDetail(){
                 let isApplied = {
                     isApplied: result.data.isapplied
                 }
+
                 dispatch(getCardInfo(detail))
                 dispatch(isAppliedInfo(isApplied))
                 setCardInfo(result.data)
             }) 
-        }
- 
+
+        } 
+
     }
 
     useEffect(()=> {

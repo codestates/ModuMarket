@@ -1,6 +1,10 @@
 import styled, { keyframes } from 'styled-components';
 
-
+export const  BodyDiv = styled.div`
+    width : 100%;
+    height : 50%;
+    
+`
 const floatingAnimation = keyframes`
  0% {
         transform: translateY(0);    

@@ -32,6 +32,7 @@ export const Title = styled.div`
     font-family: 'Open Sans', sans-serif;
 
     & > h2 {
+       
         font-size : 3rem;
         margin: 0;
         padding-bottom: 0.5rem;

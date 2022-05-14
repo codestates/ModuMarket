@@ -93,7 +93,16 @@ export const LoginInput = styled.div`
     justify-content: center;
     align-items: center;
     flex-direction: column;
+
+    & > span{
+      padding-top: 0.5rem;
+      font-size:0.8rem;
+      font-weight: 700;
+      color: red;
+    }
   }
+
+
 `;
 
 export const LoginWrap = styled.div`

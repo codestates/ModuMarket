@@ -66,9 +66,10 @@ function LoginModal() {
                 dispatch(getUserInfo(data))
                 dispatch(login(result.data.data.accessToken))
                 dispatch(showLoginModal(false));
+                setTimeout(() => {window.location.reload()}, 50) ;
             }
             ).catch((err) => {
-                console.log(err.response.status)
+                
                 dispatch(inputModalText(err.response.data.message));
                 dispatch(changeModalImg('question'));
                 dispatch(showConfirmModal(true));
@@ -114,8 +115,7 @@ function LoginModal() {
                                 type='password'
                                 onChange={handleInputValue('password')}/>
                         </LoginWrap>
-
-                        <div className='alert-box'>{errorMessage}</div>
+                        <span className='alert-box'>{errorMessage}</span>
                     </form>
                 </LoginInput>
                 <ButtonWrap>
