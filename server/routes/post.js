@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const controller = require('../controllers');
 const multer = require('multer');
-const moment = require('moment');
 const {getFileStream} = require('../s3');
 
 const storage = multer.diskStorage({
@@ -32,7 +31,6 @@ router.post('/:id', controller.post.postPostOne);
 
 // 공고글 AWS s3에서 가져오기
 router.get('/image/:key', (req, res) => {
-    console.log(req.params)
     const key = req.params.key;
 
     const readStream = getFileStream(key)

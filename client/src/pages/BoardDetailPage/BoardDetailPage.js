@@ -15,6 +15,7 @@ function BoardDetail(){
     const dispatch = useDispatch();
     const [cardInfo, setCardInfo] = useState();
     const userInfo = useSelector((state) => state.userInfo.userInfo.id);
+
     async function handleCardDetail (){
         if (userInfo === '') {
             await axios({
@@ -51,7 +52,7 @@ function BoardDetail(){
                 },
                 withCredentials : true
             }).then((result) => {
-                
+
                 let detail = {
                     cardInfo: result.data.data
                 }
@@ -64,7 +65,9 @@ function BoardDetail(){
                 dispatch(isAppliedInfo(isApplied))
                 setCardInfo(result.data)
             }) 
+
         } 
+
     }
 
     useEffect(()=> {
