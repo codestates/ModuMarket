@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { showRegisterModal, showConfirmModal, inputModalText, changeModalImg } from '../../../reducers/modalSlice';
-import {ko} from 'date-fns/esm/locale';
+import { ko } from 'date-fns/esm/locale';
 import axios from 'axios';
 import moment from "moment";
 import { REACT_APP_API_URL } from '../../../config'
@@ -26,19 +26,19 @@ function Register() {
     // const date = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
     console.log(moment(new Date()).format('YYYY-MM-DD'))
     const [endDate, setEndDate] = useState(new Date());
-    const [files, setFiles] = useState("") 
+    const [files, setFiles] = useState("")
     const [boardInfo, setBoardInfo] = useState({
         title: "",
-        userId: userId, 
+        userId: userId,
         category: 0,
         image: files,
         post_content: "",
-        area_name : area_name, 
-        post_location : address,
-        isvalid : true,
-        member_num : 1,
-        member_min : 0,
-        endtime : moment(endDate).format('YYYY-MM-DD'),
+        area_name: area_name,
+        post_location: address,
+        isvalid: true,
+        member_num: 1,
+        member_min: 0,
+        endtime: moment(endDate).format('YYYY-MM-DD'),
 
     })
 
@@ -47,36 +47,36 @@ function Register() {
     };
 
     async function handleRegister() { // 입력한 값을 서버로 보내는 함수 
-        
+
         let photoFile = document.getElementById("photofile");
         const formData = new FormData(); // 폼 태그로 이미지와 데이터를 한번에 보낼 수 있도록 하기 위한 접근
-        const {title, userId, category, post_content, area_name,  isvalid, member_num, member_min, endtime} = boardInfo 
+        const { title, userId, category, post_content, area_name, isvalid, member_num, member_min, endtime } = boardInfo
         formData.append("title", title);
         formData.append("category", category);
         formData.append("image", photoFile.files[0]);
         formData.append("post_content", post_content);
-        formData.append("area_name", area_name); 
-        formData.append("userId", userId); 
+        formData.append("area_name", area_name);
+        formData.append("userId", userId);
         formData.append("post_location", address);
         formData.append("isvalid", isvalid);
         formData.append("member_num", member_num);
         formData.append("member_min", member_min);
-        formData.append("endtime", moment(endDate).format('YYYY-MM-DD'));   
+        formData.append("endtime", moment(endDate).format('YYYY-MM-DD'));
 
-        if(title === "" || address === "" || post_content === "" || member_min === 0){
+        if (title === "" || address === "" || post_content === "" || member_min === 0) {
             alert(errorMessage)
-        }else{
+        } else {
 
             await axios({
-                url : `${ REACT_APP_API_URL }/post`,
-                method : 'POST',
-                data : formData,
-                headers : {
+                url: `${REACT_APP_API_URL}/post`,
+                method: 'POST',
+                data: formData,
+                headers: {
                     'Content-Type': 'multipart/form-data',
-                    authorization : `Bearer ${accessToken}` 
+                    authorization: `Bearer ${accessToken}`
                 },
-                withCredentials : true
-            }).then((result) =>{
+                withCredentials: true
+            }).then((result) => {
                 dispatch(inputModalText(result.data.message));
                 dispatch(changeModalImg('check_man'));
                 dispatch(showRegisterModal(false))

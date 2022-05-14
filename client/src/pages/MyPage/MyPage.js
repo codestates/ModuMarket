@@ -1,9 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { profileImg, nothingImg } from '../../assets/images'
+import { getUserImg } from '../../reducers/userInfoSlice'
 import Cards from '../../components/Cards/Cards'
 import { showMyInfoModal } from '../../reducers/modalSlice'
-import { getWritePost, getParticipatePost, checkWriteNull, checkPartyNull } from '../../reducers/myPostSlice'
+import {
+    getWritePost,
+    getParticipatePost,
+    checkWriteNull,
+    checkPartyNull
+} from '../../reducers/myPostSlice'
 import { REACT_APP_API_URL } from '../../config';
 import {
     Section,
@@ -22,6 +28,7 @@ function MyPage() {
 
     const dispatch = useDispatch();
     const userInfo = useSelector((state) => state.userInfo.userInfo);
+    const userImg = useSelector((state) => state.userInfo.userImg);
     const accessToken = useSelector((state) => state.login.accessToken);
     const myWritePost = useSelector((state) => state.mypost.writePost);
     const myPartyPost = useSelector((state) => state.mypost.participatePost);
@@ -79,13 +86,35 @@ function MyPage() {
         setParticipateBackgroundColor("#D9D9D9")
     }
 
+    function handleUserImg() {
+        axios.get(`${REACT_APP_API_URL}/user/image`,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${accessToken}`,
+                },
+                withCredentials: true
+            }
+        ).then((result) => {
+            //응답 성공시 s3에 있는 이미지 경로를 받아와서 리덕스 userInfo.userImg에 저장
+            dispatch(getUserImg(result.data));
+        }).catch((err) => {
+            //default profile img
+            dispatch(getUserImg(profileImg));
+        })
+    }
+
+    useEffect(() => {
+        handleUserImg();
+    }, [])
+
 
     return (
         <Section>
             <Wrap>
                 <ProfileWrap>
                     <ProfilePhotoWrap>
-                        <img src={profileImg[1]} alt="user profile" />
+                        <img src={userImg} alt="user profile" />
                     </ProfilePhotoWrap>
                     <ProfileContentWrap>
                         <span>{userInfo.name}</span>

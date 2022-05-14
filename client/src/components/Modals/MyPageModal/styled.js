@@ -158,11 +158,38 @@ export const ModalImg = styled.div`
     width: 100%;
     max-width: 485px;
     object-fit: cover;
-    img{
-      width: 13rem;
-      height: 13rem;
+    & > img {
+    width: 13rem;
+    height: 13rem;
+    cursor: pointer;
+    transition: .5s ease;
+    backface-visibility: hidden;
     }
-    `
+    &:hover{
+        opacity: 0.3;
+      }
+  
+`
+
+export const ProfileImg = styled.div`
+/* width: 100%;
+height:10%; */
+
+
+
+`
+export const ModalImgText = styled.div`
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    left:50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    text-align: center;
+    ${ModalImg}:hover & {
+    opacity: 1;
+  }
+`
 export const ModalButton = styled.button`
     display: flex;
     flex-direction: column;

@@ -4,8 +4,9 @@ import { REACT_APP_API_URL } from '../../config';
 import { Link } from 'react-router-dom';
 import { React, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
+import { profileImg } from '../../assets/images';
 import { logout } from '../../reducers/loginSlice';
-import { getUserInfo } from '../../reducers/userInfoSlice'
+import { getUserInfo, getUserImg } from '../../reducers/userInfoSlice'
 import { getWritePost, getParticipatePost, checkWriteNull, checkPartyNull } from '../../reducers/myPostSlice'
 import {
     showLoginModal,
@@ -28,6 +29,7 @@ function Header() {
     const isLogin = useSelector((state) => state.login.isLogin);
     const accessToken = useSelector((state) => state.login.accessToken);
     const userSocial = useSelector((state) => state.userInfo.userStatus);
+    const userInfo = useSelector((state) => state.userInfo.userInfo);
 
     const purge = async () => {
         await persistor.purge();
@@ -88,8 +90,6 @@ function Header() {
             }
         })
     }
-
-
 
     const handleLogout = async () => {
         axios.post(`${REACT_APP_API_URL}/sign/out`,
