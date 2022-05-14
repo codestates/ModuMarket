@@ -28,14 +28,9 @@ function ParticipateModal (){
             },
             withCredentials : true
         }).then((result) =>{
-            console.log(result);
-           
             dispatch(inputModalText(result.data.message));
-            
             dispatch(changeModalImg('check_man'));
-            
             dispatch(showParticipateModal(false));
-            
             dispatch(showConfirmModal(true));
         })
     }

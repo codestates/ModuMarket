@@ -60,8 +60,7 @@ module.exports = {
   },
 
   postPostOne: async (req, res) => {
-    //어플리케이션 컬렉션에서 포스트아이디, 유저아이디 찾는데 없는 경우, 있는데 취소한 경우 
-    // 있는데 참가한 경우 true 인 경우 => 취소하기 버튼 주게
+
     const {_id} = req.body;
     let a = await Application.findOne({user_id: _id, post_id: req.params.id}).exec();
     
@@ -82,8 +81,7 @@ module.exports = {
       const refTokenData = jwt.verify(req.cookies.refreshToken, process.env.REFRESH_SECRET);
       if (accTokenData && refTokenData) {
         const { _id } = accTokenData;
-        const applied = await Application.find({post_id: req.params.id, user_id:_id}).select('isapplied');
-        console.log(applied);
+        const applied = await Application.find({post_id: req.params.id, user_id:_id}).select('isapplied')
         if (applied.length !== 0) {
           if(applied[0].isapplied === false){ // 참가이력이 없거나, 참가했다가 취소한 경우 
             const result = await Post.findOne({ _id: req.params.id }).populate('userId', 'name').exec()
@@ -94,7 +92,9 @@ module.exports = {
           }
         } else {
             const result = await Post.findOne({ _id: req.params.id }).populate('userId', 'name').exec()
+
             res.status(200).json({ data: result});
+
         }
       }
       if (!accTokenData && refTokenData) {
@@ -143,6 +143,7 @@ module.exports = {
     }
 
   },
+
 
   getPostOne: async (req, res) => {
     //어플리케이션 컬렉션에서 포스트아이디, 유저아이디 찾는데 없는 경우, 있는데 취소한 경우 

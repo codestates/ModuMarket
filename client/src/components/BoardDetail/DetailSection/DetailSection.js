@@ -35,7 +35,7 @@ function DetailSection({ info }) {
     const dispatch = useDispatch();
     const cardUserId = info.data.userId._id
     const isValid = info.data.isvalid
-    const isApplied = info.isapplied
+    const isApplied = useSelector((state) => state.board.isApplied)
     const userId = useSelector((state) => state.userInfo.userInfo.id);
     const isLogin = useSelector((state) => state.login.isLogin);
     

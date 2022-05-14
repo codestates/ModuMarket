@@ -2,6 +2,8 @@ import styled from 'styled-components'
 import {Link} from "react-router-dom"
 
 export const ButtonLink = styled(Link)`
+
+    
     & > button {
         @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
         font-family: 'Open Sans', sans-serif;
@@ -67,6 +69,7 @@ export const IntroduceContent = styled.div`
     }
 
     & > h2 {
+        padding-bottom: 1rem;
         font-size: 2rem;
         line-height: 2.5rem;
     }

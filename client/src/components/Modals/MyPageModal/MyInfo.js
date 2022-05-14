@@ -62,7 +62,7 @@ const MyInfo = () => {
                 alterAddress(position);
             });
         } else {
-            console.log('위치 인증 실패');
+            // console.log('위치 인증 실패');
             //loc.innerHTML = "이 문장은 사용자의 웹 브라우저가 Geolocation API를 지원하지 않을 때 나타납니다!";
 
         }
