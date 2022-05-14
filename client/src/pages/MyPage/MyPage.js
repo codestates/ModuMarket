@@ -23,7 +23,7 @@ import {
     NullBody
 } from './styled'
 import axios from 'axios'
-import { REACT_APP_API_URL } from '../../config';
+
 
 function MyPage() {
 

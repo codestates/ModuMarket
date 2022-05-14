@@ -47,11 +47,11 @@ if (fs.existsSync("./key.pem") && fs.existsSync("./cert.pem")) {
     .listen(PORT, () => {
       console.log(`Express https server is listening on port ${PORT}`)
     });
-} else {
-//   // express가 http를 통해 실행될 수 있도록 만들기
-  server = http.createServer(app).listen(PORT, () => {
-    console.log(`Express http server is listening on port ${PORT}`)
-  })
+// } else {
+// //   // express가 http를 통해 실행될 수 있도록 만들기
+//   server = http.createServer(app).listen(PORT, () => {
+//     console.log(`Express http server is listening on port ${PORT}`)
+//   })
 
   // 위에서 만들어둔 listen이란 변수에 서버를 담고 CORS 처리하기.
   // io 객체를 통해 메시지를 전달하고 받음.

@@ -1,10 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-<<<<<<< HEAD
-import { showRegisterModal, showConfirmModal, inputModalText, changeModalImg } from '../../../reducers/modalSlice';
-=======
 import { showRegisterModal, showConfirmModalToBoard, inputModalText, changeModalImg, showAlertModal } from '../../../reducers/modalSlice';
->>>>>>> merge-dev
 import { ko } from 'date-fns/esm/locale';
 import axios from 'axios';
 import moment from "moment";
@@ -66,11 +62,6 @@ function Register() {
         formData.append("endtime", moment(endDate).format('YYYY-MM-DD'));
 
         if (title === "" || address === "" || post_content === "" || member_min === 0) {
-<<<<<<< HEAD
-            alert(errorMessage)
-        } else {
-=======
->>>>>>> merge-dev
 
             dispatch(showAlertModal(true));
 
