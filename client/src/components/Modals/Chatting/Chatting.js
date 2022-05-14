@@ -4,8 +4,9 @@ import { showConfirmModal, showChattingModal } from '../../../reducers/modalSlic
 import { ModalBackground, ModalContainer, ModalText, ModalImg, ModalButton } from './styled';
 import TextField from '@material-ui/core/TextField';
 import io from 'socket.io-client';
+import { REACT_APP_API_URL } from '../../../config';
 // const socket =  io.connect('http://localhost:4000',{secure: true})
-const socket =  io.connect('http://localhost:4000')
+const socket =  io.connect(REACT_APP_API_URL)
 
 const Chatting = () => {
     const dispatch = useDispatch();

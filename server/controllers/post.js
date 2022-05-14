@@ -82,7 +82,6 @@ module.exports = {
       if (accTokenData && refTokenData) {
         const { _id } = accTokenData;
         const applied = await Application.find({post_id: req.params.id, user_id:_id}).select('isapplied')
-
         if (applied.length !== 0) {
           if(applied[0].isapplied === false){ // 참가이력이 없거나, 참가했다가 취소한 경우 
             const result = await Post.findOne({ _id: req.params.id }).populate('userId', 'name').exec()
