@@ -43,6 +43,7 @@ router.get('/image/:key', (req, res) => {
 router.post('/', upload.single('image'), controller.post.registerPost);
 
 // 공고글 수정
+// formdata에 이미지가 있는데 이미지를 못받으니까 body에 아무것도 안 들어옴.
 router.patch('/', upload.single('newImage'), controller.post.modifyPost);
 
 // 공고글에 있는 참가 신청 버튼

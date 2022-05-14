@@ -64,14 +64,14 @@ const Auth = ({ social }) => {
 
     } else {
         const code = new URL(window.location.href).searchParams.get("code");
-        const githubToken = () => {
-            if (!code) {
-                window.loaction.replace('/')
-            } else {
+        if(code ===  null){
+            window.location.replace('/')
+        }else {
+            const githubToken = () => {
                 axios.get(`${REACT_APP_API_URL}/sign/github/callback`,
-                    { params: { code: code } },
-                    { withCredentials: true }
-                ).then((result) => {
+                    { params: { code: code },
+                    withCredentials: true
+                }).then((result) => {
                     if (result.data.accessToken) {
                         let data = {
                             userInfo: {
@@ -87,7 +87,6 @@ const Auth = ({ social }) => {
                         dispatch(changeModalImg('check_man'));
                         dispatch(showConfirmModal(true));
                     } else {
-                        console.log(result);
                         dispatch(inputSocialId(result.data.id));
                         dispatch(inputSocialEmail(result.data.email));
                         dispatch(showSignupSocialModal(true));
@@ -95,8 +94,8 @@ const Auth = ({ social }) => {
                 }
                 )
             }
+            githubToken();
         }
-        githubToken();
     }
 
 

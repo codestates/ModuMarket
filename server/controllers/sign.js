@@ -137,7 +137,7 @@ module.exports = {
         console.log(id)
 
         // 카카오에서 유저정보를 받아왔으면 카카오 유니크 키로, 가입했는지 여부 확인
-        const result = await User.findOne({ social_kakao: id }).exec()
+        const result = await User.findOne({ social_Id: id }).exec()
         if (result) { // 가입한 유저이면? 디비에 있는 유저의 동네정보, 아이디, 이메일을 갖고 토큰만들어서주기
           console.log(result);
           const { _id, email, name, area_name } = result;
@@ -165,7 +165,7 @@ module.exports = {
     let { id, email, name, age, area_name } = req.body;
 
     const newUser = new User();
-    newUser.social_kakao = id;
+    newUser.social_Id = id;
     newUser.name = name;
     newUser.email = email;
     newUser.age = age;
@@ -202,7 +202,7 @@ module.exports = {
     })
       .then((data) => {
         githubAccessToken = data.data.access_token;
-        console.log(githubAccessToken)
+        // console.log(githubAccessToken)
         axios.get('https://api.github.com/user', {
           headers: {
             Authorization: `token ${githubAccessToken}`,
@@ -221,9 +221,9 @@ module.exports = {
             console.log(id)
             console.log(email)
             // ! social_github : id 가 들어가도록 해야함
-            const result = await User.findOne({ social_kakao: id }).exec()
+            const result = await User.findOne({ social_Id: id }).exec()
             if (result) { // 가입한 유저이면? 디비에 있는 유저의 동네정보, 아이디, 이메일을 갖고 토큰만들어서주기
-
+              console.log(githubAccessToken)
               const { _id, email, name, area_name } = result;
               const accessToken = jwt.sign(JSON.parse(JSON.stringify({ _id, email, area_name })),
                 process.env.ACCESS_SECRET, { expiresIn: '2h' });
@@ -233,6 +233,11 @@ module.exports = {
               res
                 .cookie("refreshToken", refreshToken, {
                   maxAge: 1000 * 60 * 60 * 24 * 14, // 쿠키 유효시간: 14일
+                  httpOnly: true,
+                  secure: true
+                })
+                .cookie("githubAccessToken", githubAccessToken, {
+                  maxAge: 1000 * 60 * 60 * 2, // 쿠키 유효시간: 2시간
                   httpOnly: true,
                 })
                 .status(201)
@@ -249,7 +254,7 @@ module.exports = {
     let { id, email, name, age, area_name } = req.body;
 
     const newUser = new User();
-    newUser.social_kakao = id;
+    newUser.social_Id = id;
     newUser.name = name;
     newUser.email = email;
     newUser.age = age;
@@ -264,6 +269,29 @@ module.exports = {
         throw new Error(err)
       })
 
+  },
+
+  outGithub: async (req, res) => {
+
+    const access_token = req.cookies.githubAccessToken
+        
+    await axios.delete(`https://api.github.com/applications/${process.env.REACT_APP_GITHUB_APP_KEY}/grant`,
+        {
+            headers: {
+                Accept: "application/vnd.github.v3+json"
+            },
+            auth: {
+                username: process.env.REACT_APP_GITHUB_APP_KEY,
+                password: process.env.REACT_APP_GITHUB_SECRET
+            },
+            data: {
+                access_token
+            }
+        }
+    )
+    .then(() => {
+      res.status(200).json({ message: '로그아웃이 완료되었습니다' });
+    }) 
   }
 
 

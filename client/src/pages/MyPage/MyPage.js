@@ -22,7 +22,8 @@ import {
     CardWrap,
     NullBody
 } from './styled'
-import axios from 'axios';
+import axios from 'axios'
+import { REACT_APP_API_URL } from '../../config';
 
 function MyPage() {
 
@@ -84,6 +85,17 @@ function MyPage() {
         })
         setWriteBackgroundColor("#FF6767")
         setParticipateBackgroundColor("#D9D9D9")
+
+        axios.get(`${REACT_APP_API_URL}/user/writepost`,
+        {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accessToken}`,
+            },
+            withCredentials: true
+        }
+
+        )
     }
 
     function handleUserImg() {

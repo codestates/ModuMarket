@@ -135,7 +135,6 @@ module.exports = {
     }
   },
 
-
   changeInfo: async (req, res) => {
     const token = req.headers.authorization.split(' ')[1];
     const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET);
@@ -273,14 +272,16 @@ module.exports = {
     const token = req.headers.authorization.split(' ')[1];
     const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET);
     const refTokenData = jwt.verify(req.cookies.refreshToken, process.env.REFRESH_SECRET);
-
+//    const Post = require('../models/Post');
     // 토큰에서 유저 아이디 겟잇해서
     // post 컬렉션에서 userId로 필터링해서 가져오기 
     if (accTokenData && refTokenData) {
       const { _id } = accTokenData
       try {
+
         await Post.updateMany({ endtime: { $lt: Date.now() } }, { isvalid: true })
         const result = await Post.find({ userId: _id }).exec();
+        // console.log(result)
         if (result.length > 0) { //내가 작성한 공고글이 있을때
           res.status(200).json({ data: result, message: 'list fetch success' });
         } else { //내가 작성한 공고글이 없을때
