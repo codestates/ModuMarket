@@ -76,8 +76,8 @@ export const Button = styled.button`
     border : 0;
     border-radius: 0;
     color : white;
-    background-color: ${(props) => 
-    props.background === '#FF6767' ? "#FF6767" : "#D9D9D9"  };
+    background-color: ${(props) =>
+        props.background === '#FF6767' ? "#FF6767" : "#D9D9D9"};
     
 `
 
@@ -87,4 +87,12 @@ export const CardWrap = styled.div`
     width : 100%;
     justify-content: space-evenly;
     align-items : center;
+`
+export const NullBody = styled.div`
+    display : flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: center;
+    align-items : center;
+    padding-bottom: 15rem;
 `

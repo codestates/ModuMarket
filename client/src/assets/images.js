@@ -9,8 +9,7 @@ export const confirmImg = {
     loading: "/images/loading.png",
 }
 
-export const profileImg = [
-    "/images/profile.png",
-    "/images/profile_color_blue.png",
-    "/images/profile_color_white.png",
-];
+export const profileImg = "/images/profile_color_blue.png"
+
+
+export const nothingImg = '/images/no_connection.gif'

@@ -1,12 +1,18 @@
 import styled from 'styled-components';
 
+export const Section = styled.section`
+    position: relative;
+    transform : translateY();
+`
 
 export const FooterContainer = styled.footer`
     width: 100vw;
     background-color : #333B52;
-    padding-top : 6rem;
+    padding-top : 3rem;
     padding-bottom : 1rem;
-   
+    height : auto;
+
+
 `
 export const LogoContainer = styled.div`
     width: 100%;
@@ -33,7 +39,7 @@ export const TeamContainer = styled.div`
 
 export const ProfileContainer = styled.div`
     display: flex;
-    /* position : relative; */
+    flex-wrap: wrap;
     padding: 1rem;
     justify-content : space-evenly;
     color : #CED4DA;
@@ -53,6 +59,7 @@ export const ProfilePhoto = styled.div`
     display: flex;
     align-items: center;
     justify-content : center;
+    padding-top :1rem;
 `
 
 export const ProfileInfo = styled.div`
@@ -79,7 +86,7 @@ export const ProfileInfo = styled.div`
 export const GithubIcon = styled.div`
     width : 100%;
     display : flex;
-    margin-top: 5rem;
+    margin-top: 4rem;
     justify-content : center;
     align-items : center;
     gap : 1rem;

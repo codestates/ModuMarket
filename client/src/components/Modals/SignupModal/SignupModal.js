@@ -7,18 +7,19 @@ import {
     showConfirmModal,
     inputModalText,
     changeModalImg
-} from '../../reducers/modalSlice';
+} from '../../../reducers/modalSlice';
 import {
-    ModalBackground,
-    ModalContainer,
-    ModalText,
-    SignupInput,
-    ModalButton
+    ModalBackground, ModalTextWrap,
+    ModalContainer, ModalTitleWrap,
+    LocationButton, ModalTitleText,
+    ModalButton, ButtonWrap,
+    Wrap, XWrap, SignupInput, ContentWrap,
+    NameAgeWrap, Name, Age
 } from './styled'
 import axios from 'axios'
-import { REACT_APP_API_URL, REDIRECT_URI } from '../../config';
+import { REACT_APP_API_URL, REDIRECT_URI } from '../../../config';
 
-function Signup() {
+function SignupModal() {
 
     const dispatch = useDispatch();
     const [errorMessage, setErrorMessage] = useState('');
@@ -127,49 +128,66 @@ function Signup() {
             {/* onClick시 모달창 닫히게끔 모달창 띄우는 상태가 리덕스로 관리*/}
             <ModalBackground onClick={() => dispatch(showSignupModal(false))} />
             <ModalContainer>
-                <ModalText>
+                <XWrap>
                     <span onClick={() => dispatch(showSignupModal(false))}>&times;</span>
-                    <h2>회원가입</h2>
-                    <p>이미 회원이신가요?
-                        {/* Login 모달창으로 변경하도록 해당 상태 관리*/}
-                        <button onClick={() => {
-                            dispatch(showSignupModal(false))
-                            dispatch(showLoginModal(true))
-                        }}>로그인 하기</button>
-                    </p>
-                </ModalText>
-                <SignupInput>
-                    <form onSubmit={(e) => e.preventDefault()}>
-                        <span>이메일</span>
-                        <input type='email' onChange={handleInputValue('email')} placeholder="E-mail을 입력해주세요" />
-                        {/* <button>중복확인</button> */}
-                        <span>비밀번호</span>
-                        <input
-                            type='password'
-                            onChange={handleInputValue('password')}
-                            placeholder="비밀번호를 입력해주세요" />
-                        <span>비밀번호 확인</span>
-                        <input
-                            type='password'
-                            onChange={handlePWcheck('passwordCheck')}
-                            placeholder="비밀번호 확인을 위해 다시 입력해주세요" />
-                        {isPWCheck ? <p>비밀번호가 일치합니다</p> : <p>비밀번호가 일치하지 않습니다</p>}
-                        <span>이름</span>
-                        <input type='text' onChange={handleInputValue('name')} />
-                        <span>나이</span>
-                        <input type='number' onChange={handleInputValue('age')} />
-                        <button onClick={getUserLocation}>동네 인증하기</button>
+                </XWrap>
+                <Wrap>
+                    <ModalTextWrap>
+                        <ModalTitleWrap>
+                            <h2>회원가입</h2>
+                            <ModalTitleText>
+                                <p>이미 회원이신가요?</p>
+                                <a onClick={() => {
+                                    dispatch(showSignupModal(false))
+                                    dispatch(showLoginModal(true))
+                                }}>로그인 하기</a>
+                            </ModalTitleText>
+                        </ModalTitleWrap>
+                    </ModalTextWrap>
+                    <SignupInput>
+                        <form onSubmit={(e) => e.preventDefault()}>
+                            <ContentWrap>
+                                <span>이메일</span>
+                                <input type='email' onChange={handleInputValue('email')} />
+                            </ContentWrap>
+                            <ContentWrap>
+                                <span>비밀번호</span>
+                                <input
+                                    type='password'
+                                    onChange={handleInputValue('password')}
+                                />
+                            </ContentWrap>
+                            <ContentWrap>
+                                <span>비밀번호 확인</span>
+                                <input
+                                    type='password'
+                                    onChange={handlePWcheck('passwordCheck')}
+                                />
+                                {isPWCheck ? <p>비밀번호가 일치합니다</p> : <p>비밀번호가 일치하지 않습니다</p>}
+                            </ContentWrap>
+                            <NameAgeWrap>
+                                <Name>
+                                    <span>이름</span>
+                                    <input type='text' onChange={handleInputValue('name')} />
+                                </Name>
+                                <Age>
+                                    <span>나이</span>
+                                    <input type='number' onChange={handleInputValue('age')} />
+                                </Age>
+                            </NameAgeWrap>
+                        </form>
                         {/* 서비스 이용동의 체크란
                         <input type="checkbox"/> */}
-                        <ModalButton type='submit' onClick={handleSignup}>
-                            회원가입
-                        </ModalButton>
+                    </SignupInput>
+                    <ButtonWrap>
+                        <LocationButton onClick={getUserLocation}>동네 인증하기</LocationButton>
+                        <ModalButton type='submit' onClick={handleSignup}>회원가입</ModalButton>
                         <div className='alert-box'>{errorMessage}</div>
-                    </form>
-                </SignupInput>
+                    </ButtonWrap>
+                </Wrap>
             </ModalContainer>
 
         </>
     )
 }
-export default Signup;
+export default SignupModal;

@@ -63,10 +63,8 @@ function Login() {
                 dispatch(getUserInfo(data))
                 dispatch(login(result.data.data.accessToken))
                 dispatch(showLoginModal(false));
-                window.location.reload();
             }
             ).catch((err) => {
-                console.log(err.response.status)
                 dispatch(inputModalText(err.response.data.message));
                 dispatch(changeModalImg('question'));
                 dispatch(showConfirmModal(true));

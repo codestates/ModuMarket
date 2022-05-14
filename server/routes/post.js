@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const controller = require('../controllers');
 const multer = require('multer');
-const moment = require('moment');
 const {getFileStream} = require('../s3');
 
 const storage = multer.diskStorage({
@@ -24,12 +23,14 @@ const upload = multer({storage: storage, limits: { fileSize: 5 * 1024 * 1024 }, 
 // 공고글 게시판 목록
 router.get('/', controller.post.postList);
 
-// 특정 공고글 보기
-router.get('/:id', controller.post.postOne);
+// 특정 공고글 보기(유저 로그아웃 상태)
+router.get('/:id', controller.post.getPostOne);
+
+// 특정 공고글 보기(유저 로그인 상태)
+router.post('/:id', controller.post.postPostOne);
 
 // 공고글 AWS s3에서 가져오기
 router.get('/image/:key', (req, res) => {
-    console.log(req.params)
     const key = req.params.key;
 
     const readStream = getFileStream(key)

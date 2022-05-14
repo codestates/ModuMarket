@@ -17,12 +17,11 @@ export const ModalContainer = styled.div`
     height: 30rem;
     overflow-y: scroll;
     border-radius: 10px;
-    //padding: 2rem 2rem;
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 900;
+    z-index: 999;
     &::-webkit-scrollbar {
         display: none;
     }

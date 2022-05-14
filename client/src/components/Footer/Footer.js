@@ -10,7 +10,7 @@ import {FooterContainer,
         ProfileContainer, 
         ProfilePhoto, 
         TeamContainer,
-        ProfileInfo,
+        ProfileInfo,Section,
         GithubIcon} from './styled'
 
 
@@ -18,6 +18,7 @@ import {FooterContainer,
 function Footer (){
 
     return (
+        <Section>
         <FooterContainer>
             <LogoContainer>
             <img src = {logo} alt="logo" />
@@ -40,7 +41,7 @@ function Footer (){
                         <p>
                             <span>박보미 Back-End</span>
                         </p>
-                        <span>guddks84@gmail.com</span>
+                        <span>pakpomi77@gmail.com</span>
                         </ProfileInfo>
                     </ProfilePhoto>
                     <ProfilePhoto>
@@ -49,7 +50,7 @@ function Footer (){
                          <p>
                             <span>송혜원 Front-End</span>
                         </p>
-                        <span>guddks84@gmail.com</span>
+                        <span>shyewon1203@gmail.com</span>
                         </ProfileInfo>
                     </ProfilePhoto>
                     <ProfilePhoto>
@@ -58,7 +59,7 @@ function Footer (){
                         <p>
                             <span>유태의 Back-End</span>
                         </p>
-                        <span>guddks84@gmail.com</span>
+                        <span>xodml9598@gmail.com</span>
                         </ProfileInfo>
                     </ProfilePhoto>
                 </ProfileContainer>
@@ -70,6 +71,7 @@ function Footer (){
                 <span>About Us</span>
             </GithubIcon>
         </FooterContainer>
+        </Section>
     )
 }
 
