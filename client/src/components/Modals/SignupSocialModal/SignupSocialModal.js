@@ -7,10 +7,10 @@ import {
     changeModalImg
 } from '../../../reducers/modalSlice';
 import {
-    ModalBackground,ModalTextWrap,
-    ModalContainer,ModalTitleWrap, FormWrap,
-    ButtonWrap,Wrap,XWrap, SignupInput,
-    NameAgeWrap,Name,Age,LocationButton,ModalButton
+    ModalBackground, ModalTextWrap,
+    ModalContainer, ModalTitleWrap, FormWrap,
+    ButtonWrap, Wrap, XWrap, SignupInput,
+    NameAgeWrap, Name, Age, LocationButton, ModalButton
 } from './styled'
 import axios from 'axios'
 import { REACT_APP_API_URL, REACT_APP_HOME_URL } from '../../../config';
@@ -134,6 +134,8 @@ function SignupSocialModal() {
                 dispatch(changeModalImg('check_man'));
                 dispatch(showSignupSocialModal(false));
                 dispatch(showConfirmModal(true));
+                //홈으로 redirect
+                window.location.replace('/')
 
 
             })
@@ -156,37 +158,37 @@ function SignupSocialModal() {
                     </ModalTextWrap>
                 </Wrap>
                 <FormWrap onSubmit={(e) => e.preventDefault()}>
-                <SignupInput>
-                    <NameAgeWrap>
-                        <Name>
-                            <span>이름</span>
-                            <input type='text' onChange={handleInputValue('name')} />
-                        </Name>
-                        <Age>
-                            <span>나이</span>
-                            <input type='number' onChange={handleInputValue('age')} />
-                        </Age>
-                    </NameAgeWrap>                    
-                </SignupInput>
-                <ButtonWrap>
-                    <LocationButton onClick={getUserLocation}>동네 인증하기</LocationButton>
-                            {
-                                userSocial === 'kakao' ?
-                                    <ModalButton background="#F7E600" type='submit' onClick={handleKakaoSignup}>
-                                        <img src={kakaoIcon} alt="kakaoIcon"/>
-                                        카카오로 회원가입
-                                    </ModalButton>
-                                    :
-                                    <ModalButton background="white" type='submit' onClick={() => {
-                                        handleGithubSignup();
-                                        // window.location.href = `${REACT_APP_HOME_URL}`
-                                    }}>
-                                        <img src={gitIcon} alt="gitIcon"/>
-                                        Github으로 회원가입
-                                    </ModalButton>
-                            }
-                            <div className='alert-box'>{errorMessage}</div>   
-                </ButtonWrap>
+                    <SignupInput>
+                        <NameAgeWrap>
+                            <Name>
+                                <span>이름</span>
+                                <input type='text' onChange={handleInputValue('name')} />
+                            </Name>
+                            <Age>
+                                <span>나이</span>
+                                <input type='number' onChange={handleInputValue('age')} />
+                            </Age>
+                        </NameAgeWrap>
+                    </SignupInput>
+                    <ButtonWrap>
+                        <LocationButton onClick={getUserLocation}>동네 인증하기</LocationButton>
+                        {
+                            userSocial === 'kakao' ?
+                                <ModalButton background="#F7E600" type='submit' onClick={handleKakaoSignup}>
+                                    <img src={kakaoIcon} alt="kakaoIcon" />
+                                    카카오로 회원가입
+                                </ModalButton>
+                                :
+                                <ModalButton background="white" type='submit' onClick={() => {
+                                    handleGithubSignup();
+                                    // window.location.href = `${REACT_APP_HOME_URL}`
+                                }}>
+                                    <img src={gitIcon} alt="gitIcon" />
+                                    Github으로 회원가입
+                                </ModalButton>
+                        }
+                        <div className='alert-box'>{errorMessage}</div>
+                    </ButtonWrap>
                 </FormWrap>
             </ModalContainer>
         </>

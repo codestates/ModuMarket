@@ -9,12 +9,12 @@ import {
     changeModalImg
 } from '../../../reducers/modalSlice';
 import {
-    ModalBackground,ModalTextWrap,
-    ModalContainer,ModalTitleWrap, 
-    LocationButton,ModalTitleText,
-    ModalButton,ButtonWrap,
-    Wrap,XWrap, SignupInput,ContentWrap,
-    NameAgeWrap,Name,Age
+    ModalBackground, ModalTextWrap,
+    ModalContainer, ModalTitleWrap,
+    LocationButton, ModalTitleText,
+    ModalButton, ButtonWrap,
+    Wrap, XWrap, SignupInput, ContentWrap,
+    NameAgeWrap, Name, Age
 } from './styled'
 import axios from 'axios'
 import { REACT_APP_API_URL, REDIRECT_URI } from '../../../config';
@@ -127,11 +127,11 @@ function SignupModal() {
         <>
             {/* onClick시 모달창 닫히게끔 모달창 띄우는 상태가 리덕스로 관리*/}
             <ModalBackground onClick={() => dispatch(showSignupModal(false))} />
-                <ModalContainer>
-                    <XWrap>
+            <ModalContainer>
+                <XWrap>
                     <span onClick={() => dispatch(showSignupModal(false))}>&times;</span>
-                    </XWrap>
-                    <Wrap>
+                </XWrap>
+                <Wrap>
                     <ModalTextWrap>
                         <ModalTitleWrap>
                             <h2>회원가입</h2>
@@ -144,46 +144,46 @@ function SignupModal() {
                             </ModalTitleText>
                         </ModalTitleWrap>
                     </ModalTextWrap>
-                <SignupInput>
-                    <form onSubmit={(e) => e.preventDefault()}>
-                        <ContentWrap>
-                            <span>이메일</span>
-                            <input type='email' onChange={handleInputValue('email')} />
-                        </ContentWrap>
-                        <ContentWrap>
-                            <span>비밀번호</span>
-                            <input
-                                type='password'
-                                onChange={handleInputValue('password')}
-                                 />
-                        </ContentWrap>
-                        <ContentWrap>
-                            <span>비밀번호 확인</span>
-                            <input
-                                type='password'
-                                onChange={handlePWcheck('passwordCheck')}
-                               />
-                            {isPWCheck ? <p>비밀번호가 일치합니다</p> : <p>비밀번호가 일치하지 않습니다</p>}
-                        </ContentWrap>
-                        <NameAgeWrap>
-                            <Name>
-                                <span>이름</span>
-                                <input type='text' onChange={handleInputValue('name')} />
-                            </Name>
-                            <Age>
-                                <span>나이</span>
-                                <input type='number' onChange={handleInputValue('age')} />
-                            </Age> 
-                        </NameAgeWrap>
-                    </form>
+                    <SignupInput>
+                        <form onSubmit={(e) => e.preventDefault()}>
+                            <ContentWrap>
+                                <span>이메일</span>
+                                <input type='email' onChange={handleInputValue('email')} />
+                            </ContentWrap>
+                            <ContentWrap>
+                                <span>비밀번호</span>
+                                <input
+                                    type='password'
+                                    onChange={handleInputValue('password')}
+                                />
+                            </ContentWrap>
+                            <ContentWrap>
+                                <span>비밀번호 확인</span>
+                                <input
+                                    type='password'
+                                    onChange={handlePWcheck('passwordCheck')}
+                                />
+                                {isPWCheck ? <p>비밀번호가 일치합니다</p> : <p>비밀번호가 일치하지 않습니다</p>}
+                            </ContentWrap>
+                            <NameAgeWrap>
+                                <Name>
+                                    <span>이름</span>
+                                    <input type='text' onChange={handleInputValue('name')} />
+                                </Name>
+                                <Age>
+                                    <span>나이</span>
+                                    <input type='number' onChange={handleInputValue('age')} />
+                                </Age>
+                            </NameAgeWrap>
+                        </form>
                         {/* 서비스 이용동의 체크란
                         <input type="checkbox"/> */}
-                </SignupInput>
-                <ButtonWrap>
-                    <LocationButton onClick={getUserLocation}>동네 인증하기</LocationButton>
-                    <ModalButton type='submit' onClick={handleSignup}>회원가입</ModalButton>
-                    <div className='alert-box'>{errorMessage}</div>
-                </ButtonWrap>
+                    </SignupInput>
+                    <ButtonWrap>
+                        <LocationButton onClick={getUserLocation}>동네 인증하기</LocationButton>
+                        <ModalButton type='submit' onClick={handleSignup}>회원가입</ModalButton>
+                        <div className='alert-box'>{errorMessage}</div>
+                    </ButtonWrap>
                 </Wrap>
             </ModalContainer>
 

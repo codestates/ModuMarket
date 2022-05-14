@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { showRegisterModal, showLoginConfirmModal } from '../../reducers/modalSlice';
 import { REACT_APP_API_URL } from '../../config'
 import notYet from '../../assets/no_data_not_yet.gif'
+import { confirmImg } from '../../assets/images';
 import {
     Section,
     Wrap,
@@ -17,7 +18,8 @@ import {
     ReservationButton,
     CardWrap,
     RegisterNotYet,
-    RegisterNotYetPhoto
+    RegisterNotYetPhoto,
+    Loading
 } from "./styled"
 
 
@@ -30,7 +32,7 @@ function BoardPage() {
     const [cardInfo, setCardInfo] = useState()
     const [resultInfo, setResultInfo] = useState()
     const [searchInfo, setSearchInfo] = useState({
-        title: "", 
+        title: "",
         category: 5,
     })
     const handleInputValue = (key) => (e) => { // onChange 가 발생할 경우 값을 넣어주는 함수
@@ -43,37 +45,37 @@ function BoardPage() {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
-                authorization : `Bearer ${accessToken}` 
+                authorization: `Bearer ${accessToken}`
             },
             withCredentials: true
         })
-        
+
         setResultInfo(result.data.data)
         setCardInfo(result.data.data)
     }
 
     useEffect(() => {
         handleCardInfo()
-    },[])
+    }, [])
 
-    function handleSearch () {
+    function handleSearch() {
 
-        if(searchInfo.title === "" && parseInt(searchInfo.category) === 5){
+        if (searchInfo.title === "" && parseInt(searchInfo.category) === 5) {
             return setCardInfo(resultInfo)
         }
-        if(searchInfo.title !== "" && parseInt(searchInfo.category) === 5) {
+        if (searchInfo.title !== "" && parseInt(searchInfo.category) === 5) {
             let filteringInfo = resultInfo.filter((info) => {
                 return info.title.includes(searchInfo.title)
             })
             return setCardInfo(filteringInfo)
         }
-        if(searchInfo.title === "" && parseInt(searchInfo.category) !== 5){
+        if (searchInfo.title === "" && parseInt(searchInfo.category) !== 5) {
             let filteringInfo = resultInfo.filter((info) => {
                 return info.category === parseInt(searchInfo.category)
             })
             return setCardInfo(filteringInfo)
         }
-        else{
+        else {
             let filteringInfo = resultInfo.filter((info) => {
                 return info.title.includes(searchInfo.title) && (info.category === parseInt(searchInfo.category))
             })
@@ -88,10 +90,10 @@ function BoardPage() {
             <Section>
                 <Wrap>
                     {
-                        isLogin 
-                        ?
+                        isLogin
+                            ?
                             <TitleWrap>{`${areaName} 공구찾기`}</TitleWrap>
-                        :
+                            :
                             <TitleWrap>전체 공구찾기</TitleWrap>
                     }
                     <SearchWrap>
@@ -107,32 +109,35 @@ function BoardPage() {
                         <SearchButton onClick={() => handleSearch()}>검색</SearchButton>
                     </SearchWrap>
                     {
-                        isLogin 
-                        ?   
+                        isLogin
+                            ?
                             <ReservationButtonWrap>
                                 <ReservationButton onClick={() => dispatch(showRegisterModal(true))}>공구글 등록하기</ReservationButton>
                             </ReservationButtonWrap>
-                        :
+                            :
                             <ReservationButtonWrap>
                                 <ReservationButton onClick={() => dispatch(showLoginConfirmModal(true))}>공구글 등록하기</ReservationButton>
                             </ReservationButtonWrap>
                     }
                     <CardWrap>
                         {
-                            cardInfo 
-                            ? 
+                            cardInfo
+                                ?
                                 cardInfo.length === 0
                                     ?
-                                        <RegisterNotYet>
-                                            <RegisterNotYetPhoto>
-                                                <img src={notYet} alt="has no data not yet photo"/>
-                                            </RegisterNotYetPhoto>
-                                            <p>아직 우리동네에 등록된 공구가 없어요</p>
-                                        </RegisterNotYet>
+                                    <RegisterNotYet>
+                                        <RegisterNotYetPhoto>
+                                            <img src={notYet} alt="has no data not yet" />
+                                        </RegisterNotYetPhoto>
+                                        <p>아직 우리동네에 등록된 공구가 없어요</p>
+                                    </RegisterNotYet>
                                     :
-                                        cardInfo.map((info, idx) => <Cards info={info} key={idx} />)
-                            :   
-                                <div>Loading</div>
+                                    cardInfo.map((info, idx) => <Cards info={info} key={idx} />)
+                                :
+                                <Loading>
+                                    <h1>Loading...</h1>
+                                    <img src={confirmImg.loading} alt='loading' />
+                                </Loading>
                         }
                     </CardWrap>
                 </Wrap>

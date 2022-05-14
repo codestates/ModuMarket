@@ -4,8 +4,10 @@ import { REACT_APP_API_URL } from '../../config';
 import { Link } from 'react-router-dom';
 import { React, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
+import { profileImg } from '../../assets/images';
 import { logout } from '../../reducers/loginSlice';
-import { getUserInfo } from '../../reducers/userInfoSlice'
+import { getUserInfo, getUserImg } from '../../reducers/userInfoSlice'
+import { getWritePost, getParticipatePost, checkWriteNull, checkPartyNull } from '../../reducers/myPostSlice'
 import {
     showLoginModal,
     showSignupGateModal,
@@ -27,6 +29,7 @@ function Header() {
     const isLogin = useSelector((state) => state.login.isLogin);
     const accessToken = useSelector((state) => state.login.accessToken);
     const userSocial = useSelector((state) => state.userInfo.userStatus);
+    const userInfo = useSelector((state) => state.userInfo.userInfo);
 
     const purge = async () => {
         await persistor.purge();
@@ -46,6 +49,46 @@ function Header() {
             dispatch(getUserInfo(result.data.data));
         })
 
+    }
+
+    function handleWritePost() {
+        axios.get(`${REACT_APP_API_URL}/user/writepost`,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${accessToken}`,
+                },
+                withCredentials: true
+            }
+
+        ).then((result) => {
+            if (result.status === 200) {
+                dispatch(checkWriteNull(false));
+                dispatch(getWritePost(result.data.data));
+            } else {
+                dispatch(checkWriteNull(true));
+            }
+        })
+    }
+
+    function handleParticipatePost() {
+        axios.get(`${REACT_APP_API_URL}/user/participatepost`,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${accessToken}`,
+                },
+                withCredentials: true
+            }
+
+        ).then((result) => {
+            if (result.status === 200) {
+                dispatch(checkPartyNull(false));
+                dispatch(getParticipatePost(result.data.data));
+            } else {
+                dispatch(checkPartyNull(true));
+            }
+        })
     }
 
     const handleLogout = async () => {
@@ -71,6 +114,7 @@ function Header() {
         setTimeout(() => purge(), 100)
     }
 
+
     return (
         <NavContainer>
             <NavLink to="/board">
@@ -86,8 +130,12 @@ function Header() {
             {isLogin ? (
                 <>
                     <NavButtons>
-                        <NavLink to="/mypage">
-                            <NavButton onClick={handleGetUserInfo}>마이페이지</NavButton>
+                        <NavLink to="/mypage" >
+                            <NavButton onClick={async () => {
+                                handleGetUserInfo();
+                                handleWritePost();
+                                handleParticipatePost();
+                            }}>마이페이지</NavButton>
                         </NavLink>
                         {userSocial === 'own' ?
                             //일반 로그아웃
