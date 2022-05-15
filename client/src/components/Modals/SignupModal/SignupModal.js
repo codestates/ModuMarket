@@ -13,7 +13,7 @@ import {
     ModalContainer, ModalTitleWrap,
     LocationButton, ModalTitleText,
     ModalButton, ButtonWrap,
-    Wrap, XWrap, SignupInput, ContentWrap,
+    Wrap, XWrap, SignupInput, ContentWrap, ErrorMsgWrap,
     NameAgeWrap, Name, Age
 } from './styled'
 import axios from 'axios'
@@ -23,8 +23,11 @@ function SignupModal() {
 
     const dispatch = useDispatch();
     const [errorMessage, setErrorMessage] = useState('');
-    const [passwordCheck, setPasswordCheck] = useState('');
-    const [isPWCheck, setIsPWCheck] = useState(false);
+    const [errorEmailMessage, setErrorEmailMessage] = useState('');
+    const [errorPwMessage, setErrorPwMessage] = useState('');
+    const [errorNameMessage, setErrorNameMessage] = useState('');
+    const [errorAgeMessage, setErrorAgeMessage] = useState('');
+    const [pwCheck, setPwCheck] = useState('');
     const [userInputInfo, setUserInputInfo] = useState({
         email: '',
         password: '',
@@ -40,10 +43,13 @@ function SignupModal() {
     }
 
     /* 비밀번호 확인 */
-    const handlePWcheck = (key) => (e) => {
-        setPasswordCheck({ ...passwordCheck, [key]: e.target.value });
-        if (passwordCheck === userInputInfo.password) {
-            setIsPWCheck(true);
+    const handlePWcheck = (e) => {
+        console.log(userInputInfo.password)
+        setPwCheck(e.target.value)
+        if (e.target.value !== userInputInfo.password) {
+            setErrorPwMessage('비밀번호가 일치하지 않습니다');
+        } else {
+            setErrorPwMessage('');
         }
     }
     /* 이메일 중복확인 요청 */
@@ -82,17 +88,53 @@ function SignupModal() {
                 alterAddress(position);
             });
         } else {
-            console.log('위치 인증 실패');
-            //loc.innerHTML = "이 문장은 사용자의 웹 브라우저가 Geolocation API를 지원하지 않을 때 나타납니다!";
-
+            dispatch(inputModalText('위치 인증 실패'));
+            dispatch(changeModalImg('question'));
+            dispatch(showConfirmModal(true));
         }
 
+    }
+    /* 에러 메세지 설정 함수*/
+    const handleErrMsg = () => {
+        if (userInputInfo.email || userInputInfo.password || userInputInfo.name || userInputInfo.age) {
+            if (userInputInfo.email) {
+                setErrorEmailMessage('')
+            }
+            if (userInputInfo.password) {
+                setErrorPwMessage('')
+            }
+            if (userInputInfo.name) {
+                setErrorNameMessage('')
+            }
+            if (userInputInfo.age) {
+                setErrorAgeMessage('')
+            }
+        }
+        if (!userInputInfo.email) {
+            setErrorEmailMessage('이메일을 입력해주세요')
+        }
+        if (!userInputInfo.password) {
+            setErrorPwMessage('비밀번호를 입력해주세요')
+        }
+        if (!pwCheck) {
+            setErrorPwMessage('비밀번호 확인을 입력해주세요')
+        }
+        if (!userInputInfo.name) {
+            setErrorNameMessage('이름을 입력해주세요')
+        }
+        if (!userInputInfo.age) {
+            setErrorAgeMessage('나이를 입력해주세요')
+        }
     }
 
     /* 회원가입 요청 */
     const handleSignup = () => {
         //입력값이 모두 존재할 경우만 요청보냄
-        if (userInputInfo.email &&
+        if (!userInputInfo.email || !userInputInfo.password || !userInputInfo.name || !userInputInfo.age) {
+            handleErrMsg();
+        }
+        else if (
+            userInputInfo.email &&
             userInputInfo.password &&
             userInputInfo.name &&
             userInputInfo.age
@@ -120,9 +162,24 @@ function SignupModal() {
                 dispatch(showConfirmModal(true));
             })
         } else {
+            handleErrMsg();
             setErrorMessage('모든 항목을 빠짐없이 입력해주세요.');
         }
     }
+
+    useEffect(() => {
+        setErrorEmailMessage(errorEmailMessage);
+        setErrorPwMessage(errorPwMessage);
+        setErrorNameMessage(errorNameMessage);
+        setErrorAgeMessage(errorAgeMessage);
+    }, [errorEmailMessage, errorPwMessage, errorNameMessage, errorAgeMessage])
+
+
+    useEffect(() => {
+        setPwCheck(pwCheck);
+    }, [pwCheck])
+
+
     return (
         <>
             {/* onClick시 모달창 닫히게끔 모달창 띄우는 상태가 리덕스로 관리*/}
@@ -150,6 +207,9 @@ function SignupModal() {
                                 <span>이메일</span>
                                 <input type='email' onChange={handleInputValue('email')} />
                             </ContentWrap>
+                            <ErrorMsgWrap>
+                                <p>{errorEmailMessage}</p>
+                            </ErrorMsgWrap>
                             <ContentWrap>
                                 <span>비밀번호</span>
                                 <input
@@ -157,14 +217,19 @@ function SignupModal() {
                                     onChange={handleInputValue('password')}
                                 />
                             </ContentWrap>
+                            <ErrorMsgWrap>
+                                <p></p>
+                            </ErrorMsgWrap>
                             <ContentWrap>
                                 <span>비밀번호 확인</span>
                                 <input
                                     type='password'
-                                    onChange={handlePWcheck('passwordCheck')}
+                                    onChange={handlePWcheck}
                                 />
-                                {isPWCheck ? <p>비밀번호가 일치합니다</p> : <p>비밀번호가 일치하지 않습니다</p>}
                             </ContentWrap>
+                            <ErrorMsgWrap>
+                                <p>{errorPwMessage}</p>
+                            </ErrorMsgWrap>
                             <NameAgeWrap>
                                 <Name>
                                     <span>이름</span>
@@ -175,14 +240,15 @@ function SignupModal() {
                                     <input type='number' onChange={handleInputValue('age')} />
                                 </Age>
                             </NameAgeWrap>
+                            <ErrorMsgWrap tag={'nameAge'}>
+                                <p>{errorNameMessage}</p>
+                                <p>{errorAgeMessage}</p>
+                            </ErrorMsgWrap>
                         </form>
-                        {/* 서비스 이용동의 체크란
-                        <input type="checkbox"/> */}
                     </SignupInput>
                     <ButtonWrap>
                         <LocationButton onClick={getUserLocation}>동네 인증하기</LocationButton>
                         <ModalButton type='submit' onClick={handleSignup}>회원가입</ModalButton>
-                        <div className='alert-box'>{errorMessage}</div>
                     </ButtonWrap>
                 </Wrap>
             </ModalContainer>

@@ -15,15 +15,20 @@ import {
 } from '../../../reducers/modalSlice';
 import {
     ModalBackground,
-    ModalNameWrap,
     ModalContainer,
+    ModalInformRow,
+    ModalNameWrap,
     ModalAgeWrap,
+    NameAgeWrap,
+    Name, Age,
+    EmailWrap,
+    AreaWrap,
     ModalText,
     ModalImg,
     ProfileImg,
     ModalImgText,
-    ModalInformRow,
-    ModalButton
+    ModalButton,
+    SignoutText,
 } from './styled'
 import { profileImg } from '../../../assets/images'
 
@@ -39,6 +44,11 @@ const MyInfo = () => {
     const [file, setFile] = useState('');
 
 
+    /* 전체 둘러보기 가능하도록 유저의 위치를 전체로 만드는 함수 */
+    const makeUserOverall = () => {
+        setNewArea('전체');
+        dispatch(changeUserArea('전체'));
+    }
 
     /* 카카오지도 API로 현재 유저 좌표를 동단위로 변환 */
     const alterAddress = (position) => {
@@ -148,6 +158,7 @@ const MyInfo = () => {
                 //서버로부터 이미지 경로를 받아와야함
                 //응답 성공시 s3에 있는 이미지 경로를 받아와서 리덕스 userInfo.userImg에 저장
                 dispatch(getUserImg(`${ REACT_APP_API_URL }/user/image/${result.data.data}/`));
+
             }).catch((err) => {
                 //default profile img
                 console.log(err.response.message);
@@ -159,19 +170,6 @@ const MyInfo = () => {
         }
     }
     console.log(myImg);
-
-    // function onLoadFile(e) {
-    //     const reader = new FileReader();
-    //     reader.readAsDataURL(e)
-
-    //     return new Promise((resolve) => {
-    //         reader.onload = () => {
-    //             setFile(reader.result);
-    //             resolve();
-    //         }
-    //     })
-    // }
-
 
     useEffect(() => {
         if (newArea) {
@@ -185,13 +183,14 @@ const MyInfo = () => {
 
     return (
         <>
-            <ModalBackground onClick={() => dispatch(showMyInfoModal(false))} />
+            <ModalBackground />
             <ModalContainer>
                 <ModalText>
                     <span onClick={() => dispatch(showMyInfoModal(false))}>&times;</span>
                     <h2>마이 페이지</h2>
                 </ModalText>
                 <ModalImg>
+
                     <form onSubmit={(e) => e.preventDefault()} >
                         <input
                             id="photofile"
@@ -211,24 +210,30 @@ const MyInfo = () => {
                     </ModalImgText>
                 </ModalImg>
                 <ModalInformRow>
-                    <ModalNameWrap>
-                        <p>이름</p>
-                        <span>{myInfo.name}</span>
-                    </ModalNameWrap>
-                    <ModalAgeWrap>
-                        <span>나이</span>
-                        <p>{myInfo.age}</p>
-                    </ModalAgeWrap>
+                    <NameAgeWrap>
+                        <ModalNameWrap>
+                            <p>이름</p>
+                            <Name>
+                                <span>{myInfo.name}</span>
+                            </Name>
+                        </ModalNameWrap>
+                        <ModalAgeWrap>
+                            <p>나이</p>
+                            <Age>
+                                <span>{myInfo.age}</span>
+                            </Age>
+                        </ModalAgeWrap>
+                    </NameAgeWrap>
+                    <EmailWrap>
+                        <p>이메일</p>
+                        <p>{myInfo.email}</p>
+                    </EmailWrap>
+                    <AreaWrap>
+                        <p>나의 동네</p>
+                        <p>{myInfo.area_name}</p>
+                    </AreaWrap>
                 </ModalInformRow>
-                <ModalInformRow>
-                    <span>이메일</span>
-                    <p>{myInfo.email}</p>
-                </ModalInformRow>
-                <ModalInformRow>
-                    <span>나의 동네</span>
-                    <p>{myInfo.area_name}</p>
-                </ModalInformRow>
-                <ModalButton onClick={getUserLocation}>
+                <ModalButton area={'area'} onClick={getUserLocation}>
                     동네인증 다시하기
                 </ModalButton>
                 {/* 사용자의 로그인 상태(소셜로그인인지, 일반인지)에 따라 버튼 보여주기 */}
@@ -250,12 +255,16 @@ const MyInfo = () => {
 
                 }
                 <ModalText>
+
+                    <button onClick={makeUserOverall}>제한 없이 전체 동네 둘러보기 </button>
+                </ModalText>
+                <SignoutText>
                     <p>Modumarket을 더이상 이용하지 않는다면?
                         <button onClick={() => {
                             dispatch(showSignoutModal(true));
                         }}>탈퇴하기</button>
                     </p>
-                </ModalText>
+                </SignoutText>
             </ModalContainer>
 
         </>

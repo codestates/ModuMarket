@@ -141,6 +141,13 @@ export const Name = styled.div`
       height : 1.5rem;
       border-radius: 4px;
     }
+    & > p {
+      padding-top : 0.5rem;
+      padding-bottom: 0.5rem;
+      font-size : 0.7rem;
+      color : red;
+      font-weight: 700;
+    }
 `
 export const Age = styled.div`
   width : 100%;
@@ -162,13 +169,20 @@ export const Age = styled.div`
       border-radius: 4px;   
 
     }
+  & > p {
+    padding-top : 0.5rem;
+    padding-bottom: 0.5rem;
+    font-size : 0.7rem;
+    color : red;
+    font-weight: 700;
+  }
 `
 
 
 
 export const ButtonWrap = styled.div`
   width : 70%;
-  padding-top : 2rem;
+  padding-top : 1.5rem;
   display: flex;
   flex-direction: column;
   justify-content:center;
@@ -206,5 +220,21 @@ export const ModalButton = styled.button`
         transition: all 0.3s;
         border: 1px solid #FF6767;   
         background-color: white;
+    }
+`
+
+export const ErrorMsgWrap = styled.div`
+    display : flex; 
+    flex-direction: row;
+    justify-content: ${(props) => props.tag === 'nameAge' ?
+    'space-around' : 'flex-start'
+  };
+    /* align-items: space-around; */
+    height : 0.8rem;
+    padding : 0.3rem 0;
+  & > p {
+      font-size : 0.5rem;
+      color : red;
+      font-weight: 700;
     }
 `
