@@ -28,6 +28,7 @@ const PwCheck = () => {
         setPw(e.target.value);
     }
 
+    // 암호화된 비밀번호를 가져와서 해독후 클라이언트에서 보내주는 문자열 비밀번호를 비교해서 보내주기
     const handlePasswordAuth = () => {
         if (!pw) {
             setErrorMessage('비밀번호를 입력해주세요');

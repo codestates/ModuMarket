@@ -47,6 +47,7 @@ if (fs.existsSync("./key.pem") && fs.existsSync("./cert.pem")) {
     .listen(PORT, () => {
       console.log(`Express https server is listening on port ${PORT}`)
     });
+
   // } else {
   // //   // express가 http를 통해 실행될 수 있도록 만들기
   //   server = http.createServer(app).listen(PORT, () => {

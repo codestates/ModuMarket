@@ -2,7 +2,7 @@ const User = require('../models/User');
 const { Post } = require('../models/Post');
 const Application = require('../models/Application');
 const jwt = require('jsonwebtoken');
-const { uploadFile } = require('../s3');
+const { uploadFile, deleteFile } = require('../s3');
 const fs = require('fs');
 const util = require('util');
 const unlinkFile = util.promisify(fs.unlink);
@@ -211,17 +211,33 @@ module.exports = {
 
   uploadImage: async (req, res) => {
     console.log(req.file);
-    console.log(req.params)
 
-    const result1 = await uploadFile(req.file);
-    await unlinkFile(req.file.path)
-    // console.log(result1);
+    const token = req.headers.authorization.split(' ')[1];
+    const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET);
+    const refTokenData = jwt.verify(req.cookies.refreshToken, process.env.REFRESH_SECRET);
+    
+    console.log(req.body.formerImage)
+    if (accTokenData && refTokenData) {
+      const {_id} = accTokenData;
+      await uploadFile(req.file);
+      if (req.body.formerImage !== '/images/profile_color_blue.png') {
+        await deleteFile(req.body.formerImage);
+      }
+      await unlinkFile(req.file.path);
+      const userData = await User.findByIdAndUpdate(_id, { $set: { user_image: req.file.filename } }).exec();
+      // console.log(userData.user_image)
+      res.status(200).json({ data: userData.user_image });
+    }
 
-    await User.updateOne({ email: req.params.email }, { $set: { user_image: req.file.path } })
+    // const result1 = await uploadFile(req.file);
+    // await unlinkFile(req.file.path)
+    // // console.log(result1);
 
-    const result = await User.findOne({ email: req.body.email }).exec();
+    // await User.updateOne({ email: req.params.email }, { $set: { user_image: req.file.path } })
 
-    res.send({ imagePath: `/:email/image/${result1.key}` })
+    // const result = await User.findOne({ email: req.body.email }).exec();
+
+    // res.send({ imagePath: `/:email/image/${result1.key}` })
     // res.send('1')
 
     // uploadImage.save()
@@ -234,12 +250,12 @@ module.exports = {
 
   },
 
-  getImage: async (req, res) => {
-    console.log(req.params)
-    const result = await User.findOne({ email: req.params.email }).select("user_image").exec();
+  // getImage: async (req, res) => {
+  //   console.log(req.params)
+  //   const result = await User.findOne({ email: req.params.email }).select("user_image").exec();
 
-    res.send(result);
-  },
+  //   res.send(result);
+  // },
 
   deleteInfo: async (req, res) => {
     const token = req.headers.authorization.split(' ')[1]; //Bearer

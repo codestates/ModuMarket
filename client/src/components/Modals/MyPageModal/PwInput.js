@@ -37,6 +37,7 @@ const PwInput = () => {
         }
     }
 
+    // 비밀번호 수정은 잘 됨. >> 이 비밀번호를 암호화 시켜서 저장 필요.
     const handlePasswordChange = () => {
         if (!pw) {
             setErrorMessage('비밀번호를 입력해주세요');
