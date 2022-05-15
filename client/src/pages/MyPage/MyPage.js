@@ -110,7 +110,7 @@ function MyPage() {
             }
         ).then((result) => {
             //응답 성공시 s3에 있는 이미지 경로를 받아와서 리덕스 userInfo.userImg에 저장
-            dispatch(getUserImg(result.data));
+            dispatch(getUserImg(result.data.data));
         }).catch((err) => {
             //default profile img
             dispatch(getUserImg(profileImg));
@@ -127,7 +127,11 @@ function MyPage() {
             <Wrap>
                 <ProfileWrap>
                     <ProfilePhotoWrap>
-                        <img src={userImg} alt="user profile" />
+                        {
+                            userImg === '/images/profile_color_blue.png' ?
+                            <img src={userImg} alt="user profile" /> :
+                            <img src={`${ REACT_APP_API_URL }/user/image/${userImg}/`} alt="user profile" />
+                        }
                     </ProfilePhotoWrap>
                     <ProfileContentWrap>
                         <span>{userInfo.name}</span>
