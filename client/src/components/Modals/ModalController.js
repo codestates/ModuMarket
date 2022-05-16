@@ -18,6 +18,7 @@ import RecruitmentCompleteModal from './RecruitmentCompleteModal/RecruitmentComp
 import ParticipateModal from './ParticipateModal/participateModal'
 import CancelParticipateModal from './CancelParticipateModal/CancelParticipateModal'
 import AlertModal from './AlertModal/AlertModal'
+import ConfirmReloadModal from './ConfirmReload/ConfirmReload';
 
 const ModalController = () => {
     const {
@@ -40,7 +41,8 @@ const ModalController = () => {
         participateModal,
         cancelParticipateModal,
         confirmModalToBoard,
-        alertModal
+        alertModal,
+        confirmReloadModal
 
     } = useSelector((state) => state.modal);
 
@@ -67,7 +69,7 @@ const ModalController = () => {
             {confirmModalToBoard && <ConfirmModalToBoard />}
             {alertModal && <AlertModal />}
             {confirmModal && <Confirm />}
-
+            {confirmReloadModal && <ConfirmReloadModal />}
         </>
     )
 }

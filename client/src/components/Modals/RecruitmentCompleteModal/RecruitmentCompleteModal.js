@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { showRecruitmentCompleteModal, inputModalText, changeModalImg, showConfirmModal } from '../../../reducers/modalSlice';
+import { showRecruitmentCompleteModal, inputModalText, changeModalImg, showConfirmReloadModal } from '../../../reducers/modalSlice';
 import question from '../../../assets/question.png';
 import axios from 'axios';
 import { REACT_APP_API_URL } from '../../../config'
@@ -30,7 +30,7 @@ function RecruitmentCompleteModal () {
             dispatch(inputModalText(result.data.message));
             dispatch(changeModalImg('check_man'));
             dispatch(showRecruitmentCompleteModal(false));
-            dispatch(showConfirmModal(true));
+            dispatch(showConfirmReloadModal(true));
         })
     }
 

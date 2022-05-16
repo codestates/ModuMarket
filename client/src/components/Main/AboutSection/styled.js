@@ -2,27 +2,31 @@ import styled from 'styled-components'
 import {Link} from "react-router-dom"
 
 export const ButtonLink = styled(Link)`
-
-    
-    & > button {
-        @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
-        font-family: 'Open Sans', sans-serif;
-        background-color: #FF6767;
-        font-size: 1rem;
-        font-weight:700;
-        width : 16rem;
-        height : 2.8rem;
-        cursor: pointer;
-        border-radius: 4px;
-        border: none;
-        color : white;
-        &:hover {
-            color: #FF6767;
-            transition: all 0.3s;
-            border: 1px solid #FF6767;
-            background-color: #fff;
-        }
-
+    text-decoration: none;
+    color: black;
+  
+  &:focus, &:hover, &:visited, &:link, &:active {
+    text-decoration: none;
+    color: black;
+  }
+`
+export const Button = styled.button`
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+    font-family: 'Open Sans', sans-serif;
+    background-color: #FF6767;
+    font-size: 1rem;
+    font-weight:700;
+    width : 16rem;
+    height : 2.8rem;
+    cursor: pointer;
+    border-radius: 4px;
+    border: none;
+    color : white;
+    &:hover {
+        color: #FF6767;
+        transition: all 0.3s;
+        border: 1px solid #FF6767;
+        background-color: #fff;
     }
 `
 

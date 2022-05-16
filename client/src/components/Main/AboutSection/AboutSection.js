@@ -8,7 +8,7 @@ import {
     IntroduceSection,
     IntroducePhoto,
     IntroduceContent,
-    ButtonLink
+    ButtonLink, Button
 } from './styled'
 
 function AboutSection() {
@@ -63,7 +63,7 @@ function AboutSection() {
                                 이웃들과 공동구매를 시작해보세요!
                             </h2>
                             <ButtonLink to="/board">
-                                <button onClick={() => window.scrollTo({ top: 0, left: 0 })}>우리동네 공구 찾기</button>
+                                <Button onClick={() => window.scrollTo({ top: 0, left: 0 })}>우리동네 공구 찾기</Button>
                             </ButtonLink>
                         </IntroduceContent>
                     </IntroduceSection>

@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { showParticipateModal, inputModalText, changeModalImg, showConfirmModal } from '../../../reducers/modalSlice';
+import { showParticipateModal, inputModalText, changeModalImg, showConfirmReloadModal } from '../../../reducers/modalSlice';
 import question from '../../../assets/question.png';
 import axios from 'axios';
 import { REACT_APP_API_URL } from '../../../config';
@@ -31,7 +31,7 @@ function ParticipateModal (){
             dispatch(inputModalText(result.data.message));
             dispatch(changeModalImg('check_man'));
             dispatch(showParticipateModal(false));
-            dispatch(showConfirmModal(true));
+            dispatch(showConfirmReloadModal(true));
         })
     }
     

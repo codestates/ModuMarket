@@ -4,7 +4,7 @@ import { login } from '../../reducers/loginSlice';
 import {
     showLoginModal,
     showSignupModal,
-    showConfirmModal,
+    showConfirmReloadModal,
     inputModalText,
     changeModalImg
 } from '../../reducers/modalSlice';
@@ -70,7 +70,7 @@ function Login() {
             ).catch((err) => {
                 dispatch(inputModalText(err.response.data.message));
                 dispatch(changeModalImg('question'));
-                dispatch(showConfirmModal(true));
+                dispatch(showConfirmReloadModal(true));
             })
         } else {
             setErrorMessage('이메일과 비밀번호를 모두 입력하세요');

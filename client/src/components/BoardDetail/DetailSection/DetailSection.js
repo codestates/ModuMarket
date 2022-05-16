@@ -23,12 +23,13 @@ import {
     Section, Wrap,
     TitleWrap, Title,
     ButtonWrap, Button,
-    SectionWrap,
+    SectionWrap, HeadButton,
     DetailWrap, Detail,
     DetailPhoto, DetailCategory,
     DetailMemberAndTimeWrap,
     DetailMemberAndTime,
-    DetailButtonWrap, DetailButton
+    DetailButtonWrap, DetailButton,
+    DitailButtonChild
 } from './styled';
 
 function DetailSection({ info }) {
@@ -84,11 +85,11 @@ function DetailSection({ info }) {
                         cardUserId === userId
                             ?
                             <ButtonWrap>
-                                <Button background="#FF6767">
-                                    <button onClick={() => { handleRevise() }}>수정하기</button>
+                                <Button>
+                                    <HeadButton background="#FF6767" onClick={() => { handleRevise() }}>수정하기</HeadButton>
                                 </Button>
-                                <Button background="white">
-                                    <button onClick={() => { handleDelete() }}>삭제하기</button>
+                                <Button>
+                                    <HeadButton background="white" onClick={() => { handleDelete() }}>삭제하기</HeadButton>
                                 </Button>
                             </ButtonWrap>
                             : null
@@ -122,8 +123,8 @@ function DetailSection({ info }) {
                             <span>{info.data.endtime}</span>
                         </DetailMemberAndTimeWrap>
                         <DetailButtonWrap>
-                            <DetailButton background="#FF6767">
-                                <button onClick={() => dispatch(showChattingModal(true))} >채팅하기</button>
+                            <DetailButton>
+                                <DitailButtonChild background="#FF6767" onClick={() => dispatch(showChattingModal(true))} >채팅하기</DitailButtonChild>
                             </DetailButton>
                             {
                                 isValid
@@ -132,26 +133,26 @@ function DetailSection({ info }) {
                                         ?
                                         cardUserId === userId
                                             ?
-                                            <DetailButton background="white">
-                                                <button onClick={() => dispatch(showRecruitmentCompleteModal(true))}>모집 완료하기</button>
+                                            <DetailButton>
+                                                <DitailButtonChild background="white" onClick={() => dispatch(showRecruitmentCompleteModal(true))}>모집 완료하기</DitailButtonChild>
                                             </DetailButton>
                                             :
                                             isApplied
                                                 ?
-                                                <DetailButton background="white">
-                                                    <button onClick={() => dispatch(showCancelParticipateModal(true))}>참가 취소하기</button>
+                                                <DetailButton>
+                                                    <DitailButtonChild  background="white" onClick={() => dispatch(showCancelParticipateModal(true))}>참가 취소하기</DitailButtonChild>
                                                 </DetailButton>
                                                 :
-                                                <DetailButton background="white">
-                                                    <button onClick={() => dispatch(showParticipateModal(true))}>참가하기</button>
+                                                <DetailButton>
+                                                    <DitailButtonChild  background="white" onClick={() => dispatch(showParticipateModal(true))}>참가하기</DitailButtonChild>
                                                 </DetailButton>
                                         :
-                                        <DetailButton background="white">
-                                            <button onClick={() => { handleLogin() }}>공구 참여하기</button>
+                                        <DetailButton>
+                                            <DitailButtonChild background="white" onClick={() => { handleLogin() }}>공구 참여하기</DitailButtonChild>
                                         </DetailButton>
                                     :
-                                    <DetailButton background="white">
-                                        <button>모집 완료되었습니다</button>
+                                    <DetailButton>
+                                        <DitailButtonChild  background="white">모집 완료되었습니다</DitailButtonChild>
                                     </DetailButton>
                             }
                         </DetailButtonWrap>

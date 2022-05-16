@@ -11,7 +11,7 @@ import {
     showSignupGateModal,
     showConfirmModal,
     inputModalText,
-    changeModalImg
+    changeModalImg, 
 } from '../../reducers/modalSlice';
 import {
     NavItem,
