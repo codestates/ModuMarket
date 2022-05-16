@@ -129,8 +129,6 @@ function MyPage() {
                 <ProfileWrap>
                     <ProfilePhotoWrap>
                         {
-
-
                             userImg === 'default' ?
                                 <img src={profileImg} alt="default profile" /> :
                                 <img src={`${REACT_APP_API_URL}/user/image/${userImg}/`} alt="user profile" />

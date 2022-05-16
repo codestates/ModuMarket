@@ -1,12 +1,11 @@
 import axios from 'axios'
 import { REACT_APP_API_URL } from '../../../config';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeUserArea, getUserImg } from '../../../reducers/userInfoSlice';
 import {
     showMyInfoModal,
     showMyPwCheckModal,
-    showMyNewPwModal,
     showSignoutModal,
     showSignoutSocialModal,
     showConfirmModal,
@@ -116,31 +115,16 @@ const MyInfo = () => {
     }
 
     /* 프로필 사진 이미지 불러오기 */
-    const uploadedImg = useRef(null);
-    const imageUploader = useRef(null);
     const handleImgUpload = () => {
         let photoFile = document.getElementById("photofile");
         const formData = new FormData();
 
         if (photoFile.files[0]) {
-            // 전에 있던 사진의 이름 넣으면 됨.
-            console.log(myImg);
+            // 전에 있던 사진의 이름 
             formData.append("formerImage", myImg);
             formData.append("newImage", photoFile.files[0]);
         }
-
-        // const [file] = e.target.files;
-        // if (file) {
-        //     const reader = new FileReader();
-        //     const { current } = uploadedImg;
-        //     current.file = file;
-        //     reader.onload = e => {
-        //         current.src = e.target.result;
-        //         setFile(reader.result);
-        //     }
-        //     reader.readAsDataURL(file)
         /* 서버로 이미지 등록 요청 */
-
         axios.post(`${REACT_APP_API_URL}/user/image`,
             formData
             ,
@@ -156,13 +140,17 @@ const MyInfo = () => {
             //서버로부터 이미지 경로를 받아와야함
             //응답 성공시 s3에 있는 이미지 경로를 받아와서 리덕스 userInfo.userImg에 저장
             dispatch(getUserImg(result.data.data));
-
+            dispatch(inputModalText('회원 정보 수정이 완료되었습니다'));
+            dispatch(changeModalImg('check_woman1'));
+            dispatch(showConfirmModal(true));
+            dispatch(showMyInfoModal(false));
         }).catch((err) => {
             //default profile img
-            console.log(err.response.message);
-            // dispatch(getUserImg(profileImg));
-            //임시방편으로 404일때 모달에서 등록한 img를 리덕스 스토어에 저장해 MyPage에서도 띄움
-            // dispatch(getUserImg(reader.result));
+            console.log(err.response.data);
+            dispatch(inputModalText(err.response.data.message));
+            dispatch(changeModalImg('check_skull'));
+            dispatch(showConfirmModal(true));
+
         })
 
 
@@ -189,7 +177,6 @@ const MyInfo = () => {
 
     useEffect(() => {
         setFile(file)
-        handleImgUpload()
     }, [file])
 
     return (
@@ -265,16 +252,14 @@ const MyInfo = () => {
                         }}>
                             비밀번호 변경하기
                         </ModalButton>
-                        <ModalButton onClick={() => {
-                            dispatch(showMyNewPwModal(true))
-                        }}>
-                            비밀번호 입력하기
-                        </ModalButton>
                     </>
                     :
                     <></>
 
                 }
+                <ModalButton onClick={handleImgUpload}>
+                    수정 완료하기
+                </ModalButton>
                 <ModalText>
 
                     <button onClick={makeUserOverall}>제한 없이 전체 동네 둘러보기 </button>
