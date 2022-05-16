@@ -51,7 +51,7 @@ const SignupGate = () => {
                     dispatch(showSignupGateModal(false))
                     dispatch(setUserStatus('github'))
                     }}>
-                        <img src={gitIcon}/>
+                        <img src={gitIcon} alt='git icon'/>
                         Github 회원가입
                     </ModalButton>
                     <ModalButton background="#F7E600" onClick={() => {
@@ -59,7 +59,7 @@ const SignupGate = () => {
                         dispatch(showSignupGateModal(false))
                         dispatch(setUserStatus('kakao'))
                     }}>
-                        <img src={kakaoIcon}/>
+                        <img src={kakaoIcon} alt='kakao icon'/>
                         카카오톡 회원가입
                     </ModalButton>
                 </ButtonWrap>

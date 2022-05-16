@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import FoodIcon from '../../../assets/food_icon.png'
 import BabiesIcon from '../../../assets/babies_icon.png'
 import FashionIcon from '../../../assets/fashion_icon.png'
@@ -7,7 +7,6 @@ import NecessityIcon from '../../../assets/necessity_icon.png'
 import MemberIcon from '../../../assets/member.png'
 import TimerIcon from '../../../assets/timer.png'
 import Photo from '../../../assets/photo.png'
-import ReviseRegister from '../../Modals/ReviseRegister/ReviseRegister'
 import { useDispatch, useSelector } from 'react-redux';
 import {
     showChattingModal,

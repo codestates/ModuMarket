@@ -43,7 +43,7 @@ function CancelParticipateModal (){
         <ModalBackground>
             <ModalContainer>
                 <ModalImg>
-                    <img src = {question} alt="confirm photo"/>
+                    <img src = {question} alt="confirm"/>
                 </ModalImg>
                 <ModalText>
                     <p>공구참여 취소할까요?</p>

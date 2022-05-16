@@ -48,11 +48,9 @@ router.post('/', controller.user.auth);
 router.patch('/', controller.user.changeInfo);
 
 router.get('/image/:key', (req, res) => {
-    console.log(req.params)
     const key = req.params.key;
 
     const readStream = getFileStream(key)
-    console.log(readStream)
 
     readStream.pipe(res);
 })

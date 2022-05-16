@@ -143,13 +143,10 @@ module.exports = {
       .then(async (data) => {
         const { email } = data.data.kakao_account
         const id = data.data.id
-        console.log(email)
-        console.log(id)
 
         // 카카오에서 유저정보를 받아왔으면 카카오 유니크 키로, 가입했는지 여부 확인
         const result = await User.findOne({ social_Id: id }).exec()
         if (result) { // 가입한 유저이면? 디비에 있는 유저의 동네정보, 아이디, 이메일을 갖고 토큰만들어서주기
-          console.log(result);
           const { _id, email, name, area_name } = result;
           const accessToken = jwt.sign(JSON.parse(JSON.stringify({ _id, email, area_name })),
             process.env.ACCESS_SECRET, { expiresIn: '2h' });
@@ -228,12 +225,9 @@ module.exports = {
               email = data.data.email;
             }
             id = data.data.id;
-            console.log(id)
-            console.log(email)
             // ! social_github : id 가 들어가도록 해야함
             const result = await User.findOne({ social_Id: id }).exec()
             if (result) { // 가입한 유저이면? 디비에 있는 유저의 동네정보, 아이디, 이메일을 갖고 토큰만들어서주기
-              console.log(githubAccessToken)
               const { _id, email, name, area_name } = result;
               const accessToken = jwt.sign(JSON.parse(JSON.stringify({ _id, email, area_name })),
                 process.env.ACCESS_SECRET, { expiresIn: '2h' });

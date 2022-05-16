@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router';
 import {
     showLoginModal,
     showSignupModal,
@@ -17,7 +16,7 @@ import {
     NameAgeWrap, Name, Age
 } from './styled'
 import axios from 'axios'
-import { REACT_APP_API_URL, REDIRECT_URI } from '../../../config';
+import { REACT_APP_API_URL } from '../../../config';
 
 function SignupModal() {
 
@@ -35,7 +34,6 @@ function SignupModal() {
         age: '',
         area_name: '',
     });
-    const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_KAKAO_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
 
     /* 회원 정보 입력 관리 함수 */
     const handleInputValue = (key) => (e) => {
@@ -44,7 +42,6 @@ function SignupModal() {
 
     /* 비밀번호 확인 */
     const handlePWcheck = (e) => {
-        console.log(userInputInfo.password)
         setPwCheck(e.target.value)
         if (e.target.value !== userInputInfo.password) {
             setErrorPwMessage('비밀번호가 일치하지 않습니다');
@@ -53,9 +50,10 @@ function SignupModal() {
         }
     }
     /* 이메일 중복확인 요청 */
-    const handleEmailCheck = () => {
+    // const handleEmailCheck = () => {
 
-    }
+    // }
+
     /* 카카오지도 API로 현재 유저 좌표를 동단위로 변환 */
     const alterAddress = (position) => {
         let x = position.coords.longitude;

@@ -7,7 +7,6 @@ import {
     showMyInfoModal,
     showMyPwCheckModal,
     showSignoutModal,
-    showSignoutSocialModal,
     showConfirmModal,
     inputModalText,
     changeModalImg

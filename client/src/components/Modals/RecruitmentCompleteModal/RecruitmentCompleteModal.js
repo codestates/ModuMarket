@@ -38,7 +38,7 @@ function RecruitmentCompleteModal () {
         <ModalBackground>
             <ModalContainer>
                 <ModalImg>
-                    <img src = {question} alt="confirm photo"/>
+                    <img src = {question} alt="confirm"/>
                 </ModalImg>
                 <ModalText>
                     <p>현재 공고글 모집을 완료할까요?</p>

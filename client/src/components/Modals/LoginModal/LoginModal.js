@@ -12,7 +12,7 @@ import { getUserInfo, setUserStatus } from '../../../reducers/userInfoSlice'
 import {
     ModalBackground,ModalTextWrap,
     ModalContainer,ModalTitleWrap, 
-    ModalText,ModalTitleText,
+    ModalTitleText,
     LoginInput,LoginWrap,
     ModalButton,ButtonWrap,
     Wrap,XWrap
@@ -131,7 +131,7 @@ function LoginModal() {
                         dispatch(showLoginModal(false));
                         dispatch(setUserStatus('github'));
                     }}>
-                        <img src={gitIcon}/>
+                        <img src={gitIcon} alt='git icon'/>
                         Git Hub 로그인
                     </ModalButton>
                     <ModalButton background="#F7E600" onClick={() => {

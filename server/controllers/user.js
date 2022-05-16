@@ -80,8 +80,6 @@ module.exports = {
       const { email } = accTokenData
       try {
         const result = await User.findOne({ email: email }).exec();
-        console.log(result.password);
-        console.log(req.body.password);
         if (result.password === req.body.password) {
           res.status(200).json({ data: null, message: '인증이 완료되었습니다' });
         } else {
@@ -161,7 +159,6 @@ module.exports = {
           } else {
             bcrypt.hash(req.body.password, salt, async (err, hash) => {
               if (err)
-                // console.log('에러나는 진짜 이유')
                 return res.status(500).json({ message: "비밀번호가 안전하지 않습니다." });
 
               // 비밀번호를 해쉬된 값으로 대체합니다.
@@ -238,8 +235,6 @@ module.exports = {
   },
 
   passwordCheck: (req, res) => {
-    console.log(req.body);
-
     const token = req.headers.authorization.split(' ')[1];
     const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET);
     const refTokenData = jwt.verify(req.cookies.refreshToken, process.env.REFRESH_SECRET);
@@ -252,7 +247,6 @@ module.exports = {
         }
         // 이메일 일치할 경우 비밀번호 확인하기
         if (data) {
-          console.log(data);
           const checkPW = () => {
             //복호화 
             bcrypt.compare(req.body.password, data.password, (err, isMatch) => {
@@ -276,14 +270,10 @@ module.exports = {
   },
 
   uploadImage: async (req, res) => {
-    console.log(req.file);
-
     const token = req.headers.authorization.split(' ')[1];
     const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET);
     const refTokenData = jwt.verify(req.cookies.refreshToken, process.env.REFRESH_SECRET);
 
-    console.log('예전꺼 찍혀야함!!!!!')
-    console.log(req.body.formerImage)
     if (accTokenData && refTokenData) {
       const { _id } = accTokenData;
       if (!req.body.formerImage || !req.file) {
@@ -295,8 +285,6 @@ module.exports = {
         }
         await unlinkFile(req.file.path);
         const userData = await User.findByIdAndUpdate(_id, { $set: { user_image: req.file.filename } }, { new: true }).exec();
-        console.log('새로운거 와야함!!!!!')
-        console.log(userData.user_image)
         res.status(200).json({ data: userData.user_image });
       }
     }

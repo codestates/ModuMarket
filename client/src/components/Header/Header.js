@@ -14,7 +14,6 @@ import {
     changeModalImg, 
 } from '../../reducers/modalSlice';
 import {
-    NavItem,
     NavLink,
     NavContainer,
     NavButtons,
