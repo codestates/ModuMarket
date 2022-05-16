@@ -33,6 +33,10 @@ const GlobalStyle = createGlobalStyle`
       }
     outline:none;
   }
+  a{
+    text-decoration: none;
+    color: black;
+  }
 
 
 `
@@ -43,7 +47,7 @@ const GlobalStyle = createGlobalStyle`
 function App() {
   return (
     <>
-      <GlobalStyle/>
+      <GlobalStyle />
       <Header />
       <Body />
       <Footer />

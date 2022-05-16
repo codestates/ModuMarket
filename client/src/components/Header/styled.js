@@ -4,12 +4,21 @@ import { Link } from "react-router-dom";
 export const NavLink = styled(Link)`
   text-decoration: none;
   color: black;
-
-    & > span{
+  
+  & > span{
+      text-decoration: none;
+      color: black;
       width: 190px;
+  }
+  &:hover{
+      color:black;
+      text-decoration:none;
   }
 
 `;
+// export default styled(Header)`
+
+// `
 
 export const NavContainer = styled.div`
     display: flex;
