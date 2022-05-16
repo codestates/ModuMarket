@@ -79,7 +79,6 @@ if (fs.existsSync("./key.pem") && fs.existsSync("./cert.pem")) {
           if (data.length === 0) {
             return;
           } else {
-            console.log(data)
             const result = data.map(el => {
               return {
                 username: el.username,
@@ -87,7 +86,6 @@ if (fs.existsSync("./key.pem") && fs.existsSync("./cert.pem")) {
                 time: el.time
               }
             })
-            console.log(result)
             //const time = moment(new Date()).format("h:mm A") //?
             io.to(room).emit('type', { result, room }) // arr= 채팅내역, 요 채팅방에만 메시지를 보내겠다
           }
@@ -95,7 +93,6 @@ if (fs.existsSync("./key.pem") && fs.existsSync("./cert.pem")) {
     })
 
     socket.on('message', async ({ name, message, room }) => {
-      console.log(name, message, room)
       const time = moment(new Date()).format("h:mm A")
 
       const chatroomMessage = new ChatroomMessage();
@@ -111,7 +108,6 @@ if (fs.existsSync("./key.pem") && fs.existsSync("./cert.pem")) {
 
     socket.on('leave', (room) => {
       socket.leave(room, () => {
-        console.log('왜안되냐 ... ')
       });
     });
 

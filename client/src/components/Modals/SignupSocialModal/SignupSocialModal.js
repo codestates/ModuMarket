@@ -13,7 +13,7 @@ import {
     NameAgeWrap, Name, Age, LocationButton, ModalButton
 } from './styled'
 import axios from 'axios'
-import { REACT_APP_API_URL, REACT_APP_HOME_URL } from '../../../config';
+import { REACT_APP_API_URL } from '../../../config';
 import gitIcon from '../../../assets/github_icon_dark.png'
 import kakaoIcon from '../../../assets/kakao.png'
 

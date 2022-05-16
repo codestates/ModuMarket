@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useState, useEffect} from 'react';
-import { showConfirmModal, showChattingModal } from '../../../reducers/modalSlice';
-import { ModalBackground, ModalContainer, ModalText, ModalImg, ModalButton } from './styled';
+import { showChattingModal } from '../../../reducers/modalSlice';
+import { ModalBackground, ModalContainer, ModalText } from './styled';
 import TextField from '@material-ui/core/TextField';
 import io from 'socket.io-client';
 import { REACT_APP_API_URL } from '../../../config';
@@ -10,7 +10,6 @@ const socket =  io.connect(REACT_APP_API_URL)
 
 const Chatting = () => {
     const dispatch = useDispatch();
-    const isLogin = useSelector((state) => state.login.isLogin);
     const userInfo = useSelector((state) => state.userInfo.userInfo);
     const cardInfo = useSelector((state) => state.board.cardInfo);
 
@@ -26,14 +25,13 @@ const Chatting = () => {
   
         socket.on('type', (data)=>{
             
-          const {result, room} = data;
+          const {result} = data;
           
         //   console.log(room + '에 입장하셨습니다!!!!!')
         //   console.log(userName)
           // setChat([...chat,{name, message, time}]);
           let temp = [];
           result.forEach(el => {
-              console.log(el)
               temp.push({
                 // name: userInfo.name,
                 name: el.username,

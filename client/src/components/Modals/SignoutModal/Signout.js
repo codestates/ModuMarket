@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { persistor } from '../../../index'
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../../reducers/loginSlice'

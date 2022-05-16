@@ -40,7 +40,7 @@ function ParticipateModal (){
         <ModalBackground>
             <ModalContainer>
                 <ModalImg>
-                    <img src = {question} alt="confirm photo"/>
+                    <img src = {question} alt="confirm"/>
                 </ModalImg>
                 <ModalText>
                     <p>공구에 참가하실래요?</p>

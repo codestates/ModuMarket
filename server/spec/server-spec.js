@@ -43,8 +43,6 @@ describe('🗄  Cmarket Database', () => {
       (err, result) => {
         if (result) {
           if (!app) {
-            console.log('dd');
-
             app = require('../app');
           }
           done();

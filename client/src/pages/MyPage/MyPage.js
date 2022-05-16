@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { profileImg, nothingImg } from '../../assets/images'
-import { getUserImg } from '../../reducers/userInfoSlice'
 import Cards from '../../components/Cards/Cards'
 import { showMyInfoModal } from '../../reducers/modalSlice'
 import {
@@ -120,8 +119,6 @@ function MyPage() {
     // useEffect(() => {
 
     // }, [userImg])
-
-    console.log(userImg)
 
     return (
         <Section>
