@@ -4,7 +4,7 @@ import { REACT_APP_API_URL } from '../../config';
 import { React } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../reducers/loginSlice';
-import { getUserInfo } from '../../reducers/userInfoSlice'
+import { getUserInfo, getUserImg } from '../../reducers/userInfoSlice'
 import { getWritePost, getParticipatePost, checkWriteNull, checkPartyNull } from '../../reducers/myPostSlice'
 import {
     showLoginModal,
