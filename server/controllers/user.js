@@ -5,6 +5,8 @@ const jwt = require('jsonwebtoken');
 const { uploadFile, deleteFile } = require('../s3');
 const fs = require('fs');
 const util = require('util');
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
 const unlinkFile = util.promisify(fs.unlink);
 
 module.exports = {
@@ -143,12 +145,28 @@ module.exports = {
     if (accTokenData && refTokenData) {
       const { _id } = accTokenData;
       if (req.body.password || req.body.area_name) {
-        const result = await User.findByIdAndUpdate(_id, { $set: { password: req.body.password, area_name: req.body.area_name } }, { new: true })
-        if (result) {
-          res.status(200).json({ data: null, message: '회원정보 수정이 완료 되었습니다' });
-        } else {
-          res.status(500).json({ data: null, message: 'server error' });
-        }
+        bcrypt.genSalt(saltRounds, (err, salt) => {
+          // 솔트 생성 실패시
+          if (err)
+            return res.status(500).json({ message: "비밀번호가 안전하지 않습니다." });
+          // salt 생성에 성공시 hash 진행
+    
+          bcrypt.hash(req.body.password, salt, async (err, hash) => {
+            if (err)
+              return res.status(500).json({ message: "비밀번호가 안전하지 않습니다." });
+    
+            // 비밀번호를 해쉬된 값으로 대체합니다.
+            password = hash;
+    
+            // console.log(User)
+            const result = await User.findByIdAndUpdate(_id, { $set: { password: hash, area_name: req.body.area_name } }, { new: true })
+            if (result) {
+              res.status(200).json({ data: null, message: '회원정보 수정이 완료 되었습니다' });
+            } else {
+              res.status(500).json({ data: null, message: 'server error' });
+            }
+          })
+        })
       } else {
         res.status(404).json({ data: null, message: '회원정보 수정란을 입력해주세요' });
       }
@@ -208,6 +226,43 @@ module.exports = {
       res.status(404).json({ data: null, message: "access and refresh token has been tempered" })
     }
   },
+
+  passwordCheck: (req, res) => {
+    console.log(req.body);
+
+    const token = req.headers.authorization.split(' ')[1];
+    const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET);
+    const refTokenData = jwt.verify(req.cookies.refreshToken, process.env.REFRESH_SECRET);
+
+    if (accTokenData && refTokenData) {
+      const {_id} = accTokenData;
+      User.findOne({ _id: _id }, (err, data) => {
+        if (err) {
+          return res.status(500).json({ message: "서버 오류" });
+        }
+        // 이메일 일치할 경우 비밀번호 확인하기
+        if (data) {
+          console.log(data);
+          const checkPW = () => {
+            //복호화 
+            bcrypt.compare(req.body.password, data.password, (err, isMatch) => {
+              if (err) {
+                return res.status(500).json({ message: "서버 오류" });
+              }
+              // 비밀번호가 일치할 경우 
+              if (isMatch) {
+                res.status(200).json({message: "비밀번호가 일치합니다." });
+              }
+              else {
+                return res.status(401).json({ message: "비밀번호를 일치하지 않습니다." });
+              }
+            });
+          };
+          checkPW();
+        }
+        // 이메일이 일치하지않을 경우 
+      })
+  }},
 
   uploadImage: async (req, res) => {
     console.log(req.file);

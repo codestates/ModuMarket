@@ -21,11 +21,10 @@ const Auth = ({ social }) => {
 
     const dispatch = useDispatch();
     if (social === 'kakao') {
-        const REDIRECT_URI = "https://localhost:3000/sign/kakao/callback";
         const code = new URL(window.location.href).searchParams.get("code");
         const kakaoToken = () => {
             let kakaoAccessToken = ' ';
-            axios.post(`https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${process.env.REACT_APP_KAKAO_API_KEY}&redirect_uri=${REDIRECT_URI}&code=${code}`,
+            axios.post(`https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${process.env.REACT_APP_KAKAO_API_KEY}&redirect_uri=${REACT_APP_API_URL}&code=${code}`,
                 { headers: { "Content-type": "application/x-www-form-urlencoded;charset=utf-8" } })
                 .then((result) => {
                     kakaoAccessToken = result.data.access_token

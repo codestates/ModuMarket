@@ -38,6 +38,9 @@ router.get('/writepost', controller.user.writePost);
 // 내가 참가한 공고글 목록
 router.get('/participatepost', controller.user.participatePost);
 
+// 유저 비밀번호 확인
+router.post('/password', controller.user.passwordCheck);
+
 // 마이페이지 정보수정(유저 비밀번호 인증(body에 password))
 router.post('/', controller.user.auth);
 
