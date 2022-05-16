@@ -10,10 +10,10 @@ export const NavLink = styled(Link)`
       color: black;
       width: 190px;
   }
-  &:hover{
-      color:black;
-      text-decoration:none;
-  }
+  &:focus, &:hover, &:visited, &:link, &:active {
+    text-decoration: none;
+    color: black;
+}
 
 `;
 // export default styled(Header)`
