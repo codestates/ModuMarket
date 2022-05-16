@@ -4,7 +4,8 @@ import { showConfirmModal } from '../../../reducers/modalSlice';
 import {
     ModalBackground, ModalContainer,
     ModalText, ModalButton,
-    ModalImg,ModalButtonWrap } from './styled'
+    ModalImg, ModalButtonWrap
+} from './styled'
 import { confirmImg } from '../../../assets/images'
 import { ModalForm } from './styled';
 
@@ -16,24 +17,24 @@ const Confirm = () => {
 
     return (
         <>
-        <ModalBackground/>
+            <ModalBackground />
             <ModalContainer img={img}>
                 <ModalImg>
                     <img src={confirmImg[`${img}`]} alt={`${img}`} />
                     <ModalText>
                         <ModalForm>
                             <p>{text}</p>
-                        </ModalForm> 
+                        </ModalForm>
                     </ModalText>
-                        {
-                            img ==='loading' 
-                            ? 
-                                <></>
+                    {
+                        img === 'loading'
+                            ?
+                            <></>
                             :
-                                <ModalButtonWrap>
-                                    <ModalButton background="#FF6767" onClick={() => {dispatch(showConfirmModal(false)); }}>확인</ModalButton>
-                                </ModalButtonWrap>
-                        }
+                            <ModalButtonWrap>
+                                <ModalButton background="#FF6767" onClick={() => { dispatch(showConfirmModal(false)); }}>확인</ModalButton>
+                            </ModalButtonWrap>
+                    }
                 </ModalImg>
             </ModalContainer>
         </>

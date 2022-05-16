@@ -1,12 +1,11 @@
 import axios from 'axios'
 import { REACT_APP_API_URL } from '../../../config';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeUserArea, getUserImg } from '../../../reducers/userInfoSlice';
 import {
     showMyInfoModal,
     showMyPwCheckModal,
-    showMyNewPwModal,
     showSignoutModal,
     showSignoutSocialModal,
     showConfirmModal,
@@ -15,15 +14,20 @@ import {
 } from '../../../reducers/modalSlice';
 import {
     ModalBackground,
-    ModalNameWrap,
     ModalContainer,
+    ModalInformRow,
+    ModalNameWrap,
     ModalAgeWrap,
+    NameAgeWrap,
+    Name, Age,
+    EmailWrap,
+    AreaWrap,
     ModalText,
     ModalImg,
     ProfileImg,
     ModalImgText,
-    ModalInformRow,
-    ModalButton
+    ModalButton,
+    SignoutText,
 } from './styled'
 import { profileImg } from '../../../assets/images'
 
@@ -32,13 +36,18 @@ const MyInfo = () => {
 
     const dispatch = useDispatch();
     const myInfo = useSelector((state) => state.userInfo.userInfo);
-    const myImg = useSelector((state) => state.userInfo.userImg)
+    const myImg = useSelector((state) => state.userInfo.userImg);
     const myStatus = useSelector((state) => state.userInfo.userStatus);
     const accessToken = useSelector((state) => state.login.accessToken);
     const [newArea, setNewArea] = useState('');
     const [file, setFile] = useState('');
 
 
+    /* 전체 둘러보기 가능하도록 유저의 위치를 전체로 만드는 함수 */
+    const makeUserOverall = () => {
+        setNewArea('전체');
+        dispatch(changeUserArea('전체'));
+    }
 
     /* 카카오지도 API로 현재 유저 좌표를 동단위로 변환 */
     const alterAddress = (position) => {
@@ -106,57 +115,58 @@ const MyInfo = () => {
     }
 
     /* 프로필 사진 이미지 불러오기 */
-    const uploadedImg = useRef(null);
-    const imageUploader = useRef(null);
-    const handleImgUpload = e => {
-        const [file] = e.target.files;
-        if (file) {
-            const reader = new FileReader();
-            const { current } = uploadedImg;
-            current.file = file;
-            reader.onload = e => {
-                current.src = e.target.result;
-                setFile(reader.result);
-            }
-            reader.readAsDataURL(file)
-            /* 서버로 이미지 등록 요청 */
+    const handleImgUpload = () => {
+        let photoFile = document.getElementById("photofile");
+        const formData = new FormData();
 
-            axios.post(`${REACT_APP_API_URL}/user/image`,
-                file
-                ,
-                {
-                    headers: {
-                        "Content-Type": file.type,
-                        Authorization: `Bearer ${accessToken}`,
-                    },
-                    withCredentials: true
-                }
-            ).then((result) => {
-                //서버로부터 이미지 경로를 받아와야함
-                //응답 성공시 s3에 있는 이미지 경로를 받아와서 리덕스 userInfo.userImg에 저장
-                dispatch(getUserImg(result.data));
-            }).catch((err) => {
-                //default profile img
-                console.log(err.response.message);
-                // dispatch(getUserImg(profileImg));
-                //임시방편으로 404일때 모달에서 등록한 img를 리덕스 스토어에 저장해 MyPage에서도 띄움
-                dispatch(getUserImg(reader.result));
-            })
-
+        if (photoFile.files[0]) {
+            // 전에 있던 사진의 이름 
+            formData.append("formerImage", myImg);
+            formData.append("newImage", photoFile.files[0]);
         }
+        /* 서버로 이미지 등록 요청 */
+        axios.post(`${REACT_APP_API_URL}/user/image`,
+            formData
+            ,
+            {
+                headers: {
+                    "Content-Type": 'multipart/form-data',
+                    Authorization: `Bearer ${accessToken}`,
+                },
+                withCredentials: true
+            }
+        ).then((result) => {
+            console.log(result.data.data);
+            //서버로부터 이미지 경로를 받아와야함
+            //응답 성공시 s3에 있는 이미지 경로를 받아와서 리덕스 userInfo.userImg에 저장
+            dispatch(getUserImg(result.data.data));
+            dispatch(inputModalText('회원 정보 수정이 완료되었습니다'));
+            dispatch(changeModalImg('check_woman1'));
+            dispatch(showConfirmModal(true));
+            dispatch(showMyInfoModal(false));
+        }).catch((err) => {
+            //default profile img
+            console.log(err.response.data);
+            dispatch(inputModalText(err.response.data.message));
+            dispatch(changeModalImg('check_skull'));
+            dispatch(showConfirmModal(true));
+
+        })
+
+
     }
 
-    // function onLoadFile(e) {
-    //     const reader = new FileReader();
-    //     reader.readAsDataURL(e)
+    function onLoadFile(e) {
+        const reader = new FileReader();
+        reader.readAsDataURL(e)
 
-    //     return new Promise((resolve) => {
-    //         reader.onload = () => {
-    //             setFile(reader.result);
-    //             resolve();
-    //         }
-    //     })
-    // }
+        return new Promise((resolve) => {
+            reader.onload = () => {
+                setFile(reader.result);
+                resolve();
+            }
+        })
+    }
 
 
     useEffect(() => {
@@ -171,47 +181,67 @@ const MyInfo = () => {
 
     return (
         <>
-            <ModalBackground onClick={() => dispatch(showMyInfoModal(false))} />
+            <ModalBackground />
             <ModalContainer>
                 <ModalText>
                     <span onClick={() => dispatch(showMyInfoModal(false))}>&times;</span>
                     <h2>마이 페이지</h2>
                 </ModalText>
                 <ModalImg>
-                    <input
-                        id="photofile"
-                        type="file"
-                        accept="image/jpg, image/png, image/jpeg"
-                        multiple={false}
-                        onChange={handleImgUpload}
-                        ref={imageUploader}
-                        style={{
-                            display: "none"
-                        }} />
-                    <img ref={uploadedImg} src={myImg} alt='profileImg' onClick={() => imageUploader.current.click()} />
-                    <ModalImgText>
-                        이미지 업로드
-                    </ModalImgText>
+                    <form onSubmit={(e) => e.preventDefault()} >
+                        <input
+                            id="photofile"
+                            name='image'
+                            type="file"
+                            accept="image/jpg, image/png, image/jpeg"
+                            multiple={false}
+                            onChange={(e) => {
+                                onLoadFile(e.target.files[0])
+
+                            }}
+                            style={{ visibility: "hidden" }} />
+                    </form>
+                    <ProfileImg>
+                        <label htmlFor="photofile">
+                            {
+                                file ?
+                                    <img src={file} alt='profile preview' />
+                                    :
+                                    myImg === 'default' ?
+                                        <img src={profileImg} alt='profileImg' />
+                                        : <img src={`${REACT_APP_API_URL}/user/image/${myImg}/`} alt='profileImg' />
+                            }
+                        </label>
+                        <ModalImgText>
+                            <label htmlFor="photofile">이미지 업로드</label>
+                        </ModalImgText>
+                    </ProfileImg>
                 </ModalImg>
                 <ModalInformRow>
-                    <ModalNameWrap>
-                        <p>이름</p>
-                        <span>{myInfo.name}</span>
-                    </ModalNameWrap>
-                    <ModalAgeWrap>
-                        <span>나이</span>
-                        <p>{myInfo.age}</p>
-                    </ModalAgeWrap>
+                    <NameAgeWrap>
+                        <ModalNameWrap>
+                            <p>이름</p>
+                            <Name>
+                                <span>{myInfo.name}</span>
+                            </Name>
+                        </ModalNameWrap>
+                        <ModalAgeWrap>
+                            <p>나이</p>
+                            <Age>
+                                <span>{myInfo.age}</span>
+                            </Age>
+                        </ModalAgeWrap>
+                    </NameAgeWrap>
+                    <EmailWrap>
+                        <p>이메일</p>
+                        <p>{myInfo.email}</p>
+                    </EmailWrap>
+                    <AreaWrap>
+                        <p>나의 동네</p>
+                        <p>{myInfo.area_name}</p>
+                    </AreaWrap>
                 </ModalInformRow>
-                <ModalInformRow>
-                    <span>이메일</span>
-                    <p>{myInfo.email}</p>
-                </ModalInformRow>
-                <ModalInformRow>
-                    <span>나의 동네</span>
-                    <p>{myInfo.area_name}</p>
-                </ModalInformRow>
-                <ModalButton onClick={getUserLocation}>
+                <ModalButton area={'area'} onClick={getUserLocation}>
                     동네인증 다시하기
                 </ModalButton>
                 {/* 사용자의 로그인 상태(소셜로그인인지, 일반인지)에 따라 버튼 보여주기 */}
@@ -222,23 +252,25 @@ const MyInfo = () => {
                         }}>
                             비밀번호 변경하기
                         </ModalButton>
-                        <ModalButton onClick={() => {
-                            dispatch(showMyNewPwModal(true))
-                        }}>
-                            비밀번호 입력하기
-                        </ModalButton>
                     </>
                     :
                     <></>
 
                 }
+                <ModalButton onClick={handleImgUpload}>
+                    수정 완료하기
+                </ModalButton>
                 <ModalText>
+
+                    <button onClick={makeUserOverall}>제한 없이 전체 동네 둘러보기 </button>
+                </ModalText>
+                <SignoutText>
                     <p>Modumarket을 더이상 이용하지 않는다면?
                         <button onClick={() => {
                             dispatch(showSignoutModal(true));
                         }}>탈퇴하기</button>
                     </p>
-                </ModalText>
+                </SignoutText>
             </ModalContainer>
 
         </>

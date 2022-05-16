@@ -2,9 +2,11 @@ const User = require('../models/User');
 const { Post } = require('../models/Post');
 const Application = require('../models/Application');
 const jwt = require('jsonwebtoken');
-const { uploadFile } = require('../s3');
+const { uploadFile, deleteFile } = require('../s3');
 const fs = require('fs');
 const util = require('util');
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
 const unlinkFile = util.promisify(fs.unlink);
 
 module.exports = {
@@ -39,12 +41,12 @@ module.exports = {
 
     if (accTokenData && refTokenData) {
       const userinfo = await User.findOne({ email: accTokenData.email }).exec();
-      const { _id, name, email, age, area_name } = userinfo
-      res.status(200).json({ data: { userInfo: { id: _id, name, email, age, area_name } }, message: 'ok' })
+      const { _id, name, email, age, area_name, user_image } = userinfo
+      res.status(200).json({ data: { userInfo: { id: _id, name, email, age, area_name, user_image } }, message: 'ok' })
     }
     if (accTokenData && !refTokenData) {
       const userinfo = await User.findOne({ email: accTokenData.email }).exec();
-      const { _id, name, email, age, area_name } = userinfo
+      const { _id, name, email, age, area_name, user_image } = userinfo
       const refreshToken = jwt.sign(JSON.parse(JSON.stringify({ _id, email, area_name })), process.env.REFRESH_SECRET, { expiresIn: '14d' });
 
       res
@@ -53,14 +55,14 @@ module.exports = {
           httpOnly: true,
         })
         .status(200)
-        .json({ data: { userinfo: { id: _id, name, email, age, area_name } }, message: 'ok' });
+        .json({ data: { userInfo: { id: _id, name, email, age, area_name, user_image } }, message: 'ok' });
 
     }
     if (!accTokenData && refTokenData) {
       const userinfo = await User.findOne({ email: refTokenData.email }).exec();
-      const { _id, name, email, password, age, area_name } = userinfo
+      const { _id, name, email, age, area_name, user_image } = userinfo
       const accessToken = jwt.sign(JSON.parse(JSON.stringify({ _id, email, area_name })), process.env.ACCESS_SECRET, { expiresIn: '2h' });
-      return res.send({ data: { accessToken, userInfo: { id: _id, name, email, age, area_name } }, message: "ok" })
+      return res.send({ data: { accessToken, userInfo: { id: _id, name, email, age, area_name, user_image } }, message: "ok" })
     }
     if (!accTokenData && !refTokenData) {
       res.status(404).send({ "data": null, "message": "access and refresh token has been tempered" })
@@ -143,12 +145,28 @@ module.exports = {
     if (accTokenData && refTokenData) {
       const { _id } = accTokenData;
       if (req.body.password || req.body.area_name) {
-        const result = await User.findByIdAndUpdate(_id, { $set: { password: req.body.password, area_name: req.body.area_name } }, { new: true })
-        if (result) {
-          res.status(200).json({ data: null, message: '회원정보 수정이 완료 되었습니다' });
-        } else {
-          res.status(500).json({ data: null, message: 'server error' });
-        }
+        bcrypt.genSalt(saltRounds, (err, salt) => {
+          // 솔트 생성 실패시
+          if (err)
+            return res.status(500).json({ message: "비밀번호가 안전하지 않습니다." });
+          // salt 생성에 성공시 hash 진행
+
+          bcrypt.hash(req.body.password, salt, async (err, hash) => {
+            if (err)
+              return res.status(500).json({ message: "비밀번호가 안전하지 않습니다." });
+
+            // 비밀번호를 해쉬된 값으로 대체합니다.
+            password = hash;
+
+            // console.log(User)
+            const result = await User.findByIdAndUpdate(_id, { $set: { password: hash, area_name: req.body.area_name } }, { new: true })
+            if (result) {
+              res.status(200).json({ data: null, message: '회원정보 수정이 완료 되었습니다' });
+            } else {
+              res.status(500).json({ data: null, message: 'server error' });
+            }
+          })
+        })
       } else {
         res.status(404).json({ data: null, message: '회원정보 수정란을 입력해주세요' });
       }
@@ -209,19 +227,79 @@ module.exports = {
     }
   },
 
+  passwordCheck: (req, res) => {
+    console.log(req.body);
+
+    const token = req.headers.authorization.split(' ')[1];
+    const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET);
+    const refTokenData = jwt.verify(req.cookies.refreshToken, process.env.REFRESH_SECRET);
+
+    if (accTokenData && refTokenData) {
+      const { _id } = accTokenData;
+      User.findOne({ _id: _id }, (err, data) => {
+        if (err) {
+          return res.status(500).json({ message: "서버 오류" });
+        }
+        // 이메일 일치할 경우 비밀번호 확인하기
+        if (data) {
+          console.log(data);
+          const checkPW = () => {
+            //복호화 
+            bcrypt.compare(req.body.password, data.password, (err, isMatch) => {
+              if (err) {
+                return res.status(500).json({ message: "서버 오류" });
+              }
+              // 비밀번호가 일치할 경우 
+              if (isMatch) {
+                res.status(200).json({ message: "비밀번호가 일치합니다." });
+              }
+              else {
+                return res.status(401).json({ message: "비밀번호를 일치하지 않습니다." });
+              }
+            });
+          };
+          checkPW();
+        }
+        // 이메일이 일치하지않을 경우 
+      })
+    }
+  },
+
   uploadImage: async (req, res) => {
     console.log(req.file);
-    console.log(req.params)
 
-    const result1 = await uploadFile(req.file);
-    await unlinkFile(req.file.path)
-    // console.log(result1);
+    const token = req.headers.authorization.split(' ')[1];
+    const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET);
+    const refTokenData = jwt.verify(req.cookies.refreshToken, process.env.REFRESH_SECRET);
 
-    await User.updateOne({ email: req.params.email }, { $set: { user_image: req.file.path } })
+    console.log('예전꺼 찍혀야함!!!!!')
+    console.log(req.body.formerImage)
+    if (accTokenData && refTokenData) {
+      const { _id } = accTokenData;
+      if (!req.body.formerImage || !req.file) {
+        res.status(404).json({ message: '수정사항이 없습니다. 이미지를 선택해주세요' })
+      } else {
+        await uploadFile(req.file);
+        if (req.body.formerImage !== 'default') {
+          await deleteFile(req.body.formerImage);
+        }
+        await unlinkFile(req.file.path);
+        const userData = await User.findByIdAndUpdate(_id, { $set: { user_image: req.file.filename } }, { new: true }).exec();
+        console.log('새로운거 와야함!!!!!')
+        console.log(userData.user_image)
+        res.status(200).json({ data: userData.user_image });
+      }
+    }
 
-    const result = await User.findOne({ email: req.body.email }).exec();
+    // const result1 = await uploadFile(req.file);
+    // await unlinkFile(req.file.path)
+    // // console.log(result1);
 
-    res.send({ imagePath: `/:email/image/${result1.key}` })
+    // await User.updateOne({ email: req.params.email }, { $set: { user_image: req.file.path } })
+
+    // const result = await User.findOne({ email: req.body.email }).exec();
+
+    // res.send({ imagePath: `/:email/image/${result1.key}` })
     // res.send('1')
 
     // uploadImage.save()
@@ -234,12 +312,12 @@ module.exports = {
 
   },
 
-  getImage: async (req, res) => {
-    console.log(req.params)
-    const result = await User.findOne({ email: req.params.email }).select("user_image").exec();
+  // getImage: async (req, res) => {
+  //   console.log(req.params)
+  //   const result = await User.findOne({ email: req.params.email }).select("user_image").exec();
 
-    res.send(result);
-  },
+  //   res.send(result);
+  // },
 
   deleteInfo: async (req, res) => {
     const token = req.headers.authorization.split(' ')[1]; //Bearer
@@ -272,7 +350,7 @@ module.exports = {
     const token = req.headers.authorization.split(' ')[1];
     const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET);
     const refTokenData = jwt.verify(req.cookies.refreshToken, process.env.REFRESH_SECRET);
-//    const Post = require('../models/Post');
+    //    const Post = require('../models/Post');
     // 토큰에서 유저 아이디 겟잇해서
     // post 컬렉션에서 userId로 필터링해서 가져오기 
     if (accTokenData && refTokenData) {

@@ -11,8 +11,18 @@ module.exports = {
     let { name, email, password, age, area_name } = req.body;
 
     // 빈값이 오면 팅겨내기
-    if (!name || !email || !password || !age || !area_name) {
-      return res.status(400).json({ message: "빠진 정보가 있습니다" });
+    if (!name || !email || !password || !age) {
+      if (!name) {
+        return res.status(400).json({ message: "이름 정보가 빠졌습니다" });
+      } else if (!email) {
+        return res.status(400).json({ message: "이메일 정보가 빠졌습니다" });
+      } else if (!password) {
+        return res.status(400).json({ message: "비밀번호 정보가 빠졌습니다" });
+      } else if (!age) {
+        return res.status(400).json({ message: "나이 정보가 빠졌습니다" });
+      } else {
+        return res.status(400).json({ message: "입력정보를 다시 확인해주세요" });
+      }
     }
 
     // // 비밀번호가 같지 않으면 팅겨내기
@@ -274,24 +284,24 @@ module.exports = {
   outGithub: async (req, res) => {
 
     const access_token = req.cookies.githubAccessToken
-        
+
     await axios.delete(`https://api.github.com/applications/${process.env.REACT_APP_GITHUB_APP_KEY}/grant`,
-        {
-            headers: {
-                Accept: "application/vnd.github.v3+json"
-            },
-            auth: {
-                username: process.env.REACT_APP_GITHUB_APP_KEY,
-                password: process.env.REACT_APP_GITHUB_SECRET
-            },
-            data: {
-                access_token
-            }
+      {
+        headers: {
+          Accept: "application/vnd.github.v3+json"
+        },
+        auth: {
+          username: process.env.REACT_APP_GITHUB_APP_KEY,
+          password: process.env.REACT_APP_GITHUB_SECRET
+        },
+        data: {
+          access_token
         }
+      }
     )
-    .then(() => {
-      res.status(200).json({ message: '로그아웃이 완료되었습니다' });
-    }) 
+      .then(() => {
+        res.status(200).json({ message: '로그아웃이 완료되었습니다' });
+      })
   }
 
 

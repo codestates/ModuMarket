@@ -51,7 +51,10 @@ function Login() {
                     email: loginInfo.email,
                     password: loginInfo.password
                 },
-                { headers: { "Content-Type": "application/json" }, withCredentials: true }
+                {
+                    headers: { "Content-Type": "application/json" },
+                    withCredentials: true
+                }
             ).then((result) => {
                 let data = {
                     userInfo: {

@@ -12,7 +12,7 @@ export const initialState = {
         age: 0,
         area_name: "",
     },
-    userImg: "",
+    userImg: "default",
     userStatus: ""
 };
 

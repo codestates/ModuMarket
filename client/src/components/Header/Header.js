@@ -14,6 +14,7 @@ import {
     changeModalImg
 } from '../../reducers/modalSlice';
 import {
+    NavItem,
     NavLink,
     NavContainer,
     NavButtons,
@@ -44,6 +45,7 @@ function Header() {
 
         ).then((result) => {
             dispatch(getUserInfo(result.data.data));
+            dispatch(getUserImg(result.data.data.userInfo.user_image));
         })
 
     }
@@ -107,8 +109,8 @@ function Header() {
         window.location.href = `${KAKAO_LOGOUT_URL}`
         purge();
     }
-    const handleGithubLogout = async() => {
-        await axios.post(`${REACT_APP_API_URL}/sign/out/github`,{},{
+    const handleGithubLogout = async () => {
+        await axios.post(`${REACT_APP_API_URL}/sign/out/github`, {}, {
             headers: {
                 "Content-Type": "application/json",
             },

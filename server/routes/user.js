@@ -7,11 +7,8 @@ const moment = require('moment');
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'images')
+        cb(null, 'uploads')
     },
-    filename: (req, file, cb) => {
-        cb(null, moment(new Date()).format("h:mm A") + ' ' + file.originalname)
-    }
 });
 
 const fileFilter = (req, file, cb) => {
@@ -27,7 +24,6 @@ const upload = multer({
     limits: {
         fileSize: 1024 * 1024 * 5
     },
-    fileFilter: fileFilter
 });
 
 // 로그인 후 api주소와 동네주소 일치하는지 인증
@@ -42,13 +38,16 @@ router.get('/writepost', controller.user.writePost);
 // 내가 참가한 공고글 목록
 router.get('/participatepost', controller.user.participatePost);
 
+// 유저 비밀번호 확인
+router.post('/password', controller.user.passwordCheck);
+
 // 마이페이지 정보수정(유저 비밀번호 인증(body에 password))
 router.post('/', controller.user.auth);
 
 // 사는곳 비밀번호 수정
 router.patch('/', controller.user.changeInfo);
 
-router.get('/:email/image/:key', (req, res) => {
+router.get('/image/:key', (req, res) => {
     console.log(req.params)
     const key = req.params.key;
 
@@ -59,10 +58,10 @@ router.get('/:email/image/:key', (req, res) => {
 })
 
 // 이미지 등록
-router.post('/:email/image', upload.single('img'), controller.user.uploadImage);
+router.post('/image', upload.single('newImage'), controller.user.uploadImage);
 
 // 이미지 가져오기
-router.get('/:email/image', controller.user.getImage)
+// router.get('/:email/image', controller.user.getImage)
 
 // 회원탈퇴
 router.delete('/', controller.user.deleteInfo);

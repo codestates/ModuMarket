@@ -2,13 +2,25 @@ import styled from 'styled-components';
 import { Link } from "react-router-dom";
 
 export const NavLink = styled(Link)`
+
+  text-decoration: none;
+  color: black;
+  
+  & > span{
+      text-decoration: none;
+      color: black;
+      width: 190px;
+  }
+  &:focus, &:hover, &:visited, &:link, &:active {
+    text-decoration: none;
     color: black;
-    text-decoration: none;
-    &:focus, &:hover, &:visited, &:link, &:active {
-    text-decoration: none;
+
 }
 
 `;
+// export default styled(Header)`
+
+// `
 
 export const NavContainer = styled.div`
     display: flex;
