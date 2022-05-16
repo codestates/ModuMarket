@@ -150,22 +150,32 @@ module.exports = {
           if (err)
             return res.status(500).json({ message: "비밀번호가 안전하지 않습니다." });
           // salt 생성에 성공시 hash 진행
-
-          bcrypt.hash(req.body.password, salt, async (err, hash) => {
-            if (err)
-              return res.status(500).json({ message: "비밀번호가 안전하지 않습니다." });
-
-            // 비밀번호를 해쉬된 값으로 대체합니다.
-            password = hash;
-
-            // console.log(User)
-            const result = await User.findByIdAndUpdate(_id, { $set: { password: hash, area_name: req.body.area_name } }, { new: true })
+          if (!req.body.password) {
+            const result = User.findByIdAndUpdate(_id, { $set: { area_name: req.body.area_name } }, { new: true })
             if (result) {
-              res.status(200).json({ data: null, message: '회원정보 수정이 완료 되었습니다' });
+              res.status(200).json({ data: null, message: '동네 재인증 완료' });
             } else {
-              res.status(500).json({ data: null, message: 'server error' });
+              res.status(404).json({ data: null, message: '동네 재인증 실패' });
             }
-          })
+
+          } else {
+            bcrypt.hash(req.body.password, salt, async (err, hash) => {
+              if (err)
+                // console.log('에러나는 진짜 이유')
+                return res.status(500).json({ message: "비밀번호가 안전하지 않습니다." });
+
+              // 비밀번호를 해쉬된 값으로 대체합니다.
+              password = hash;
+
+              // console.log(User)
+              const result = await User.findByIdAndUpdate(_id, { $set: { password: hash, area_name: req.body.area_name } }, { new: true })
+              if (result) {
+                res.status(200).json({ data: null, message: '회원정보 수정이 완료 되었습니다' });
+              } else {
+                res.status(500).json({ data: null, message: 'server error' });
+              }
+            })
+          }
         })
       } else {
         res.status(404).json({ data: null, message: '회원정보 수정란을 입력해주세요' });
