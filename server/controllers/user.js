@@ -435,7 +435,7 @@ module.exports = {
     if (accTokenData && refTokenData) {
       const { _id } = accTokenData
       await Post.updateMany({ endtime: { $lt: Date.now() } }, { isvalid: true })
-      const result = await Application.find({ userId: _id, isapplied: true }).populate('post_id').exec();
+      const result = await Application.find({ user_id: _id, isapplied: true }).populate('post_id').exec();
       if (result.length > 0) {
         const postresult = result.map((data) => {
           return data.post_id;
@@ -453,7 +453,7 @@ module.exports = {
         const accessToken = jwt.sign(JSON.parse(JSON.stringify({ _id, email, area_name })), process.env.ACCESS_SECRET, { expiresIn: '2h' });
 
         await Post.updateMany({ endtime: { $lt: Date.now() } }, { isvalid: true })
-        const result = await Application.find({ userId: _id, isapplied: true }).populate('post_id').exec();
+        const result = await Application.find({ user_id: _id, isapplied: true }).populate('post_id').exec();
         if (result.length > 0) {
           const postresult = result.map((data) => {
             return data.post_id;
@@ -472,7 +472,7 @@ module.exports = {
         const refreshToken = jwt.sign(JSON.parse(JSON.stringify({ _id, email, area_name })), process.env.ACCESS_SECRET, { expiresIn: '2h' });
 
         await Post.updateMany({ endtime: { $lt: Date.now() } }, { isvalid: true })
-        const result = await Application.find({ userId: _id, isapplied: true }).populate('post_id').exec();
+        const result = await Application.find({ user_id: _id, isapplied: true }).populate('post_id').exec();
         if (result.length > 0) {
           const postresult = result.map((data) => {
             return data.post_id;
