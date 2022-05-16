@@ -40,7 +40,6 @@ function MainSection() {
                                             dispatch(showRegisterModal(true))
                                             : dispatch(showLoginConfirmModal(true))
                                     }>공구 등록하기</RegisterButton>
-
                                 </ButtonLink>
                             </ButtonWrap>
                         </MainText>

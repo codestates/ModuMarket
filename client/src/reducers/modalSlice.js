@@ -16,6 +16,7 @@ export const initialState = {
     chattingModal: false,
     notificationModal: false,
     confirmModal: false,
+    confirmReloadModal: false,
     confirmModalToBoard: false,
     myInfoModal: false,
     myPwCheckModal: false,
@@ -108,6 +109,9 @@ export const modalSlice = createSlice({
         showAlertModal : (state, action) =>{  
             state.alertModal = action.payload;
         },
+        showConfirmReloadModal : (state, action) =>{ 
+            state.confirmReloadModal = action.payload
+        }
     }
 })
 
@@ -135,7 +139,8 @@ export const {
     showParticipateModal,
     showCancelParticipateModal,
     showConfirmModalToBoard,
-    showAlertModal
+    showAlertModal,
+    showConfirmReloadModal
 
 } = modalSlice.actions;
 

@@ -48,28 +48,28 @@ export const Button = styled.div`
     @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
     font-family: 'Open Sans', sans-serif;
     
-    & > button {
-            background-color: ${(props) => 
-            props.background === "#FF6767" ? "#FF6767" : "white"   
-        };
-        font-size: 1rem;
-        font-weight : 600;
-        padding-top: 0.2rem;
-        cursor: pointer;
-        width  :6rem;
-        border-radius: 4px;
-        border: ${(props) => 
-            props.background === "#FF6767" ? 0 : "thin"
-        };
-        border-color : ${(props) => 
-            props.background === "#FF6767" ? "white" : "#848484"
-        };
-        color: ${ (props) =>
-            props.background === "#FF6767" ? "white" : "#848484"
-        };
-        height : 2rem;
-        border-style : solid;
+`
+export const HeadButton = styled.div`
+    background-color: ${(props) => 
+        props.background === "#FF6767" ? "#FF6767" : "white"   
     };
+    font-size: 1rem;
+    font-weight : 600;
+    padding-top: 0.2rem;
+    cursor: pointer;
+    width  :6rem;
+    border-radius: 4px;
+    border: ${(props) => 
+        props.background === "#FF6767" ? 0 : "thin"
+    };
+    border-color : ${(props) => 
+        props.background === "#FF6767" ? "white" : "#848484"
+    };
+    color: ${ (props) =>
+        props.background === "#FF6767" ? "white" : "#848484"
+    };
+    height : 2rem;
+    border-style : solid;
 `
 
 export const DetailWrap = styled.div`
@@ -150,28 +150,31 @@ export const DetailButton = styled.div`
     align-items : center;
     padding: 0.5rem;
     & > button{
-        border : ${(props) => 
-            props.background ===  "#FF6767" ? 0 : "thin"
-        };
-        background-color: ${(props) => 
-            props.background === "#FF6767" ? "#FF6767" : "white"
-        };
-        color: ${(props) => 
-            props.background === "#FF6767" ? "white" : "#848484"
-        };
-        border-color : ${(props) => 
-            props.background === "#FF6767" ? "white" : "#848484"
-        };
-        border-radius : 4px;
-        cursor: pointer;
-        border-style : solid; 
-        width : 15rem;
-        height : 2.4rem;
-        font-size : 1.1rem;
-        font-weight : 600;
-        @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
-        font-family: 'Open Sans', sans-serif;
+        
     }
     
     
+`
+export const DitailButtonChild = styled.button`
+    border : ${(props) => 
+        props.background ===  "#FF6767" ? 0 : "thin"
+    };
+    background-color: ${(props) => 
+        props.background === "#FF6767" ? "#FF6767" : "white"
+    };
+    color: ${(props) => 
+        props.background === "#FF6767" ? "white" : "#848484"
+    };
+    border-color : ${(props) => 
+        props.background === "#FF6767" ? "white" : "#848484"
+    };
+    border-radius : 4px;
+    cursor: pointer;
+    border-style : solid; 
+    width : 15rem;
+    height : 2.4rem;
+    font-size : 1.1rem;
+    font-weight : 600;
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+    font-family: 'Open Sans', sans-serif;
 `

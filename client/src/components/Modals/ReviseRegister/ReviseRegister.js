@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { showConfirmModal, showReviseRegisterModal, inputModalText, changeModalImg } from '../../../reducers/modalSlice'
+import { showConfirmReloadModal, showReviseRegisterModal, inputModalText, changeModalImg } from '../../../reducers/modalSlice'
 import {ko} from 'date-fns/esm/locale';
 import axios from 'axios';
 import moment from "moment";
@@ -90,7 +90,7 @@ const ReviseRegister = () => {
                 dispatch(inputModalText(result.data.message));
                 dispatch(changeModalImg('check_man'));
                 dispatch(showReviseRegisterModal(false))
-                dispatch(showConfirmModal(true));
+                dispatch(showConfirmReloadModal(true));
             })
         }
 
