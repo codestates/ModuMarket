@@ -115,61 +115,71 @@ const MyInfo = () => {
         })
     }
 
-
-    // 이미지 불러오는거
-
     /* 프로필 사진 이미지 불러오기 */
     const uploadedImg = useRef(null);
     const imageUploader = useRef(null);
-    const handleImgUpload = e => {
+    const handleImgUpload = () => {
         let photoFile = document.getElementById("photofile");
         const formData = new FormData();
 
         if (photoFile.files[0]) {
             // 전에 있던 사진의 이름 넣으면 됨.
+            console.log(myImg);
             formData.append("formerImage", myImg);
             formData.append("newImage", photoFile.files[0]);
         }
 
-        const [file] = e.target.files;
-        if (file) {
-            const reader = new FileReader();
-            const { current } = uploadedImg;
-            current.file = file;
-            reader.onload = e => {
-                current.src = e.target.result;
-                setFile(reader.result);
+        // const [file] = e.target.files;
+        // if (file) {
+        //     const reader = new FileReader();
+        //     const { current } = uploadedImg;
+        //     current.file = file;
+        //     reader.onload = e => {
+        //         current.src = e.target.result;
+        //         setFile(reader.result);
+        //     }
+        //     reader.readAsDataURL(file)
+        /* 서버로 이미지 등록 요청 */
+
+        axios.post(`${REACT_APP_API_URL}/user/image`,
+            formData
+            ,
+            {
+                headers: {
+                    "Content-Type": 'multipart/form-data',
+                    Authorization: `Bearer ${accessToken}`,
+                },
+                withCredentials: true
             }
-            reader.readAsDataURL(file)
-            /* 서버로 이미지 등록 요청 */
+        ).then((result) => {
+            console.log(result.data.data);
+            //서버로부터 이미지 경로를 받아와야함
+            //응답 성공시 s3에 있는 이미지 경로를 받아와서 리덕스 userInfo.userImg에 저장
+            dispatch(getUserImg(result.data.data));
 
-            axios.post(`${REACT_APP_API_URL}/user/image`,
-                formData
-                ,
-                {
-                    headers: {
-                        "Content-Type": 'multipart/form-data',
-                        Authorization: `Bearer ${accessToken}`,
-                    },
-                    withCredentials: true
-                }
-            ).then((result) => {
-                console.log(result);
-                //서버로부터 이미지 경로를 받아와야함
-                //응답 성공시 s3에 있는 이미지 경로를 받아와서 리덕스 userInfo.userImg에 저장
-                dispatch(getUserImg(`${ REACT_APP_API_URL }/user/image/${result.data.data}/`));
+        }).catch((err) => {
+            //default profile img
+            console.log(err.response.message);
+            // dispatch(getUserImg(profileImg));
+            //임시방편으로 404일때 모달에서 등록한 img를 리덕스 스토어에 저장해 MyPage에서도 띄움
+            // dispatch(getUserImg(reader.result));
+        })
 
-            }).catch((err) => {
-                //default profile img
-                console.log(err.response.message);
-                // dispatch(getUserImg(profileImg));
-                //임시방편으로 404일때 모달에서 등록한 img를 리덕스 스토어에 저장해 MyPage에서도 띄움
-                // dispatch(getUserImg(reader.result));
-            })
 
-        }
     }
-    console.log(myImg);
+
+    function onLoadFile(e) {
+        const reader = new FileReader();
+        reader.readAsDataURL(e)
+
+        return new Promise((resolve) => {
+            reader.onload = () => {
+                setFile(reader.result);
+                resolve();
+            }
+        })
+    }
+
 
     useEffect(() => {
         if (newArea) {
@@ -179,6 +189,7 @@ const MyInfo = () => {
 
     useEffect(() => {
         setFile(file)
+        handleImgUpload()
     }, [file])
 
     return (
@@ -190,7 +201,6 @@ const MyInfo = () => {
                     <h2>마이 페이지</h2>
                 </ModalText>
                 <ModalImg>
-
                     <form onSubmit={(e) => e.preventDefault()} >
                         <input
                             id="photofile"
@@ -198,16 +208,27 @@ const MyInfo = () => {
                             type="file"
                             accept="image/jpg, image/png, image/jpeg"
                             multiple={false}
-                            onChange={handleImgUpload}
-                            ref={imageUploader}
-                            style={{
-                                display: "none"
-                            }} />
+                            onChange={(e) => {
+                                onLoadFile(e.target.files[0])
+
+                            }}
+                            style={{ visibility: "hidden" }} />
                     </form>
-                    <img ref={uploadedImg} src={myImg} alt='profileImg' onClick={() => imageUploader.current.click()} />
-                    <ModalImgText>
-                        이미지 업로드
-                    </ModalImgText>
+                    <ProfileImg>
+                        <label htmlFor="photofile">
+                            {
+                                file ?
+                                    <img src={file} alt='profile preview' />
+                                    :
+                                    myImg === 'default' ?
+                                        <img src={profileImg} alt='profileImg' />
+                                        : <img src={`${REACT_APP_API_URL}/user/image/${myImg}/`} alt='profileImg' />
+                            }
+                        </label>
+                        <ModalImgText>
+                            <label htmlFor="photofile">이미지 업로드</label>
+                        </ModalImgText>
+                    </ProfileImg>
                 </ModalImg>
                 <ModalInformRow>
                     <NameAgeWrap>

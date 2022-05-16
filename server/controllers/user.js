@@ -215,17 +215,19 @@ module.exports = {
     const token = req.headers.authorization.split(' ')[1];
     const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET);
     const refTokenData = jwt.verify(req.cookies.refreshToken, process.env.REFRESH_SECRET);
-    
+
+    console.log('예전꺼 찍혀야함!!!!!')
     console.log(req.body.formerImage)
     if (accTokenData && refTokenData) {
-      const {_id} = accTokenData;
+      const { _id } = accTokenData;
       await uploadFile(req.file);
-      if (req.body.formerImage !== '/images/profile_color_blue.png') {
+      if (req.body.formerImage !== 'default') {
         await deleteFile(req.body.formerImage);
       }
       await unlinkFile(req.file.path);
       const userData = await User.findByIdAndUpdate(_id, { $set: { user_image: req.file.filename } }).exec();
-      // console.log(userData.user_image)
+      console.log('새로운거 와야함!!!!!')
+      console.log(userData.user_image)
       res.status(200).json({ data: userData.user_image });
     }
 
@@ -288,7 +290,7 @@ module.exports = {
     const token = req.headers.authorization.split(' ')[1];
     const accTokenData = jwt.verify(token, process.env.ACCESS_SECRET);
     const refTokenData = jwt.verify(req.cookies.refreshToken, process.env.REFRESH_SECRET);
-//    const Post = require('../models/Post');
+    //    const Post = require('../models/Post');
     // 토큰에서 유저 아이디 겟잇해서
     // post 컬렉션에서 userId로 필터링해서 가져오기 
     if (accTokenData && refTokenData) {
