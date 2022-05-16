@@ -41,12 +41,12 @@ module.exports = {
 
     if (accTokenData && refTokenData) {
       const userinfo = await User.findOne({ email: accTokenData.email }).exec();
-      const { _id, name, email, age, area_name } = userinfo
-      res.status(200).json({ data: { userInfo: { id: _id, name, email, age, area_name } }, message: 'ok' })
+      const { _id, name, email, age, area_name, user_image } = userinfo
+      res.status(200).json({ data: { userInfo: { id: _id, name, email, age, area_name, user_image } }, message: 'ok' })
     }
     if (accTokenData && !refTokenData) {
       const userinfo = await User.findOne({ email: accTokenData.email }).exec();
-      const { _id, name, email, age, area_name } = userinfo
+      const { _id, name, email, age, area_name, user_image } = userinfo
       const refreshToken = jwt.sign(JSON.parse(JSON.stringify({ _id, email, area_name })), process.env.REFRESH_SECRET, { expiresIn: '14d' });
 
       res
@@ -55,14 +55,14 @@ module.exports = {
           httpOnly: true,
         })
         .status(200)
-        .json({ data: { userinfo: { id: _id, name, email, age, area_name } }, message: 'ok' });
+        .json({ data: { userInfo: { id: _id, name, email, age, area_name, user_image } }, message: 'ok' });
 
     }
     if (!accTokenData && refTokenData) {
       const userinfo = await User.findOne({ email: refTokenData.email }).exec();
-      const { _id, name, email, password, age, area_name } = userinfo
+      const { _id, name, email, age, area_name, user_image } = userinfo
       const accessToken = jwt.sign(JSON.parse(JSON.stringify({ _id, email, area_name })), process.env.ACCESS_SECRET, { expiresIn: '2h' });
-      return res.send({ data: { accessToken, userInfo: { id: _id, name, email, age, area_name } }, message: "ok" })
+      return res.send({ data: { accessToken, userInfo: { id: _id, name, email, age, area_name, user_image } }, message: "ok" })
     }
     if (!accTokenData && !refTokenData) {
       res.status(404).send({ "data": null, "message": "access and refresh token has been tempered" })
@@ -150,14 +150,14 @@ module.exports = {
           if (err)
             return res.status(500).json({ message: "비밀번호가 안전하지 않습니다." });
           // salt 생성에 성공시 hash 진행
-    
+
           bcrypt.hash(req.body.password, salt, async (err, hash) => {
             if (err)
               return res.status(500).json({ message: "비밀번호가 안전하지 않습니다." });
-    
+
             // 비밀번호를 해쉬된 값으로 대체합니다.
             password = hash;
-    
+
             // console.log(User)
             const result = await User.findByIdAndUpdate(_id, { $set: { password: hash, area_name: req.body.area_name } }, { new: true })
             if (result) {
@@ -235,7 +235,7 @@ module.exports = {
     const refTokenData = jwt.verify(req.cookies.refreshToken, process.env.REFRESH_SECRET);
 
     if (accTokenData && refTokenData) {
-      const {_id} = accTokenData;
+      const { _id } = accTokenData;
       User.findOne({ _id: _id }, (err, data) => {
         if (err) {
           return res.status(500).json({ message: "서버 오류" });
@@ -251,7 +251,7 @@ module.exports = {
               }
               // 비밀번호가 일치할 경우 
               if (isMatch) {
-                res.status(200).json({message: "비밀번호가 일치합니다." });
+                res.status(200).json({ message: "비밀번호가 일치합니다." });
               }
               else {
                 return res.status(401).json({ message: "비밀번호를 일치하지 않습니다." });
@@ -262,7 +262,8 @@ module.exports = {
         }
         // 이메일이 일치하지않을 경우 
       })
-  }},
+    }
+  },
 
   uploadImage: async (req, res) => {
     console.log(req.file);
@@ -275,15 +276,19 @@ module.exports = {
     console.log(req.body.formerImage)
     if (accTokenData && refTokenData) {
       const { _id } = accTokenData;
-      await uploadFile(req.file);
-      if (req.body.formerImage !== 'default') {
-        await deleteFile(req.body.formerImage);
+      if (!req.body.formerImage || !req.file) {
+        res.status(404).json({ message: '수정사항이 없습니다. 이미지를 선택해주세요' })
+      } else {
+        await uploadFile(req.file);
+        if (req.body.formerImage !== 'default') {
+          await deleteFile(req.body.formerImage);
+        }
+        await unlinkFile(req.file.path);
+        const userData = await User.findByIdAndUpdate(_id, { $set: { user_image: req.file.filename } }, { new: true }).exec();
+        console.log('새로운거 와야함!!!!!')
+        console.log(userData.user_image)
+        res.status(200).json({ data: userData.user_image });
       }
-      await unlinkFile(req.file.path);
-      const userData = await User.findByIdAndUpdate(_id, { $set: { user_image: req.file.filename } }).exec();
-      console.log('새로운거 와야함!!!!!')
-      console.log(userData.user_image)
-      res.status(200).json({ data: userData.user_image });
     }
 
     // const result1 = await uploadFile(req.file);
