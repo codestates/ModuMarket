@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
-import { REACT_APP_API_URL } from '../../config';
+import { REACT_APP_API_URL, REDIRECT_URI } from '../../config';
 import { AuthContainer } from './styled';
 import { confirmImg } from '../../assets/images';
 import { login } from '../../reducers/loginSlice';
@@ -21,7 +21,6 @@ const Auth = ({ social }) => {
 
     const dispatch = useDispatch();
     if (social === 'kakao') {
-        const REDIRECT_URI = "https://localhost:3000/sign/kakao/callback";
         const code = new URL(window.location.href).searchParams.get("code");
         const kakaoToken = () => {
             let kakaoAccessToken = ' ';

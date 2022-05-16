@@ -140,7 +140,7 @@ function LoginModal() {
                         dispatch(setUserStatus('kakao'))
                     }}>
                         <img src={kakaoIcon}/>
-                        카카오 로그인
+                        카카오톡 로그인
                     </ModalButton>
                 </ButtonWrap>
                 </Wrap>

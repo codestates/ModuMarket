@@ -31,7 +31,7 @@ const Confirm = () => {
                                 <></>
                             :
                                 <ModalButtonWrap>
-                                    <ModalButton background="#FF6767" onClick={() => {dispatch(showConfirmModal(false)); setTimeout(() => {window.location.reload()}, 50)}}>확인</ModalButton>
+                                    <ModalButton background="#FF6767" onClick={() => {dispatch(showConfirmModal(false)); }}>확인</ModalButton>
                                 </ModalButtonWrap>
                         }
                 </ModalImg>

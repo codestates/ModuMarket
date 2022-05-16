@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import photo from '../../../assets/photo.png';
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -180,6 +179,7 @@ export const AtLeastMember = styled.div`
 
 export const ContentWrap = styled.div`
     width : 75%;
+    padding-top: 0.5rem;
     font-size : 1rem;
     font-weight : 700;
     & > p {
