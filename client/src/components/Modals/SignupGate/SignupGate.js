@@ -52,7 +52,7 @@ const SignupGate = () => {
                     dispatch(setUserStatus('github'))
                     }}>
                         <img src={gitIcon}/>
-                        Github으로 회원가입
+                        Github 회원가입
                     </ModalButton>
                     <ModalButton background="#F7E600" onClick={() => {
                         window.location.href = `${KAKAO_AUTH_URL}`
@@ -60,7 +60,7 @@ const SignupGate = () => {
                         dispatch(setUserStatus('kakao'))
                     }}>
                         <img src={kakaoIcon}/>
-                        카카오로 회원가입
+                        카카오톡 회원가입
                     </ModalButton>
                 </ButtonWrap>
                 </Wrap>

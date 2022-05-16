@@ -19,7 +19,6 @@ import {
 function Register() {
     const dispatch = useDispatch();
     const accessToken = useSelector((state) => state.login.accessToken);
-    const [errorMessage, setErrorMessage] = useState('사진을 제외한 모든 항목은 필수입니다.');
     const userId = useSelector((state) => state.userInfo.userInfo.id);
     const area_name = useSelector((state) => state.userInfo.userInfo.area_name);
     const [address, setAddress] = useState("");
@@ -48,7 +47,7 @@ function Register() {
 
         let photoFile = document.getElementById("photofile");
         const formData = new FormData(); // 폼 태그로 이미지와 데이터를 한번에 보낼 수 있도록 하기 위한 접근
-        const { title, userId, category, post_content, area_name, isvalid, member_num, member_min, endtime } = boardInfo
+        const { title, userId, category, post_content, area_name, isvalid, member_num, member_min } = boardInfo
         formData.append("title", title);
         formData.append("category", category);
         formData.append("image", photoFile.files[0]);
@@ -60,7 +59,7 @@ function Register() {
         formData.append("member_num", member_num);
         formData.append("member_min", member_min);
         formData.append("endtime", moment(endDate).format('YYYY-MM-DD'));
-
+        
         if (title === "" || address === "" || post_content === "" || member_min === 0) {
 
             dispatch(showAlertModal(true));

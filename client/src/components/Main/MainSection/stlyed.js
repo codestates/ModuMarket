@@ -73,6 +73,7 @@ export const MainPhoto = styled.div`
 `
 
 export const ButtonWrap = styled.div`
+    padding-top: 0.5rem;
     display: flex;
     align-items: center;
     @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
