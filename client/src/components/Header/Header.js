@@ -82,7 +82,6 @@ function Header() {
 
         ).then((result) => {
             if (result.status === 200) {
-                console.log(result.data.data);
                 dispatch(checkPartyNull(false));
                 dispatch(getParticipatePost(result.data.data));
             } else {
