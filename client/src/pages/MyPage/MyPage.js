@@ -129,7 +129,7 @@ function MyPage() {
                         {
                             userImg === '/images/profile_color_blue.png' ?
                             <img src={userImg} alt="user profile" /> :
-                            <img src={`${ REACT_APP_API_URL }/user/image/${userImg}/`} alt="user profile" />
+                            <img src={`${ REACT_APP_API_URL }/user/image/${userImg}`} alt="user profile" />
                         }
                     </ProfilePhotoWrap>
                     <ProfileContentWrap>

@@ -33,7 +33,7 @@ const PwCheck = () => {
         if (!pw) {
             setErrorMessage('비밀번호를 입력해주세요');
         } else {
-            axios.post(`${REACT_APP_API_URL}/user`,
+            axios.post(`${REACT_APP_API_URL}/user/password`,
                 {
                     password: pw
                 },
