@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
-import { REACT_APP_API_URL } from '../../config';
+import { REACT_APP_API_URL, REDIRECT_URI } from '../../config';
 import { AuthContainer } from './styled';
 import { confirmImg } from '../../assets/images';
 import { login } from '../../reducers/loginSlice';
@@ -63,35 +63,36 @@ const Auth = ({ social }) => {
 
     } else {
         const code = new URL(window.location.href).searchParams.get("code");
-        if(code ===  null){
+        if (code === null) {
             window.location.replace('/')
-        }else {
+        } else {
             const githubToken = () => {
                 axios.get(`${REACT_APP_API_URL}/sign/github/callback`,
-                    { params: { code: code },
-                    withCredentials: true
-                }).then((result) => {
-                    if (result.data.accessToken) {
-                        let data = {
-                            userInfo: {
-                                id: result.data.id,
-                                area_name: result.data.area_name,
-                                name: result.data.name
+                    {
+                        params: { code: code },
+                        withCredentials: true
+                    }).then((result) => {
+                        if (result.data.accessToken) {
+                            let data = {
+                                userInfo: {
+                                    id: result.data.id,
+                                    area_name: result.data.area_name,
+                                    name: result.data.name
+                                }
                             }
+                            dispatch(showLoginModal(false));
+                            dispatch(getUserInfo(data));
+                            dispatch(inputModalText(result.data.message));
+                            dispatch(login(result.data.accessToken))
+                            dispatch(changeModalImg('check_man'));
+                            dispatch(showConfirmModal(true));
+                        } else {
+                            dispatch(inputSocialId(result.data.id));
+                            dispatch(inputSocialEmail(result.data.email));
+                            dispatch(showSignupSocialModal(true));
                         }
-                        dispatch(showLoginModal(false));
-                        dispatch(getUserInfo(data));
-                        dispatch(inputModalText(result.data.message));
-                        dispatch(login(result.data.accessToken))
-                        dispatch(changeModalImg('check_man'));
-                        dispatch(showConfirmModal(true));
-                    } else {
-                        dispatch(inputSocialId(result.data.id));
-                        dispatch(inputSocialEmail(result.data.email));
-                        dispatch(showSignupSocialModal(true));
                     }
-                }
-                )
+                    )
             }
             githubToken();
         }

@@ -99,28 +99,29 @@ function MyPage() {
         )
     }
 
-    function handleUserImg() {
-        axios.get(`${REACT_APP_API_URL}/user/image`,
-            {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${accessToken}`,
-                },
-                withCredentials: true
-            }
-        ).then((result) => {
-            //응답 성공시 s3에 있는 이미지 경로를 받아와서 리덕스 userInfo.userImg에 저장
-            dispatch(getUserImg(result.data.data));
-        }).catch((err) => {
-            //default profile img
-            dispatch(getUserImg(profileImg));
-        })
-    }
+    // function handleUserImg() {
+    //     axios.get(`${REACT_APP_API_URL}/user/image`,
+    //         {
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //                 Authorization: `Bearer ${accessToken}`,
+    //             },
+    //             withCredentials: true
+    //         }
+    //     ).then((result) => {
+    //         //응답 성공시 s3에 있는 이미지 경로를 받아와서 리덕스 userInfo.userImg에 저장
+    //         dispatch(getUserImg(result.data.data));
+    //     }).catch((err) => {
+    //         //default profile img
+    //         dispatch(getUserImg(profileImg));
+    //     })
+    // }
 
-    useEffect(() => {
-        handleUserImg();
-    }, [])
+    // useEffect(() => {
 
+    // }, [userImg])
+
+    console.log(userImg)
 
     return (
         <Section>
@@ -128,9 +129,11 @@ function MyPage() {
                 <ProfileWrap>
                     <ProfilePhotoWrap>
                         {
-                            userImg === '/images/profile_color_blue.png' ?
-                            <img src={userImg} alt="user profile" /> :
-                            <img src={`${ REACT_APP_API_URL }/user/image/${userImg}`} alt="user profile" />
+
+
+                            userImg === 'default' ?
+                                <img src={profileImg} alt="default profile" /> :
+                                <img src={`${REACT_APP_API_URL}/user/image/${userImg}/`} alt="user profile" />
                         }
                     </ProfilePhotoWrap>
                     <ProfileContentWrap>

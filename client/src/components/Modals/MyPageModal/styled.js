@@ -242,7 +242,7 @@ export const ModalImg = styled.div`
     width: 100%;
     object-fit: cover;
     margin: 1rem 0;
-  `
+`
 
 export const ProfileImg = styled.div`
     display: flex;
@@ -251,33 +251,34 @@ export const ProfileImg = styled.div`
     justify-content: center;
     position: relative;
     display: inline-block;
-    img{
-      width : 13rem;
-      height : 13rem;
-      overflow : hidden;
-      cursor: pointer;
-      border-radius: 70%;
-      border : 1px solid #F1F2F2;
-      }
-      &:hover{
-        opacity: 0.3;
-      }
-
-
-
+    & > label {
+      & > img{
+        width : 13rem;
+        height : 13rem;
+        overflow : hidden;
+        cursor: pointer;
+        border-radius: 70%;
+        border : 1px solid #F1F2F2;
+        }
+        &:hover{
+          opacity: 0.3;
+        }
+    }
 `
 export const ModalImgText = styled.div`
-    opacity: 0;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    -ms-transform: translate(-50%, -50%);
-    text-align: center;
-    cursor: pointer;
-    ${ProfileImg}:hover & {
-    opacity: 1;
-  }
+    & > label {
+      opacity: 0;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+      text-align: center;
+      cursor: pointer;
+      ${ProfileImg}:hover & {
+      opacity: 1;
+      }
+    }
 `
 export const ModalButton = styled.button`
     display: flex;
